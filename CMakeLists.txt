@@ -6,5 +6,6 @@ set(CMAKE_CXX_STANDARD 11)
 
 add_subdirectory(MultiThread)
 add_subdirectory(UnitTests)
+add_subdirectory(Networking)
 
 add_executable(Granary main.cpp)
