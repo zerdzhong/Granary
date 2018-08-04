@@ -3,82 +3,75 @@
 //
 
 #include "gtest/gtest.h"
-
-#include "thread_base.hpp"
-#include "unistd.h"
 #include <iostream>
+#include "thread_base.hpp"
+#include <pthread.h>
 
 using namespace std;
 
-class ThreadTest1 : public ThreadBase
-{
+class Test {
 public:
-    void run() override;
-};
+    Test():count_(0) {
 
-
-void ThreadTest1::run()
-{
-    while (isAlive())
-    {
-        cout << "Thread test 1 tid="<< getTid() << endl;
-        sleep(1);
     }
-}
 
-
-class ThreadTest2 : public ThreadBase
-{
-public:
-    void run() override;
-};
-
-
-void ThreadTest2::run()
-{
-    while (isAlive())
-    {
-        cout << "Thread test 2 tid="<< getTid() << endl;
-        sleep(1);
+    void AddCount() {
+        count_ ++;
     }
-}
 
-
-class ThreadTest3 : public ThreadBase
-{
-public:
-    void run() override;
-
-private:
     int count_;
 };
 
 
-void ThreadTest3::run()
+class ThreadTest : public ThreadBase
+{
+public:
+    ThreadTest();
+    ~ThreadTest() override;
+    void run() override;
+
+private:
+    int count_;
+    Test *test_;
+    pthread_mutex_t mutex_;
+};
+
+ThreadTest::ThreadTest() {
+    mutex_ = PTHREAD_MUTEX_INITIALIZER;
+    test_ = new Test();
+}
+
+void ThreadTest::run()
 {
     while (isAlive())
     {
-        cout << "Thread test 3 tid="<< getTid() << endl;
-        count_ ++;
+        usleep(500);
+        pthread_mutex_lock(&mutex_);
+        cout<< this << ", count: " << test_->count_ <<endl;
+        pthread_mutex_unlock(&mutex_);
+
+        test_->AddCount();
     }
 }
 
+ThreadTest::~ThreadTest() {
+    cout << "Release ThreadTest, " << this << endl;
+}
+
 TEST(ThreadBaseTest, start) {
-    ThreadBase *test1 = new ThreadTest1();
-    ThreadBase *test2 = new ThreadTest2();
-    ThreadBase *test3 = new ThreadTest3();
+    printf("\n");
+    ThreadBase *test1 = new ThreadTest();
+    ThreadBase *test2 = new ThreadTest();
+    ThreadBase *test3 = new ThreadTest();
 
     test1->Start();
     test2->Start();
     test3->Start();
 
-    sleep(2);
+    sleep(1);
 
-//    test1->Start();
-//    test2->Start();
-
-//    test1->Join();
-//    test2->Join();
+    test1->Quit();
+    test2->Quit();
 
     delete test1;
     delete test2;

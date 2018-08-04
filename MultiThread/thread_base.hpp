@@ -21,10 +21,12 @@ public:
 
 private:
     static void* start_func(void* arg);
+    void setIsAlive(bool is_alive);
 
 private:
+    pthread_rwlock_t rwlock_;
     pthread_t tid_;
-    bool is_alive;
+    bool is_alive_;
 };
 
 

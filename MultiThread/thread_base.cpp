@@ -12,12 +12,14 @@ void* ThreadBase::start_func(void *arg) {
 
 int ThreadBase::Start() {
 
+    pthread_rwlock_init(&rwlock_, NULL);
+
     if (pthread_create(&tid_, NULL, start_func, this) != 0) {
         printf("create a new thread failed!\n");
         return -1;
     }
 
-    is_alive = true;
+    is_alive_ = true;
     return 0;
 }
 
@@ -36,7 +38,7 @@ int ThreadBase::Join() {
 }
 
 int ThreadBase::Quit() {
-    is_alive = false;
+    setIsAlive(false);
     return 0;
 }
 
@@ -45,12 +47,25 @@ pthread_t ThreadBase::getTid() {
 }
 
 bool ThreadBase::isAlive() {
+    pthread_rwlock_rdlock(&rwlock_);
+    bool is_alive = is_alive_;
+    pthread_rwlock_unlock(&rwlock_);
     return is_alive;
 }
 
+void ThreadBase::setIsAlive(bool is_alive) {
+    pthread_rwlock_wrlock(&rwlock_);
+    is_alive_ = is_alive;
+    pthread_rwlock_unlock(&rwlock_);
+}
+
+
 ThreadBase::~ThreadBase() {
+    printf("Release ThreadBase, %p\n", this);
+
     if (isAlive()) {
         pthread_kill(tid_, 0);
     }
 
+    pthread_rwlock_destroy(&rwlock_);
 }
