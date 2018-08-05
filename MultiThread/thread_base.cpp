@@ -8,6 +8,7 @@
 void* ThreadBase::start_func(void *arg) {
     ThreadBase *ptr = (ThreadBase *)arg;
     ptr->run();
+    return nullptr;
 }
 
 int ThreadBase::Start() {
@@ -64,7 +65,7 @@ ThreadBase::~ThreadBase() {
     printf("Release ThreadBase, %p\n", this);
 
     if (isAlive()) {
-        pthread_kill(tid_, 0);
+        pthread_cancel(tid_);
     }
 
     pthread_rwlock_destroy(&rwlock_);

@@ -45,7 +45,7 @@ void ThreadTest::run()
 {
     while (isAlive())
     {
-        usleep(500);
+        usleep(50);
         pthread_mutex_lock(&mutex_);
         cout<< this << ", count: " << test_->count_ <<endl;
         pthread_mutex_unlock(&mutex_);
