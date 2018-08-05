@@ -5,8 +5,25 @@
 #ifndef GRANARY_HTTP_CONNECTION_HPP
 #define GRANARY_HTTP_CONNECTION_HPP
 
+#include "thread_base.hpp"
+
+class HttpConnection;
+
+class HttpConnectionThread: public ThreadBase {
+public:
+    void run() override;
+
+private:
+    HttpConnection *connection_;
+};
 
 class HttpConnection {
+public:
+    void Start();
+    void runInternal();
+
+private:
+    HttpConnectionThread *thread_;
 
 };
 

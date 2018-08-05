@@ -4,6 +4,9 @@ project(libNetworking)
 
 add_library(libNetworking ./Source/http_connection.cpp)
 
+include_directories(../MultiThread)
+target_link_libraries(libNetworking libMultiThread)
+
 set(use_libcurl_source false)
 if (use_libcurl_source)
     add_subdirectory(./Vendor/curl-7.61.0)
