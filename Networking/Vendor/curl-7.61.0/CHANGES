@@ -652,7 +652,7 @@ Daniel Stenberg (2 Jun 2018)
   
   A POSIX fnmatch behaves slightly different than the internal function
   for a few test patterns currently and the macOS one yet slightly
-  different. Test case 1307 is adjusted for these differences.
+  different. TestModel case 1307 is adjusted for these differences.
   
   Closes #2626
 
@@ -799,7 +799,7 @@ Daniel Stenberg (29 May 2018)
 - fnmatch: insist on escaped bracket to match
   
   A non-escaped bracket ([) is for a character group - as documented. It
-  will *not* match an individual bracket anymore. Test case 1307 updated
+  will *not* match an individual bracket anymore. TestModel case 1307 updated
   accordingly to match.
   
   Problem detected by OSS-Fuzz, although this fix is probably not a final
@@ -955,7 +955,7 @@ Patrick Monnerat (22 May 2018)
   
   This avoids appending error data to already existing good data.
   
-  Test 92 is updated to match this change.
+  TestModel 92 is updated to match this change.
   New test 1156 checks all combinations of --range/--resume, --fail,
   Content-Range header and http status code 200/416.
   
@@ -2609,7 +2609,7 @@ Daniel Stenberg (12 Mar 2018)
   using the 'singlecwd' ftp method could make curl write a zero byte
   outside of the allocated buffer.
   
-  Test case 340 verifies.
+  TestModel case 340 verifies.
   
   CVE-2018-1000120
   Reported-by: Duy Phan Thanh
@@ -3043,9 +3043,9 @@ Daniel Stenberg (15 Feb 2018)
 Patrick Monnerat (13 Feb 2018)
 - tests: new tests for http raw mode
   
-  Test 319 checks proper raw mode data with non-chunked gzip
+  TestModel 319 checks proper raw mode data with non-chunked gzip
   transfer-encoded server data.
-  Test 326 checks raw mode with chunked server data.
+  TestModel 326 checks raw mode with chunked server data.
   
   Bug: #2303
   Closes #2308
@@ -4922,7 +4922,7 @@ Dan Fandrich (1 Nov 2017)
 
 - tests: Fixed torture tests on tests 556 and 650
   
-  Test cleanup after OOM wasn't being consistently performed.
+  TestModel cleanup after OOM wasn't being consistently performed.
 
 Daniel Stenberg (1 Nov 2017)
 - CURLOPT_MAXREDIRS: allow -1 as a value
@@ -5459,7 +5459,7 @@ Daniel Stenberg (11 Oct 2017)
   
   Reported-by: Zenju on github
   
-  Test 244 added to verify
+  TestModel 244 added to verify
   Fixes #1974
   Closes #1976
 
@@ -5486,7 +5486,7 @@ Daniel Stenberg (11 Oct 2017)
 
   curl: don't pass semicolons when parsing Content-Disposition
   
-  Test 1422 updated to verify.
+  TestModel 1422 updated to verify.
   
   Closes #1964
 
@@ -5557,7 +5557,7 @@ Daniel Stenberg (8 Oct 2017)
   When imap_done() got called before a connection is setup, it would try
   to "finish up" and dereffed a NULL pointer.
   
-  Test case 1553 managed to reproduce. I had to actually use a host name
+  TestModel case 1553 managed to reproduce. I had to actually use a host name
   to try to resolve to slow it down, as using the normal local server IP
   will make libcurl get a connection in the first curl_multi_perform()
   loop and then the bug doesn't trigger.
@@ -5582,7 +5582,7 @@ Daniel Stenberg (6 Oct 2017)
   ... fixes a memory leak with at least IMAP when remove_handle is never
   called and the transfer is abruptly just abandoned early.
   
-  Test 1552 added to verify
+  TestModel 1552 added to verify
   
   Detected by OSS-fuzz
   Assisted-by: Max Dymond
@@ -5733,7 +5733,7 @@ Daniel Stenberg (3 Oct 2017)
   ... a single double quote could leave the entry path buffer without a zero
   terminating byte. CVE-2017-1000254
   
-  Test 1152 added to verify.
+  TestModel 1152 added to verify.
   
   Reported-by: Max Dymond
   Bug: https://curl.haxx.se/docs/adv_20171004.html
@@ -5942,9 +5942,9 @@ Daniel Stenberg (22 Sep 2017)
   ... as the test cases themselves do that and it makes it easier to add
   crazy test cases.
   
-  Test 800 updated to use user name + password that need quoting.
+  TestModel 800 updated to use user name + password that need quoting.
   
-  Test 856 updated to trigger an auth fail differently.
+  TestModel 856 updated to trigger an auth fail differently.
   
   Ref: #1902
 
@@ -6239,7 +6239,7 @@ Patrick Monnerat (7 Sep 2017)
 - form API: add new test 650.
   
   Now that the form API is deprecated and not used anymore in curl tool,
-  a lot of its features left untested. Test 650 attempts to check all these
+  a lot of its features left untested. TestModel 650 attempts to check all these
   features not tested elsewhere.
 
 Jay Satiro (7 Sep 2017)
@@ -6421,7 +6421,7 @@ Patrick Monnerat (5 Sep 2017)
   curl tool -F option is extended with ";encoder=".
   curl tool --libcurl option generates calls to curl_mime_encoder().
   New encoder tests 648 & 649.
-  Test 1404 extended with an encoder specification.
+  TestModel 1404 extended with an encoder specification.
 
 - runtests.pl: support attribute "nonewline" in part verify/upload.
 
@@ -6551,7 +6551,7 @@ Patrick Monnerat (3 Sep 2017)
   the known caveats it always had.
   
   As a side effect, stdin size is not determined by the cli tool even if
-  possible and this results in a chunked transfer encoding. Test 173 is
+  possible and this results in a chunked transfer encoding. TestModel 173 is
   updated accordingly.
 
 - mime: fix some implicit curl_off_t --> size_t conversion warnings.

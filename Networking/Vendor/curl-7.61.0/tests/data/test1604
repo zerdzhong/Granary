@@ -15,7 +15,7 @@ none
 unittest
 </features>
  <name>
-Test WIN32/MSDOS filename sanitization
+TestModel WIN32/MSDOS filename sanitization
  </name>
 <tool>
 unit1604

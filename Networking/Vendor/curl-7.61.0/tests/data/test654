@@ -86,7 +86,7 @@ Expect: 100-continue
 Content-Disposition: form-data; name="greeting"
 Content-Type: application/X-Greeting
 Content-Transfer-Encoding: base64
-X-Test-Number: 654
+X-TestModel-Number: 654
 
 aGVsbG8=
 ------------------------------

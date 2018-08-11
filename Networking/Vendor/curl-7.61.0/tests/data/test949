@@ -39,7 +39,7 @@ smtp://%HOSTIP:%SMTPPORT/949 --mail-rcpt recipient@example.com --mail-from sende
 # The protocol section doesn't support ways of specifying the raw data in the
 # base64 encoded message so we must assert this
 <precheck>
-perl -e "print 'Test requires default test server host and port' if ( '%HOSTIP' ne '127.0.0.1' || '%SMTPPORT' ne '9005' );"
+perl -e "print 'TestModel requires default test server host and port' if ( '%HOSTIP' ne '127.0.0.1' || '%SMTPPORT' ne '9005' );"
 </precheck>
 </client>
 

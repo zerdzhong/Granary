@@ -1196,7 +1196,7 @@ ECHO=$ECHO$ECHO$ECHO$ECHO$ECHO
 ECHO=$ECHO$ECHO$ECHO$ECHO$ECHO$ECHO
 
 AC_MSG_CHECKING([how to print strings])
-# Test print first, because it will be a builtin if present.
+# TestModel print first, because it will be a builtin if present.
 if test "X`( print -r -- -n ) 2>/dev/null`" = X-n && \
    test "X`print -r -- $ECHO 2>/dev/null`" = "X$ECHO"; then
   ECHO='print -r --'
@@ -5394,7 +5394,7 @@ _LT_EOF
 	fi
 	aix_use_runtimelinking=no
 
-	# Test if we are trying to use run time linking or normal
+	# TestModel if we are trying to use run time linking or normal
 	# AIX style linking. If -brtl is somewhere in LDFLAGS, we
 	# have runtime linking enabled, and use it for executables.
 	# For shared libraries, we enable/disable runtime linking
@@ -6091,7 +6091,7 @@ x|xyes)
       # FIXME: we may have to deal with multi-command sequences.
       ;;
     '$CC '*)
-      # Test whether the compiler implicitly links with -lc since on some
+      # TestModel whether the compiler implicitly links with -lc since on some
       # systems, -lgcc has to come before -lc. If gcc already passes -lc
       # to ld, don't add -lc before -lgcc.
       AC_CACHE_CHECK([whether -lc should be explicitly linked in],
@@ -6464,7 +6464,7 @@ if test yes != "$_lt_caught_CXX_error"; then
         else
           aix_use_runtimelinking=no
 
-          # Test if we are trying to use run time linking or normal
+          # TestModel if we are trying to use run time linking or normal
           # AIX style linking. If -brtl is somewhere in LDFLAGS, we
           # have runtime linking enabled, and use it for executables.
           # For shared libraries, we enable/disable runtime linking

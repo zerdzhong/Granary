@@ -49,7 +49,7 @@ http://%HOSTIP:%HTTPPORT/10280001 -L
 </command>
 # The data section doesn't do variable substitution, so we must assert this
 <precheck>
-perl -e "print 'Test requires default test server host and port' if ( '%HOSTIP' ne '127.0.0.1' || '%FTPPORT' ne '8992' );"
+perl -e "print 'TestModel requires default test server host and port' if ( '%HOSTIP' ne '127.0.0.1' || '%FTPPORT' ne '8992' );"
 </precheck>
 </client>
 

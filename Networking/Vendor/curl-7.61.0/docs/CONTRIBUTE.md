@@ -111,7 +111,7 @@ The documentation is always made in man pages (nroff formatted) or plain
 ASCII files. All HTML files on the web site and in the release archives are
 generated from the nroff/ASCII versions.
 
-### Test Cases
+### TestModel Cases
 
 Since the introduction of the test suite, we can quickly verify that the main
 features are working as they're supposed to. To maintain this situation and

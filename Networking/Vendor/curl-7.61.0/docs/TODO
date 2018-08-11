@@ -162,7 +162,7 @@
  19.1 roffit
  19.2 Enable PIE and RELRO by default
 
- 20. Test suite
+ 20. TestModel suite
  20.1 SSL tunnel
  20.2 nicer lacking perl message
  20.3 more protocols supported
@@ -1105,7 +1105,7 @@ that doesn't exist on the server, just like --ftp-create-dirs.
  curl.
 
 
-20. Test suite
+20. TestModel suite
 
 20.1 SSL tunnel
 

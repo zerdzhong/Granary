@@ -38,7 +38,7 @@ simple HTTPS GET with base64-sha256 public key pinning
 </command>
 # Ensure that we're running on localhost because we're checking the host name
 <precheck>
-perl -e "print 'Test requires default test server host' if ( '%HOSTIP' ne '127.0.0.1' );"
+perl -e "print 'TestModel requires default test server host' if ( '%HOSTIP' ne '127.0.0.1' );"
 </precheck>
 </client>
 

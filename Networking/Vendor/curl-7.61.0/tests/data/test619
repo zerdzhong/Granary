@@ -18,7 +18,7 @@ SCP retrieval of two files
 --key curl_client_key --pubkey curl_client_key.pub -u %USER: scp://%HOSTIP:%SSHPORT%PWD/log/file619.txt scp://%HOSTIP:%SSHPORT%PWD/log/file619.txt --insecure
 </command>
 <file name="log/file619.txt">
-Test data
+TestModel data
 for ssh test
 </file>
 </client>
@@ -30,9 +30,9 @@ for ssh test
 disable
 </valgrind>
 <stdout>
-Test data
+TestModel data
 for ssh test
-Test data
+TestModel data
 for ssh test
 </stdout>
 </verify>

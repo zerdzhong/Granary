@@ -41,7 +41,7 @@ rtsp://%HOSTIP:%RTSPPORT/567
 OPTIONS rtsp://%HOSTIP:%RTSPPORT/567 RTSP/1.0
 CSeq: 1
 User-Agent: test567
-Test-Number: 567
+TestModel-Number: 567
 
 </protocol>
 </verify>

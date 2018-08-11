@@ -2951,7 +2951,7 @@ sub checksystem {
             }
         }
         #
-        # Test harness currently uses a non-stunnel server in order to
+        # TestModel harness currently uses a non-stunnel server in order to
         # run HTTP TLS-SRP tests required when curl is built with https
         # protocol support and TLS-SRP feature enabled. For convenience
         # 'httptls' may be included in the test harness protocols array
@@ -4141,7 +4141,7 @@ sub singletest {
         }
     }
 
-    # Test harness ssh server does not have this synchronization mechanism,
+    # TestModel harness ssh server does not have this synchronization mechanism,
     # this implies that some ssh server based tests might need a small delay
     # once that the client command has run to avoid false test failures.
     #
@@ -5145,7 +5145,7 @@ sub serverfortest {
     my @what = getpart("client", "server");
 
     if(!$what[0]) {
-        warn "Test case $testnum has no server(s) specified";
+        warn "TestModel case $testnum has no server(s) specified";
         return "no server specified";
     }
 

@@ -24,7 +24,7 @@ SCP upload
 --key curl_client_key --pubkey curl_client_key.pub -u %USER: -T log/file603.txt scp://%HOSTIP:%SSHPORT%PWD/log/upload.603 --insecure
 </command>
 <file name="log/file603.txt">
-Test data
+TestModel data
 for ssh upload test
 </file>
 </client>
@@ -33,7 +33,7 @@ for ssh upload test
 # Verify data after the test has been "shot"
 <verify>
 <upload>
-Test data
+TestModel data
 for ssh upload test
 </upload>
 <valgrind>

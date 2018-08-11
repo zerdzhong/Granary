@@ -18,7 +18,7 @@
 #   and substituted, and corresponds to the value of the
 #   --enable-code-coverage option, which defaults to being disabled.
 #
-#   Test also for gcov program and create GCOV variable that could be
+#   TestModel also for gcov program and create GCOV variable that could be
 #   substituted.
 #
 #   Note that all optimization flags in CFLAGS must be disabled when code

@@ -63,7 +63,7 @@ HTTP Location: redirect to HTTPS URL
 </command>
 # The data section doesn't do variable substitution, so we must assert this
 <precheck>
-perl -e "print 'Test requires default test server host and port' if ( '%HOSTIP' ne '127.0.0.1' || '%HTTPSPORT' ne '8991' );"
+perl -e "print 'TestModel requires default test server host and port' if ( '%HOSTIP' ne '127.0.0.1' || '%HTTPSPORT' ne '8991' );"
 </precheck>
 </client>
 

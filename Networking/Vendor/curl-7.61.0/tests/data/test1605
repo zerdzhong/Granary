@@ -15,7 +15,7 @@ none
 unittest
 </features>
  <name>
-Test negative data lengths as input to libcurl functions
+TestModel negative data lengths as input to libcurl functions
  </name>
 <tool>
 unit1605

@@ -4,23 +4,23 @@
                             | (__| |_| |  _ <| |___
                              \___|\___/|_| \_\_____|
 
-The curl Test Suite
+The curl TestModel Suite
 
  1. Running
   1.1 Requires to run
   1.2 Port numbers used by test servers
-  1.3 Test servers
+  1.3 TestModel servers
   1.4 Run
   1.5 Shell startup scripts
   1.6 Memory test
   1.7 Debug
   1.8 Logs
-  1.9 Test input files
+  1.9 TestModel input files
   1.10 Code coverage
   1.11 Remote testing
 
  2. Numbering
-  2.1 Test case numbering
+  2.1 TestModel case numbering
 
  3. Write tests
   3.1 test data
@@ -79,7 +79,7 @@ The curl Test Suite
   - TCP/9018 for SMBS server (reserved)
   - TCP/9019 for TELNET server with negotiation support
 
- 1.3 Test servers
+ 1.3 TestModel servers
 
   The test suite runs simple FTP, POP3, IMAP, SMTP, HTTP and TFTP stand-alone
   servers on the ports listed above to which it makes requests. For SSL tests,
@@ -179,7 +179,7 @@ The curl Test Suite
   runtests.pl script). Use runtests.pl -k to force it to keep the temporary
   files after the test run since successful runs will clean it up otherwise.
 
- 1.9 Test input files
+ 1.9 TestModel input files
 
   All test cases are put in the data/ subdirectory. Each test is stored in the
   file named according to the test number.
@@ -214,7 +214,7 @@ The curl Test Suite
 
 2. Numbering
 
- 2.1 Test case numbering
+ 2.1 TestModel case numbering
 
      1   -  99   HTTP
      100 - 199   FTP

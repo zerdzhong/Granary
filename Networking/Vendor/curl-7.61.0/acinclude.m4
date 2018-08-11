@@ -999,7 +999,7 @@ AC_DEFUN([TYPE_SOCKADDR_STORAGE],
 
 dnl CURL_CHECK_FUNC_RECV
 dnl -------------------------------------------------
-dnl Test if the socket recv() function is available,
+dnl TestModel if the socket recv() function is available,
 dnl and check its return type and the types of its
 dnl arguments. If the function succeeds HAVE_RECV
 dnl will be defined, defining the types of the arguments
@@ -1135,7 +1135,7 @@ __attribute__((overloadable))
 
 dnl CURL_CHECK_FUNC_SEND
 dnl -------------------------------------------------
-dnl Test if the socket send() function is available,
+dnl TestModel if the socket send() function is available,
 dnl and check its return type and the types of its
 dnl arguments. If the function succeeds HAVE_SEND
 dnl will be defined, defining the types of the arguments
@@ -1937,7 +1937,7 @@ AC_DEFUN([CURL_CONFIGURE_PULL_SYS_POLL], [
 
 dnl CURL_CHECK_FUNC_SELECT
 dnl -------------------------------------------------
-dnl Test if the socket select() function is available,
+dnl TestModel if the socket select() function is available,
 dnl and check its return type and the types of its
 dnl arguments. If the function succeeds HAVE_SELECT
 dnl will be defined, defining the types of the

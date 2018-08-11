@@ -75,7 +75,7 @@ lib571
 </tool>
 
 <name>
-RTSP RTP Interleaving Test
+RTSP RTP Interleaving TestModel
 </name>
 <command>
 rtsp://%HOSTIP:%RTSPPORT/571 log/protofile571.txt

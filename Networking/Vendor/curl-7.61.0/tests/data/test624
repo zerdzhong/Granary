@@ -28,7 +28,7 @@ SFTP put with --ftp-create-dirs
 perl %SRCDIR/libtest/test610.pl move %PWD/log/test624.dir/upload.624 %PWD/log/upload.624 rmdir %PWD/log/test624.dir
 </postcheck>
 <file name="log/file624.txt">
-Test data
+TestModel data
 for ssh upload test
 </file>
 </client>
@@ -37,7 +37,7 @@ for ssh upload test
 # Verify data after the test has been "shot"
 <verify>
 <upload>
-Test data
+TestModel data
 for ssh upload test
 </upload>
 <valgrind>

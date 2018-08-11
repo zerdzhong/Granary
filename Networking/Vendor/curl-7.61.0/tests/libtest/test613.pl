@@ -28,7 +28,7 @@ if ($ARGV[0] eq "prepare")
 
     open(FILE, ">plainfile.txt") || errout "$!";
     binmode FILE;
-    print FILE "Test file to support curl test suite\n";
+    print FILE "TestModel file to support curl test suite\n";
     close(FILE);
     # The mtime is specifically chosen to be an even number so that it can be
     # represented exactly on a FAT filesystem.

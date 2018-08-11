@@ -26,7 +26,7 @@ FTP resume upload but denied access to remote file
 ftp://%HOSTIP:%FTPPORT/236 -T log/file236.txt -C -
 </command>
 <file name="log/file236.txt">
-Test data
+TestModel data
 </file>
 </client>
 

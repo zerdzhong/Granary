@@ -10,7 +10,7 @@ post-quote
 # Server-side
 <reply>
 <data>
-Test file for rename test
+TestModel file for rename test
 </data>
 </reply>
 
@@ -32,7 +32,7 @@ SFTP post-quote rename
 perl %SRCDIR/libtest/test610.pl gone %PWD/log/file608.txt move %PWD/log/file608-renamed.txt %PWD/log/file608.txt
 </postcheck>
 <file name="log/file608.txt">
-Test file for rename test
+TestModel file for rename test
 </file>
 </client>
 
@@ -40,7 +40,7 @@ Test file for rename test
 # Verify data after the test has been "shot"
 <verify>
 <file name="log/file608.txt">
-Test file for rename test
+TestModel file for rename test
 </file>
 <valgrind>
 disable

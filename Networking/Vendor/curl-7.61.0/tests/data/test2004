@@ -14,7 +14,7 @@ multiprotocol
 # Server-side
 <reply>
 <data nocheck="yes">
-Test data file
+TestModel data file
 for tftp test
 </data>
 </reply>
@@ -56,7 +56,7 @@ timeout: 6
 filename: /2004
 </protocol>
 <stdout>
-Test data file
+TestModel data file
 for tftp test
 This is test data
 for several protocols
@@ -68,7 +68,7 @@ This is test data
 for several protocols
 This is test data
 for several protocols
-Test data file
+TestModel data file
 for tftp test
 </stdout>
 <valgrind>

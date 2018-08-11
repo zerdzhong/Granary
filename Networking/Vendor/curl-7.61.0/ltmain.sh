@@ -9723,7 +9723,7 @@ EOF
       old_library=
       dlname=
 
-      # Test again, we may have decided not to build it any more
+      # TestModel again, we may have decided not to build it any more
       if test yes = "$build_libtool_libs"; then
 	# Remove $wl instances when linking with ld.
 	# FIXME: should test the right _cmds variable.

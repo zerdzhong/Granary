@@ -49,7 +49,7 @@ Set-Cookie: partialip=nono; domain=.0.0.1;
 
 </file>
 <precheck>
-perl -e 'if ("%HOSTIP" !~ /\.0\.0\.1$/) {print "Test only works for HOSTIPs ending with .0.0.1"; exit(1)}'
+perl -e 'if ("%HOSTIP" !~ /\.0\.0\.1$/) {print "TestModel only works for HOSTIPs ending with .0.0.1"; exit(1)}'
 </precheck>
 </client>
 

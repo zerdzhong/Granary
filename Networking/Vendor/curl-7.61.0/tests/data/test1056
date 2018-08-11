@@ -57,7 +57,7 @@ http://%HOSTIP:%HTTPPORT/we/are/all/twits/1056 -L
 </command>
 # The data section doesn't do variable substitution, so we must assert this
 <precheck>
-perl -e "print 'Test requires default test server host and port' if ( '%HOST6IP' ne '[::1]' || '%HTTP6PORT' ne '8994' );"
+perl -e "print 'TestModel requires default test server host and port' if ( '%HOST6IP' ne '[::1]' || '%HTTP6PORT' ne '8994' );"
 </precheck>
 </client>
 

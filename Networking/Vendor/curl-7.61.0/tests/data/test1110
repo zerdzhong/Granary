@@ -1,5 +1,5 @@
 <testcase>
-# Test that the fragment is not send as part of the path
+# TestModel that the fragment is not send as part of the path
 # when it contains a query.
 <info>
 <keywords>

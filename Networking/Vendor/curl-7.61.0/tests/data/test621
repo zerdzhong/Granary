@@ -19,7 +19,7 @@ SCP retrieval of missing file followed by good file
 --key curl_client_key --pubkey curl_client_key.pub -u %USER: scp://%HOSTIP:%SSHPORT%PWD/log/not-a-valid-file-moooo scp://%HOSTIP:%SSHPORT%PWD/log/file621.txt --insecure
 </command>
 <file name="log/file621.txt">
-Test data
+TestModel data
 for ssh test
 </file>
 </client>
@@ -31,7 +31,7 @@ for ssh test
 disable
 </valgrind>
 <stdout>
-Test data
+TestModel data
 for ssh test
 </stdout>
 </verify>

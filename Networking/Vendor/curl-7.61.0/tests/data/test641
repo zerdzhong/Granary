@@ -26,7 +26,7 @@ SCP --head retrieval
 --key curl_client_key --pubkey curl_client_key.pub -u %USER: scp://%HOSTIP:%SSHPORT%PWD/log/file641.txt --insecure --head
 </command>
 <file name="log/file641.txt">
-Test data
+TestModel data
 for ssh test
 </file>
 </client>

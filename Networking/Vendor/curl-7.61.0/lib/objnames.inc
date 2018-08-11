@@ -62,7 +62,7 @@
 #
 # Resulting object name may be shorter than 10 characters.
 #
-# Test case 1221 does unit testng of this function and also verifies
+# TestModel case 1221 does unit testng of this function and also verifies
 # that it is possible to generate distinct short object names for all
 # curl and libcurl *.c source file names.
 #

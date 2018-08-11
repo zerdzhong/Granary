@@ -28,7 +28,7 @@ curl internals
  - [AP/ABI](#abi)
  - [Client](#client)
  - [Memory Debugging](#memorydebug)
- - [Test Suite](#test)
+ - [TestModel Suite](#test)
  - [Asynchronous name resolves](#asyncdns)
    - [c-ares](#cares)
  - [`curl_off_t`](#curl_off_t)
@@ -532,7 +532,7 @@ Memory Debugging
  enabled, unless some restriction prevents memory tracking from being used.
 
 <a name="test"></a>
-Test Suite
+TestModel Suite
 ==========
 
  The test suite is placed in its own subdirectory directly off the root in the
