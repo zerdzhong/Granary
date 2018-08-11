@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.7)
 
 project(libNetworking)
 
-add_library(libNetworking ./Source/http_connection.cpp Source/base_connection.cpp Source/base_connection.hpp)
+add_library(libNetworking ./Source/http_connection.cpp Source/base_connection.cpp Source/base_connection.hpp Source/http_read_connection.cpp Source/http_read_connection.hpp)
 
 include_directories(../MultiThread)
 target_link_libraries(libNetworking libMultiThread)
