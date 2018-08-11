@@ -29,10 +29,10 @@
 //
 // Authors: wan@google.com (Zhanyong Wan), eefacm@gmail.com (Sean Mcafee)
 //
-// The Google C++ Testing Framework (Google Test)
+// The Google C++ Testing Framework (Google TestModel)
 //
 // This header file declares functions and macros used internally by
-// Google Test.  They are subject to change without notice.
+// Google TestModel.  They are subject to change without notice.
 
 #ifndef GTEST_INCLUDE_GTEST_INTERNAL_GTEST_INTERNAL_H_
 #define GTEST_INCLUDE_GTEST_INTERNAL_GTEST_INTERNAL_H_
@@ -133,13 +133,13 @@ char (&IsNullLiteralHelper(...))[2];  // NOLINT
     (sizeof(::testing::internal::IsNullLiteralHelper(x)) == 1)
 #endif  // GTEST_ELLIPSIS_NEEDS_POD_
 
-// Appends the user-supplied message to the Google-Test-generated message.
+// Appends the user-supplied message to the Google-TestModel-generated message.
 GTEST_API_ std::string AppendUserMessage(
     const std::string& gtest_msg, const Message& user_msg);
 
 #if GTEST_HAS_EXCEPTIONS
 
-// This exception is thrown by (and only by) a failed Google Test
+// This exception is thrown by (and only by) a failed Google TestModel
 // assertion when GTEST_FLAG(throw_on_failure) is true (if exceptions
 // are enabled).  We derive it from std::runtime_error, which is for
 // errors presumably detectable only at run time.  Since
@@ -156,7 +156,7 @@ class GTEST_API_ GoogleTestFailureException : public ::std::runtime_error {
 class GTEST_API_ ScopedTrace {
  public:
   // The c'tor pushes the given source file location and message onto
-  // a trace stack maintained by Google Test.
+  // a trace stack maintained by Google TestModel.
   ScopedTrace(const char* file, int line, const Message& message);
 
   // The d'tor pops the info pushed by the c'tor.
@@ -452,15 +452,15 @@ TypeId GetTypeId() {
   return &(TypeIdHelper<T>::dummy_);
 }
 
-// Returns the type ID of ::testing::Test.  Always call this instead
-// of GetTypeId< ::testing::Test>() to get the type ID of
-// ::testing::Test, as the latter may give the wrong result due to a
-// suspected linker bug when compiling Google Test as a Mac OS X
+// Returns the type ID of ::testing::TestModel.  Always call this instead
+// of GetTypeId< ::testing::TestModel>() to get the type ID of
+// ::testing::TestModel, as the latter may give the wrong result due to a
+// suspected linker bug when compiling Google TestModel as a Mac OS X
 // framework.
 GTEST_API_ TypeId GetTestTypeId();
 
 // Defines the abstract factory interface that creates instances
-// of a Test object.
+// of a TestModel object.
 class TestFactoryBase {
  public:
   virtual ~TestFactoryBase() {}
@@ -508,7 +508,7 @@ struct CodeLocation {
   int line;
 };
 
-// Creates a new TestInfo object and registers it with Google Test;
+// Creates a new TestInfo object and registers it with Google TestModel;
 // returns the created object.
 //
 // Arguments:
@@ -555,7 +555,7 @@ class GTEST_API_ TypedTestCasePState {
   bool AddTestName(const char* file, int line, const char* case_name,
                    const char* test_name) {
     if (registered_) {
-      fprintf(stderr, "%s Test %s must be defined before "
+      fprintf(stderr, "%s TestModel %s must be defined before "
               "REGISTER_TYPED_TEST_CASE_P(%s, ...).\n",
               FormatFileLocation(file, line).c_str(), test_name, case_name);
       fflush(stderr);
@@ -613,7 +613,7 @@ void SplitString(const ::std::string& str, char delimiter,
                  ::std::vector< ::std::string>* dest);
 
 // TypeParameterizedTest<Fixture, TestSel, Types>::Register()
-// registers a list of type-parameterized tests with Google Test.  The
+// registers a list of type-parameterized tests with Google TestModel.  The
 // return value is insignificant - we just need to return something
 // such that we can call this function in a namespace scope.
 //
@@ -667,7 +667,7 @@ class TypeParameterizedTest<Fixture, TestSel, Types0> {
 
 // TypeParameterizedTestCase<Fixture, Tests, Types>::Register()
 // registers *all combinations* of 'Tests' and 'Types' with Google
-// Test.  The return value is insignificant - we just need to return
+// TestModel.  The return value is insignificant - we just need to return
 // something such that we can call this function in a namespace scope.
 template <GTEST_TEMPLATE_ Fixture, typename Tests, typename Types>
 class TypeParameterizedTestCase {
@@ -689,7 +689,7 @@ class TypeParameterizedTestCase {
 
     typedef typename Tests::Head Head;
 
-    // First, register the first test in 'Test' for each type in 'Types'.
+    // First, register the first test in 'TestModel' for each type in 'Types'.
     TypeParameterizedTest<Fixture, Head, Types>::Register(
         prefix, test_location, case_name, test_names, 0);
 

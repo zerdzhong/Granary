@@ -29,16 +29,16 @@
 //
 // Authors: wan@google.com (Zhanyong Wan)
 //
-// Low-level types and utilities for porting Google Test to various
+// Low-level types and utilities for porting Google TestModel to various
 // platforms.  All macros ending with _ and symbols defined in an
 // internal namespace are subject to change without notice.  Code
-// outside Google Test MUST NOT USE THEM DIRECTLY.  Macros that don't
-// end with _ are part of Google Test's public API and can be used by
-// code outside Google Test.
+// outside Google TestModel MUST NOT USE THEM DIRECTLY.  Macros that don't
+// end with _ are part of Google TestModel's public API and can be used by
+// code outside Google TestModel.
 //
-// This file is fundamental to Google Test.  All other Google Test source
+// This file is fundamental to Google TestModel.  All other Google TestModel source
 // files are expected to #include this.  Therefore, it cannot #include
-// any other Google Test header.
+// any other Google TestModel header.
 
 #ifndef GTEST_INCLUDE_GTEST_INTERNAL_GTEST_PORT_H_
 #define GTEST_INCLUDE_GTEST_INTERNAL_GTEST_PORT_H_
@@ -46,18 +46,18 @@
 // Environment-describing macros
 // -----------------------------
 //
-// Google Test can be used in many different environments.  Macros in
-// this section tell Google Test what kind of environment it is being
-// used in, such that Google Test can provide environment-specific
+// Google TestModel can be used in many different environments.  Macros in
+// this section tell Google TestModel what kind of environment it is being
+// used in, such that Google TestModel can provide environment-specific
 // features and implementations.
 //
-// Google Test tries to automatically detect the properties of its
+// Google TestModel tries to automatically detect the properties of its
 // environment, so users usually don't need to worry about these
 // macros.  However, the automatic detection is not perfect.
 // Sometimes it's necessary for a user to define some of the following
-// macros in the build script to override Google Test's decisions.
+// macros in the build script to override Google TestModel's decisions.
 //
-// If the user doesn't define a macro in the list, Google Test will
+// If the user doesn't define a macro in the list, Google TestModel will
 // provide a default definition.  After this header is #included, all
 // macros in this list will be defined to either 1 or 0.
 //
@@ -85,7 +85,7 @@
 //   GTEST_HAS_RTTI           - Define it to 1/0 to indicate that RTTI is/isn't
 //                              enabled.
 //   GTEST_HAS_STD_WSTRING    - Define it to 1/0 to indicate that
-//                              std::wstring does/doesn't work (Google Test can
+//                              std::wstring does/doesn't work (Google TestModel can
 //                              be used where std::wstring is unavailable).
 //   GTEST_HAS_TR1_TUPLE      - Define it to 1/0 to indicate tr1::tuple
 //                              is/isn't available.
@@ -97,26 +97,26 @@
 //                              platform supports I/O stream redirection using
 //                              dup() and dup2().
 //   GTEST_USE_OWN_TR1_TUPLE  - Define it to 1/0 to indicate whether Google
-//                              Test's own tr1 tuple implementation should be
+//                              TestModel's own tr1 tuple implementation should be
 //                              used.  Unused when the user sets
 //                              GTEST_HAS_TR1_TUPLE to 0.
-//   GTEST_LANG_CXX11         - Define it to 1/0 to indicate that Google Test
+//   GTEST_LANG_CXX11         - Define it to 1/0 to indicate that Google TestModel
 //                              is building in C++11/C++98 mode.
 //   GTEST_LINKED_AS_SHARED_LIBRARY
 //                            - Define to 1 when compiling tests that use
-//                              Google Test as a shared library (known as
+//                              Google TestModel as a shared library (known as
 //                              DLL on Windows).
 //   GTEST_CREATE_SHARED_LIBRARY
-//                            - Define to 1 when compiling Google Test itself
+//                            - Define to 1 when compiling Google TestModel itself
 //                              as a shared library.
 
 // Platform-indicating macros
 // --------------------------
 //
-// Macros indicating the platform on which Google Test is being used
+// Macros indicating the platform on which Google TestModel is being used
 // (a macro is defined to 1 if compiled on the given platform;
-// otherwise UNDEFINED -- it's never defined to 0.).  Google Test
-// defines these macros automatically.  Code outside Google Test MUST
+// otherwise UNDEFINED -- it's never defined to 0.).  Google TestModel
+// defines these macros automatically.  Code outside Google TestModel MUST
 // NOT define them.
 //
 //   GTEST_OS_AIX      - IBM AIX
@@ -141,7 +141,7 @@
 //   GTEST_OS_ZOS      - z/OS
 //
 // Among the platforms, Cygwin, Linux, Max OS X, and Windows have the
-// most stable support.  Since core members of the Google Test project
+// most stable support.  Since core members of the Google TestModel project
 // don't have access to other platforms, support for them may be less
 // stable.  If you notice any problems on your platform, please notify
 // googletestframework@googlegroups.com (patches for fixing them are
@@ -152,10 +152,10 @@
 // Feature-indicating macros
 // -------------------------
 //
-// Macros indicating which Google Test features are available (a macro
+// Macros indicating which Google TestModel features are available (a macro
 // is defined to 1 if the corresponding feature is supported;
-// otherwise UNDEFINED -- it's never defined to 0.).  Google Test
-// defines these macros automatically.  Code outside Google Test MUST
+// otherwise UNDEFINED -- it's never defined to 0.).  Google TestModel
+// defines these macros automatically.  Code outside Google TestModel MUST
 // NOT define them.
 //
 // These macros are public so that portable tests can be written.
@@ -172,7 +172,7 @@
 //   GTEST_HAS_PARAM_TEST   - value-parameterized tests
 //   GTEST_HAS_TYPED_TEST   - typed tests
 //   GTEST_HAS_TYPED_TEST_P - type-parameterized tests
-//   GTEST_IS_THREADSAFE    - Google Test is thread-safe.
+//   GTEST_IS_THREADSAFE    - Google TestModel is thread-safe.
 //   GTEST_USES_POSIX_RE    - enhanced POSIX regex is used. Do not confuse with
 //                            GTEST_HAS_POSIX_RE (see above) which users can
 //                            define themselves.
@@ -184,13 +184,13 @@
 // ------------------
 //
 //   GTEST_FLAG(flag_name)  - references the variable corresponding to
-//                            the given Google Test flag.
+//                            the given Google TestModel flag.
 
 // Internal utilities
 // ------------------
 //
-// The following macros and utilities are for Google Test's INTERNAL
-// use only.  Code outside Google Test MUST NOT USE THEM DIRECTLY.
+// The following macros and utilities are for Google TestModel's INTERNAL
+// use only.  Code outside Google TestModel MUST NOT USE THEM DIRECTLY.
 //
 // Macros for basic C++ coding:
 //   GTEST_AMBIGUOUS_ELSE_BLOCKER_ - for disabling a gcc warning.
@@ -413,7 +413,7 @@ struct _RTL_CRITICAL_SECTION;
 #  include <android/api-level.h>  // NOLINT
 #endif
 
-// Defines this to true iff Google Test can use POSIX regular expressions.
+// Defines this to true iff Google TestModel can use POSIX regular expressions.
 #ifndef GTEST_HAS_POSIX_RE
 # if GTEST_OS_LINUX_ANDROID
 // On Android, <regex.h> is only available starting with Gingerbread.
@@ -498,7 +498,7 @@ struct _RTL_CRITICAL_SECTION;
 # define GTEST_HAS_STD_STRING 1
 #elif !GTEST_HAS_STD_STRING
 // The user told us that ::std::string isn't available.
-# error "Google Test cannot be used where ::std::string isn't available."
+# error "Google TestModel cannot be used where ::std::string isn't available."
 #endif  // !defined(GTEST_HAS_STD_STRING)
 
 #ifndef GTEST_HAS_GLOBAL_STRING
@@ -593,12 +593,12 @@ struct _RTL_CRITICAL_SECTION;
 # include <typeinfo>
 #endif
 
-// Determines whether Google Test can use the pthreads library.
+// Determines whether Google TestModel can use the pthreads library.
 #ifndef GTEST_HAS_PTHREAD
 // The user didn't tell us explicitly, so we make reasonable assumptions about
 // which platforms have pthreads support.
 //
-// To disable threading support in Google Test, add -DGTEST_HAS_PTHREAD=0
+// To disable threading support in Google TestModel, add -DGTEST_HAS_PTHREAD=0
 // to your compiler flags.
 # define GTEST_HAS_PTHREAD (GTEST_OS_LINUX || GTEST_OS_MAC || GTEST_OS_HPUX \
     || GTEST_OS_QNX || GTEST_OS_FREEBSD || GTEST_OS_NACL)
@@ -622,8 +622,8 @@ struct _RTL_CRITICAL_SECTION;
 # endif  // _MSC_VER
 #endif  // !defined(GTEST_HAS_HASH_MAP_)
 
-// Determines whether Google Test can use tr1/tuple.  You can define
-// this macro to 0 to prevent Google Test from using tuple (any
+// Determines whether Google TestModel can use tr1/tuple.  You can define
+// this macro to 0 to prevent Google TestModel from using tuple (any
 // feature depending on tuple with be disabled in this mode).
 #ifndef GTEST_HAS_TR1_TUPLE
 # if GTEST_OS_LINUX_ANDROID && defined(_STLPORT_MAJOR)
@@ -635,7 +635,7 @@ struct _RTL_CRITICAL_SECTION;
 # endif
 #endif  // GTEST_HAS_TR1_TUPLE
 
-// Determines whether Google Test's own tr1 tuple implementation
+// Determines whether Google TestModel's own tr1 tuple implementation
 // should be used.
 #ifndef GTEST_USE_OWN_TR1_TUPLE
 // The user didn't tell us, so we need to figure it out.
@@ -783,7 +783,7 @@ using ::std::tuple_size;
 #endif  // GTEST_HAS_STREAM_REDIRECTION
 
 // Determines whether to support death tests.
-// Google Test does not support death tests for VC 7.1 and earlier as
+// Google TestModel does not support death tests for VC 7.1 and earlier as
 // abort() in a VC 7.1 application compiled as GUI in debug config
 // pops up a dialog window that cannot be suppressed programmatically.
 #if (GTEST_OS_LINUX || GTEST_OS_CYGWIN || GTEST_OS_SOLARIS || \
@@ -1002,7 +1002,7 @@ using GTEST_TUPLE_NAMESPACE_::tuple_element;
 
 namespace internal {
 
-// A secret type that Google Test users don't know about.  It has no
+// A secret type that Google TestModel users don't know about.  It has no
 // definition on purpose.  Therefore it's impossible to create a
 // Secret object, which is what we want.
 class Secret;
@@ -1110,7 +1110,7 @@ GTEST_API_ bool IsTrue(bool condition);
 // Defines scoped_ptr.
 
 // This implementation of scoped_ptr is PARTIAL - it only contains
-// enough stuff to satisfy Google Test's need.
+// enough stuff to satisfy Google TestModel's need.
 template <typename T>
 class scoped_ptr {
  public:
@@ -1205,7 +1205,7 @@ class GTEST_API_ RE {
  private:
   void Init(const char* regex);
 
-  // We use a const char* instead of an std::string, as Google Test used to be
+  // We use a const char* instead of an std::string, as Google TestModel used to be
   // used where std::string is not available.  TODO(wan@google.com): change to
   // std::string.
   const char* pattern_;
@@ -1443,7 +1443,7 @@ void SetInjectableArgvs(const ::std::vector<testing::internal::string>*
 #if GTEST_IS_THREADSAFE
 # if GTEST_HAS_PTHREAD
 // Sleeps for (roughly) n milliseconds.  This function is only for testing
-// Google Test's own constructs.  Don't use it in user tests, either
+// Google TestModel's own constructs.  Don't use it in user tests, either
 // directly or indirectly.
 inline void SleepMilliseconds(int n) {
   const timespec time = {
@@ -1463,7 +1463,7 @@ inline void SleepMilliseconds(int n) {
 // threads until notified.  Instances of this class must be created
 // and destroyed in the controller thread.
 //
-// This class is only for testing Google Test's own constructs. Do not
+// This class is only for testing Google TestModel's own constructs. Do not
 // use it in user tests, either directly or indirectly.
 class Notification {
  public:
@@ -1538,7 +1538,7 @@ class GTEST_API_ AutoHandle {
 // threads until notified.  Instances of this class must be created
 // and destroyed in the controller thread.
 //
-// This class is only for testing Google Test's own constructs. Do not
+// This class is only for testing Google TestModel's own constructs. Do not
 // use it in user tests, either directly or indirectly.
 class GTEST_API_ Notification {
  public:
@@ -1580,7 +1580,7 @@ extern "C" inline void* ThreadFuncWithCLinkage(void* thread) {
   return NULL;
 }
 
-// Helper class for testing Google Test's multi-threading constructs.
+// Helper class for testing Google TestModel's multi-threading constructs.
 // To use it, write:
 //
 //   void ThreadFunc(int param) { /* Do things with param */ }
@@ -1590,7 +1590,7 @@ extern "C" inline void* ThreadFuncWithCLinkage(void* thread) {
 //   ThreadWithParam<int> thread(&ThreadFunc, 5, &thread_can_start);
 //   thread_can_start.Notify();
 //
-// These classes are only for testing Google Test's own constructs. Do
+// These classes are only for testing Google TestModel's own constructs. Do
 // not use them in user tests, either directly or indirectly.
 template <typename T>
 class ThreadWithParam : public ThreadWithParamBase {
@@ -1782,7 +1782,7 @@ class GTEST_API_ ThreadWithParamBase {
   AutoHandle thread_;
 };
 
-// Helper class for testing Google Test's multi-threading constructs.
+// Helper class for testing Google TestModel's multi-threading constructs.
 template <typename T>
 class ThreadWithParam : public ThreadWithParamBase {
  public:
@@ -1838,10 +1838,10 @@ class ThreadWithParam : public ThreadWithParamBase {
 // destroying it. Otherwise, the per-thread objects managed for them by the
 // ThreadLocal instance are not guaranteed to be destroyed on all platforms.
 //
-// Google Test only uses global ThreadLocal objects.  That means they
+// Google TestModel only uses global ThreadLocal objects.  That means they
 // will die after main() has returned.  Therefore, no per-thread
-// object managed by Google Test will be leaked as long as all threads
-// using Google Test have exited when main() returns.
+// object managed by Google TestModel will be leaked as long as all threads
+// using Google TestModel have exited when main() returns.
 template <typename T>
 class ThreadLocal : public ThreadLocalBase {
  public:
@@ -2129,8 +2129,8 @@ class ThreadLocal {
 #else  // GTEST_IS_THREADSAFE
 
 // A dummy implementation of synchronization primitives (mutex, lock,
-// and thread-local variable).  Necessary for compiling Google Test where
-// mutex is not supported - using Google Test in multiple threads is not
+// and thread-local variable).  Necessary for compiling Google TestModel where
+// mutex is not supported - using Google TestModel in multiple threads is not
 // supported on such platforms.
 
 class Mutex {
@@ -2403,7 +2403,7 @@ GTEST_DISABLE_MSC_WARNINGS_POP_()
 
 #if GTEST_OS_WINDOWS_MOBILE
 // Windows CE has no C library. The abort() function is used in
-// several places in Google Test. This implementation provides a reasonable
+// several places in Google TestModel. This implementation provides a reasonable
 // imitation of standard behaviour.
 void Abort();
 #else
@@ -2451,10 +2451,10 @@ const BiggestInt kMaxBiggestInt =
 // Such functionality should belong to STL, but I cannot find it
 // there.
 //
-// Google Test uses this class in the implementation of floating-point
+// Google TestModel uses this class in the implementation of floating-point
 // comparison.
 //
-// For now it only handles UInt (unsigned int) as that's all Google Test
+// For now it only handles UInt (unsigned int) as that's all Google TestModel
 // needs.  Other types can be easily added in the future if need
 // arises.
 template <size_t size>
@@ -2543,7 +2543,7 @@ typedef TypeWithSize<8>::Int TimeInMillis;  // Represents time in milliseconds.
 bool ParseInt32(const Message& src_text, const char* str, Int32* value);
 
 // Parses a bool/Int32/string from the environment variable
-// corresponding to the given Google Test flag.
+// corresponding to the given Google TestModel flag.
 bool BoolFromGTestEnv(const char* flag, bool default_val);
 GTEST_API_ Int32 Int32FromGTestEnv(const char* flag, Int32 default_val);
 std::string StringFromGTestEnv(const char* flag, const char* default_val);

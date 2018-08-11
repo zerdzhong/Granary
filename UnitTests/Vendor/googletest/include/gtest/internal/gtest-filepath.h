@@ -29,10 +29,10 @@
 //
 // Author: keith.ray@gmail.com (Keith Ray)
 //
-// Google Test filepath utilities
+// Google TestModel filepath utilities
 //
 // This header file declares classes and functions used internally by
-// Google Test.  They are subject to change without notice.
+// Google TestModel.  They are subject to change without notice.
 //
 // This file is #included in <gtest/internal/gtest-internal.h>.
 // Do not include this header file separately!

@@ -71,7 +71,7 @@ const char* TypedTestCasePState::VerifyRegisteredTestNames(
        name_it != name_vec.end(); ++name_it) {
     const std::string& name = *name_it;
     if (tests.count(name) != 0) {
-      errors << "Test " << name << " is listed more than once.\n";
+      errors << "TestModel " << name << " is listed more than once.\n";
       continue;
     }
 

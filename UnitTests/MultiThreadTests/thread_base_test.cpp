@@ -9,17 +9,25 @@
 
 using namespace std;
 
-class Test {
+class TestModel {
 public:
-    Test():count_(0) {
-
+    TestModel():count_(0) {
+        data = (char *)malloc(4);
+        memset(data,0, sizeof(int));
     }
 
     void AddCount() {
         count_ ++;
+        memset(data, count_, sizeof(count_));
+    }
+
+    int ReadData() {
+        return (int)data[0];
     }
 
     int count_;
+private:
+    char *data;
 };
 
 
@@ -31,14 +39,13 @@ public:
     void run() override;
 
 private:
-    int count_;
-    Test *test_;
+    TestModel *test_;
     pthread_mutex_t mutex_;
 };
 
 ThreadTest::ThreadTest() {
     mutex_ = PTHREAD_MUTEX_INITIALIZER;
-    test_ = new Test();
+    test_ = new TestModel();
 }
 
 void ThreadTest::run()
@@ -55,10 +62,19 @@ void ThreadTest::run()
 }
 
 ThreadTest::~ThreadTest() {
+
+    if (isAlive()) {
+        setIsAlive(false);
+        pthread_join(getTid(), NULL);
+    }
+
     cout << "Release ThreadTest, " << this << endl;
+    delete test_;
+    test_ = nullptr;
 }
 
 TEST(ThreadBaseTest, start) {
+
     printf("\n");
     ThreadBase *test1 = new ThreadTest();
     ThreadBase *test2 = new ThreadTest();
@@ -69,9 +85,6 @@ TEST(ThreadBaseTest, start) {
     test3->Start();
 
     sleep(1);
-
-    test1->Quit();
-    test2->Quit();
 
     delete test1;
     delete test2;

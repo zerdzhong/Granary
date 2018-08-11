@@ -19,7 +19,7 @@ public:
     virtual void run() = 0;
     virtual ~ThreadBase();
 
-private:
+protected:
     static void* start_func(void* arg);
     void setIsAlive(bool is_alive);
 

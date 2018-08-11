@@ -44,7 +44,7 @@
 //   FRIEND_TEST(MyClassTest, MyMethod);
 // };
 //
-// class MyClassTest : public testing::Test {
+// class MyClassTest : public testing::TestModel {
 //   // ...
 // };
 //

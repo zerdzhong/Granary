@@ -31,18 +31,18 @@
 //
 // Author: wan@google.com (Zhanyong Wan)
 //
-// This file contains purely Google Test's internal implementation.  Please
+// This file contains purely Google TestModel's internal implementation.  Please
 // DO NOT #INCLUDE IT IN A USER PROGRAM.
 
 #ifndef GTEST_SRC_GTEST_INTERNAL_INL_H_
 #define GTEST_SRC_GTEST_INTERNAL_INL_H_
 
 // GTEST_IMPLEMENTATION_ is defined to 1 iff the current translation unit is
-// part of Google Test's implementation; otherwise it's undefined.
+// part of Google TestModel's implementation; otherwise it's undefined.
 #if !GTEST_IMPLEMENTATION_
 // If this file is included from the user's code, just say no.
-# error "gtest-internal-inl.h is part of Google Test's internal implementation."
-# error "It must not be included except by Google Test itself."
+# error "gtest-internal-inl.h is part of Google TestModel's internal implementation."
+# error "It must not be included except by Google TestModel itself."
 #endif  // GTEST_IMPLEMENTATION_
 
 #ifndef _WIN32_WCE
@@ -75,17 +75,17 @@ namespace testing {
 // Declares the flags.
 //
 // We don't want the users to modify this flag in the code, but want
-// Google Test's own unit tests to be able to access it. Therefore we
+// Google TestModel's own unit tests to be able to access it. Therefore we
 // declare it here as opposed to in gtest.h.
 GTEST_DECLARE_bool_(death_test_use_fork);
 
 namespace internal {
 
-// The value of GetTestTypeId() as seen from within the Google Test
+// The value of GetTestTypeId() as seen from within the Google TestModel
 // library.  This is solely for testing GetTestTypeId().
 GTEST_API_ extern const TypeId kTestTypeIdInGoogleTest;
 
-// Names of the flags (needed for parsing Google Test flags).
+// Names of the flags (needed for parsing Google TestModel flags).
 const char kAlsoRunDisabledTestsFlag[] = "also_run_disabled_tests";
 const char kBreakOnFailureFlag[] = "break_on_failure";
 const char kCatchExceptionsFlag[] = "catch_exceptions";
@@ -112,7 +112,7 @@ GTEST_API_ extern bool g_help_flag;
 // Returns the current time in milliseconds.
 GTEST_API_ TimeInMillis GetTimeInMillis();
 
-// Returns true iff Google Test should use colors in the output.
+// Returns true iff Google TestModel should use colors in the output.
 GTEST_API_ bool ShouldUseColor(bool stdout_is_tty);
 
 // Formats the given time in milliseconds as seconds.
@@ -157,7 +157,7 @@ inline int GetNextRandomSeed(int seed) {
   return (next_seed > kMaxRandomSeed) ? 1 : next_seed;
 }
 
-// This class saves the values of all Google Test flags in its c'tor, and
+// This class saves the values of all Google TestModel flags in its c'tor, and
 // restores them in its d'tor.
 class GTestFlagSaver {
  public:
@@ -399,7 +399,7 @@ class GTEST_API_ UnitTestOptions {
 #if GTEST_OS_WINDOWS
   // Function for supporting the gtest_catch_exception flag.
 
-  // Returns EXCEPTION_EXECUTE_HANDLER if Google Test should handle the
+  // Returns EXCEPTION_EXECUTE_HANDLER if Google TestModel should handle the
   // given SEH exception, or EXCEPTION_CONTINUE_SEARCH otherwise.
   // This function is useful as an __except condition.
   static int GTestShouldProcessSEH(DWORD exception_code);
@@ -428,13 +428,13 @@ class OsStackTraceGetterInterface {
   //                against max_depth.
   virtual string CurrentStackTrace(int max_depth, int skip_count) = 0;
 
-  // UponLeavingGTest() should be called immediately before Google Test calls
+  // UponLeavingGTest() should be called immediately before Google TestModel calls
   // user code. It saves some information about the current stack that
-  // CurrentStackTrace() will use to find and hide Google Test stack frames.
+  // CurrentStackTrace() will use to find and hide Google TestModel stack frames.
   virtual void UponLeavingGTest() = 0;
 
   // This string is inserted in place of stack frames that are part of
-  // Google Test's implementation.
+  // Google TestModel's implementation.
   static const char* const kElidedFramesMarker;
 
  private:
@@ -453,7 +453,7 @@ class OsStackTraceGetter : public OsStackTraceGetterInterface {
   GTEST_DISALLOW_COPY_AND_ASSIGN_(OsStackTraceGetter);
 };
 
-// Information about a Google Test trace point.
+// Information about a Google TestModel trace point.
 struct TraceInfo {
   const char* file;
   int line;
@@ -738,7 +738,7 @@ class GTEST_API_ UnitTestImpl {
   // before/after the tests are run.
   std::vector<Environment*>& environments() { return environments_; }
 
-  // Getters for the per-thread Google Test trace stack.
+  // Getters for the per-thread Google TestModel trace stack.
   std::vector<TraceInfo>& gtest_trace_stack() {
     return *(gtest_trace_stack_.pointer());
   }
@@ -858,29 +858,29 @@ class GTEST_API_ UnitTestImpl {
   int last_death_test_case_;
 
   // This points to the TestCase for the currently running test.  It
-  // changes as Google Test goes through one test case after another.
-  // When no test is running, this is set to NULL and Google Test
+  // changes as Google TestModel goes through one test case after another.
+  // When no test is running, this is set to NULL and Google TestModel
   // stores assertion results in ad_hoc_test_result_.  Initially NULL.
   TestCase* current_test_case_;
 
   // This points to the TestInfo for the currently running test.  It
-  // changes as Google Test goes through one test after another.  When
-  // no test is running, this is set to NULL and Google Test stores
+  // changes as Google TestModel goes through one test after another.  When
+  // no test is running, this is set to NULL and Google TestModel stores
   // assertion results in ad_hoc_test_result_.  Initially NULL.
   TestInfo* current_test_info_;
 
   // Normally, a user only writes assertions inside a TEST or TEST_F,
   // or inside a function called by a TEST or TEST_F.  Since Google
-  // Test keeps track of which test is current running, it can
+  // TestModel keeps track of which test is current running, it can
   // associate such an assertion with the test it belongs to.
   //
   // If an assertion is encountered when no TEST or TEST_F is running,
-  // Google Test attributes the assertion result to an imaginary "ad hoc"
+  // Google TestModel attributes the assertion result to an imaginary "ad hoc"
   // test, and records the result in ad_hoc_test_result_.
   TestResult ad_hoc_test_result_;
 
   // The list of event listeners that can be used to track events inside
-  // Google Test.
+  // Google TestModel.
   TestEventListeners listeners_;
 
   // The OS stack trace getter.  Will be deleted when the UnitTest
@@ -948,8 +948,8 @@ GTEST_API_ bool MatchRegexAnywhere(const char* regex, const char* str);
 
 #endif  // GTEST_USES_SIMPLE_RE
 
-// Parses the command line for Google Test flags, without initializing
-// other parts of Google Test.
+// Parses the command line for Google TestModel flags, without initializing
+// other parts of Google TestModel.
 GTEST_API_ void ParseGoogleTestFlagsOnly(int* argc, char** argv);
 GTEST_API_ void ParseGoogleTestFlagsOnly(int* argc, wchar_t** argv);
 
@@ -1006,10 +1006,10 @@ bool ParseNaturalNumber(const ::std::string& str, Integer* number) {
 #endif  // GTEST_HAS_DEATH_TEST
 
 // TestResult contains some private methods that should be hidden from
-// Google Test user but are required for testing. This class allow our tests
+// Google TestModel user but are required for testing. This class allow our tests
 // to access them.
 //
-// This class is supplied only for the purpose of testing Google Test's own
+// This class is supplied only for the purpose of testing Google TestModel's own
 // constructs. Do not use it in user tests, either directly or indirectly.
 class TestResultAccessor {
  public:
@@ -1111,7 +1111,7 @@ class GTEST_API_ StreamingListener : public EmptyTestEventListener {
   }
 
   void OnTestProgramEnd(const UnitTest& unit_test) {
-    // Note that Google Test current only report elapsed time for each
+    // Note that Google TestModel current only report elapsed time for each
     // test iteration, not for the entire test program.
     SendLn("event=TestProgramEnd&passed=" + FormatBool(unit_test.Passed()));
 

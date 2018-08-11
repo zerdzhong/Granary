@@ -4,7 +4,7 @@ If you cannot find the answer to your question here, and you have read
 [Primer](V1_7_Primer.md) and [AdvancedGuide](V1_7_AdvancedGuide.md), send it to
 googletestframework@googlegroups.com.
 
-## Why should I use Google Test instead of my favorite C++ testing framework? ##
+## Why should I use Google TestModel instead of my favorite C++ testing framework? ##
 
 First, let us say clearly that we don't want to get into the debate of
 which C++ testing framework is **the best**.  There exist many fine
@@ -13,40 +13,40 @@ the developers and users of them.  We don't think there is (or will
 be) a single best framework - you have to pick the right tool for the
 particular task you are tackling.
 
-We created Google Test because we couldn't find the right combination
+We created Google TestModel because we couldn't find the right combination
 of features and conveniences in an existing framework to satisfy _our_
 needs.  The following is a list of things that _we_ like about Google
-Test.  We don't claim them to be unique to Google Test - rather, the
-combination of them makes Google Test the choice for us.  We hope this
+TestModel.  We don't claim them to be unique to Google TestModel - rather, the
+combination of them makes Google TestModel the choice for us.  We hope this
 list can help you decide whether it is for you too.
 
-  * Google Test is designed to be portable: it doesn't require exceptions or RTTI; it works around various bugs in various compilers and environments; etc.  As a result, it works on Linux, Mac OS X, Windows and several embedded operating systems.
+  * Google TestModel is designed to be portable: it doesn't require exceptions or RTTI; it works around various bugs in various compilers and environments; etc.  As a result, it works on Linux, Mac OS X, Windows and several embedded operating systems.
   * Nonfatal assertions (`EXPECT_*`) have proven to be great time savers, as they allow a test to report multiple failures in a single edit-compile-test cycle.
   * It's easy to write assertions that generate informative messages: you just use the stream syntax to append any additional information, e.g. `ASSERT_EQ(5, Foo(i)) << " where i = " << i;`.  It doesn't require a new set of macros or special functions.
-  * Google Test automatically detects your tests and doesn't require you to enumerate them in order to run them.
+  * Google TestModel automatically detects your tests and doesn't require you to enumerate them in order to run them.
   * Death tests are pretty handy for ensuring that your asserts in production code are triggered by the right conditions.
   * `SCOPED_TRACE` helps you understand the context of an assertion failure when it comes from inside a sub-routine or loop.
   * You can decide which tests to run using name patterns.  This saves time when you want to quickly reproduce a test failure.
-  * Google Test can generate XML test result reports that can be parsed by popular continuous build system like Hudson.
-  * Simple things are easy in Google Test, while hard things are possible: in addition to advanced features like [global test environments](V1_7_AdvancedGuide.md#global-set-up-and-tear-down) and tests parameterized by [values](V1_7_AdvancedGuide.md#value-parameterized-tests) or [types](V1_7_AdvancedGuide.md#typed-tests), Google Test supports various ways for the user to extend the framework -- if Google Test doesn't do something out of the box, chances are that a user can implement the feature using Google Test's public API, without changing Google Test itself.  In particular, you can:
+  * Google TestModel can generate XML test result reports that can be parsed by popular continuous build system like Hudson.
+  * Simple things are easy in Google TestModel, while hard things are possible: in addition to advanced features like [global test environments](V1_7_AdvancedGuide.md#global-set-up-and-tear-down) and tests parameterized by [values](V1_7_AdvancedGuide.md#value-parameterized-tests) or [types](V1_7_AdvancedGuide.md#typed-tests), Google TestModel supports various ways for the user to extend the framework -- if Google TestModel doesn't do something out of the box, chances are that a user can implement the feature using Google TestModel's public API, without changing Google TestModel itself.  In particular, you can:
     * expand your testing vocabulary by defining [custom predicates](V1_7_AdvancedGuide.md#predicate-assertions-for-better-error-messages),
-    * teach Google Test how to [print your types](V1_7_AdvancedGuide.md#teaching-google-test-how-to-print-your-values),
-    * define your own testing macros or utilities and verify them using Google Test's [Service Provider Interface](V1_7_AdvancedGuide.md#catching-failures), and
+    * teach Google TestModel how to [print your types](V1_7_AdvancedGuide.md#teaching-google-test-how-to-print-your-values),
+    * define your own testing macros or utilities and verify them using Google TestModel's [Service Provider Interface](V1_7_AdvancedGuide.md#catching-failures), and
     * reflect on the test cases or change the test output format by intercepting the [test events](V1_7_AdvancedGuide.md#extending-google-test-by-handling-test-events).
 
-## I'm getting warnings when compiling Google Test.  Would you fix them? ##
+## I'm getting warnings when compiling Google TestModel.  Would you fix them? ##
 
-We strive to minimize compiler warnings Google Test generates.  Before releasing a new version, we test to make sure that it doesn't generate warnings when compiled using its CMake script on Windows, Linux, and Mac OS.
+We strive to minimize compiler warnings Google TestModel generates.  Before releasing a new version, we test to make sure that it doesn't generate warnings when compiled using its CMake script on Windows, Linux, and Mac OS.
 
-Unfortunately, this doesn't mean you are guaranteed to see no warnings when compiling Google Test in your environment:
+Unfortunately, this doesn't mean you are guaranteed to see no warnings when compiling Google TestModel in your environment:
 
   * You may be using a different compiler as we use, or a different version of the same compiler.  We cannot possibly test for all compilers.
   * You may be compiling on a different platform as we do.
   * Your project may be using different compiler flags as we do.
 
-It is not always possible to make Google Test warning-free for everyone.  Or, it may not be desirable if the warning is rarely enabled and fixing the violations makes the code more complex.
+It is not always possible to make Google TestModel warning-free for everyone.  Or, it may not be desirable if the warning is rarely enabled and fixing the violations makes the code more complex.
 
-If you see warnings when compiling Google Test, we suggest that you use the `-isystem` flag (assuming your are using GCC) to mark Google Test headers as system headers.  That'll suppress warnings from Google Test headers.
+If you see warnings when compiling Google TestModel, we suggest that you use the `-isystem` flag (assuming your are using GCC) to mark Google TestModel headers as system headers.  That'll suppress warnings from Google TestModel headers.
 
 ## Why should not test case names and test names contain underscore? ##
 
@@ -86,24 +86,24 @@ Now, the two `TEST`s will both generate the same class
 
 So for simplicity, we just ask the users to avoid `_` in `TestCaseName`
 and `TestName`.  The rule is more constraining than necessary, but it's
-simple and easy to remember.  It also gives Google Test some wiggle
+simple and easy to remember.  It also gives Google TestModel some wiggle
 room in case its implementation needs to change in the future.
 
 If you violate the rule, there may not be immediately consequences,
 but your test may (just may) break with a new compiler (or a new
 version of the compiler you are using) or with a new version of Google
-Test.  Therefore it's best to follow the rule.
+TestModel.  Therefore it's best to follow the rule.
 
-## Why is it not recommended to install a pre-compiled copy of Google Test (for example, into /usr/local)? ##
+## Why is it not recommended to install a pre-compiled copy of Google TestModel (for example, into /usr/local)? ##
 
 In the early days, we said that you could install
-compiled Google Test libraries on `*`nix systems using `make install`.
+compiled Google TestModel libraries on `*`nix systems using `make install`.
 Then every user of your machine can write tests without
-recompiling Google Test.
+recompiling Google TestModel.
 
 This seemed like a good idea, but it has a
 got-cha: every user needs to compile his tests using the _same_ compiler
-flags used to compile the installed Google Test libraries; otherwise
+flags used to compile the installed Google TestModel libraries; otherwise
 he may run into undefined behaviors (i.e. the tests can behave
 strangely and may even crash for no obvious reasons).
 
@@ -115,13 +115,13 @@ not required by the C++ standard to catch the violation).  If it
 doesn't, you get strange run-time behaviors that are unexpected and
 hard to debug.
 
-If you compile Google Test and your test code using different compiler
+If you compile Google TestModel and your test code using different compiler
 flags, they may see different definitions of the same
-class/function/variable (e.g. due to the use of `#if` in Google Test).
+class/function/variable (e.g. due to the use of `#if` in Google TestModel).
 Therefore, for your sanity, we recommend to avoid installing pre-compiled
-Google Test libraries.  Instead, each project should compile
-Google Test itself such that it can be sure that the same flags are
-used for both Google Test and the tests.
+Google TestModel libraries.  Instead, each project should compile
+Google TestModel itself such that it can be sure that the same flags are
+used for both Google TestModel and the tests.
 
 ## How do I generate 64-bit binaries on Windows (using Visual Studio 2008)? ##
 
@@ -152,10 +152,10 @@ Make sure the selected platform is `x64`. For the
 solution. When the build is complete, the 64-bit binaries will be in
 the `msvc\x64\Debug` directory.
 
-## Can I use Google Test on MinGW? ##
+## Can I use Google TestModel on MinGW? ##
 
 We haven't tested this ourselves, but Per Abrahamsen reported that he
-was able to compile and install Google Test successfully when using
+was able to compile and install Google TestModel successfully when using
 MinGW from Cygwin.  You'll need to configure it with:
 
 `PATH/TO/configure CC="gcc -mno-cygwin" CXX="g++ -mno-cygwin"`
@@ -166,9 +166,9 @@ to the real MinGW binaries, but we haven't tried that.
 Caveats:
 
   * There are many warnings when compiling.
-  * `make check` will produce some errors as not all tests for Google Test itself are compatible with MinGW.
+  * `make check` will produce some errors as not all tests for Google TestModel itself are compatible with MinGW.
 
-We also have reports on successful cross compilation of Google Test
+We also have reports on successful cross compilation of Google TestModel
 MinGW binaries on Linux using
 [these instructions](http://wiki.wxwidgets.org/Cross-Compiling_Under_Linux#Cross-compiling_under_Linux_for_MS_Windows)
 on the WxWidgets site.
@@ -176,12 +176,12 @@ on the WxWidgets site.
 Please contact `googletestframework@googlegroups.com` if you are
 interested in improving the support for MinGW.
 
-## Why does Google Test support EXPECT\_EQ(NULL, ptr) and ASSERT\_EQ(NULL, ptr) but not EXPECT\_NE(NULL, ptr) and ASSERT\_NE(NULL, ptr)? ##
+## Why does Google TestModel support EXPECT\_EQ(NULL, ptr) and ASSERT\_EQ(NULL, ptr) but not EXPECT\_NE(NULL, ptr) and ASSERT\_NE(NULL, ptr)? ##
 
 Due to some peculiarity of C++, it requires some non-trivial template
 meta programming tricks to support using `NULL` as an argument of the
 `EXPECT_XX()` and `ASSERT_XX()` macros. Therefore we only do it where
-it's most needed (otherwise we make the implementation of Google Test
+it's most needed (otherwise we make the implementation of Google TestModel
 harder to maintain and more error-prone than necessary).
 
 The `EXPECT_EQ()` macro takes the _expected_ value as its first
@@ -209,18 +209,18 @@ while the `EXPECT_NE`, etc, macros cannot be easily
 combined. Therefore we want to invest more in the matchers than in the
 `EXPECT_XX()` macros.
 
-## Does Google Test support running tests in parallel? ##
+## Does Google TestModel support running tests in parallel? ##
 
-Test runners tend to be tightly coupled with the build/test
-environment, and Google Test doesn't try to solve the problem of
-running tests in parallel.  Instead, we tried to make Google Test work
-nicely with test runners.  For example, Google Test's XML report
+TestModel runners tend to be tightly coupled with the build/test
+environment, and Google TestModel doesn't try to solve the problem of
+running tests in parallel.  Instead, we tried to make Google TestModel work
+nicely with test runners.  For example, Google TestModel's XML report
 contains the time spent on each test, and its `gtest_list_tests` and
 `gtest_filter` flags can be used for splitting the execution of test
 methods into multiple processes.  These functionalities can help the
 test runner run the tests in parallel.
 
-## Why don't Google Test run the tests in different threads to speed things up? ##
+## Why don't Google TestModel run the tests in different threads to speed things up? ##
 
 It's difficult to write thread-safe code.  Most tests are not written
 with thread-safety in mind, and thus may not work correctly in a
@@ -233,13 +233,13 @@ what other threads are doing (remember that test methods can be added,
 deleted, or modified after your test was written).  If you want to run
 the tests in parallel, you'd better run them in different processes.
 
-## Why aren't Google Test assertions implemented using exceptions? ##
+## Why aren't Google TestModel assertions implemented using exceptions? ##
 
-Our original motivation was to be able to use Google Test in projects
+Our original motivation was to be able to use Google TestModel in projects
 that disable exceptions.  Later we realized some additional benefits
 of this approach:
 
-  1. Throwing in a destructor is undefined behavior in C++.  Not using exceptions means Google Test's assertions are safe to use in destructors.
+  1. Throwing in a destructor is undefined behavior in C++.  Not using exceptions means Google TestModel's assertions are safe to use in destructors.
   1. The `EXPECT_*` family of macros will continue even after a failure, allowing multiple failures in a `TEST` to be reported in a single run. This is a popular feature, as in C++ the edit-compile-test cycle is usually quite long and being able to fixing more than one thing at a time is a blessing.
   1. If assertions are implemented using exceptions, a test may falsely ignore a failure if it's caught by user code:
 ```
@@ -260,13 +260,13 @@ for tests with fixtures, and require the user to define an empty
 fixture sometimes:
 
 ```
-class FooTest : public ::testing::Test {};
+class FooTest : public ::testing::TestModel {};
 
 TEST_F(FooTest, DoesThis) { ... }
 ```
 or
 ```
-typedef ::testing::Test FooTest;
+typedef ::testing::TestModel FooTest;
 
 TEST_F(FooTest, DoesThat) { ... }
 ```
@@ -291,7 +291,7 @@ Our goal was to make death tests as convenient for a user as C++
 possibly allows.  In particular:
 
   * The runner-style requires to split the information into two pieces: the definition of the death test itself, and the specification for the runner on how to run the death test and what to expect.  The death test would be written in C++, while the runner spec may or may not be.  A user needs to carefully keep the two in sync. `ASSERT_DEATH(statement, expected_message)` specifies all necessary information in one place, in one language, without boilerplate code. It is very declarative.
-  * `ASSERT_DEATH` has a similar syntax and error-reporting semantics as other Google Test assertions, and thus is easy to learn.
+  * `ASSERT_DEATH` has a similar syntax and error-reporting semantics as other Google TestModel assertions, and thus is easy to learn.
   * `ASSERT_DEATH` can be mixed with other assertions and other logic at your will.  You are not limited to one death test per test method. For example, you can write something like:
 ```
     if (FooCondition()) {
@@ -350,12 +350,12 @@ const int Foo::kBar;  // No initializer here.
 ```
 
 Otherwise your code is **invalid C++**, and may break in unexpected ways. In
-particular, using it in Google Test comparison assertions (`EXPECT_EQ`, etc)
+particular, using it in Google TestModel comparison assertions (`EXPECT_EQ`, etc)
 will generate an "undefined reference" linker error.
 
 ## I have an interface that has several implementations. Can I write a set of tests once and repeat them over all the implementations? ##
 
-Google Test doesn't yet have good support for this kind of tests, or
+Google TestModel doesn't yet have good support for this kind of tests, or
 data-driven tests in general. We hope to be able to make improvements in this
 area soon.
 
@@ -369,7 +369,7 @@ cases may want to use the same or slightly different fixtures. For example, you
 may want to make sure that all of a GUI library's test cases don't leak
 important system resources like fonts and brushes.
 
-In Google Test, you share a fixture among test cases by putting the shared
+In Google TestModel, you share a fixture among test cases by putting the shared
 logic in a base test fixture, then deriving from that base a separate fixture
 for each test case that wants to use this common logic. You then use `TEST_F()`
 to write tests using each derived fixture.
@@ -378,7 +378,7 @@ Typically, your code looks like this:
 
 ```
 // Defines a base test fixture.
-class BaseTest : public ::testing::Test {
+class BaseTest : public ::testing::TestModel {
   protected:
    ...
 };
@@ -406,7 +406,7 @@ TEST_F(FooTest, Baz) { ... }
 ```
 
 If necessary, you can continue to derive test fixtures from a derived fixture.
-Google Test has no limit on how deep the hierarchy can be.
+Google TestModel has no limit on how deep the hierarchy can be.
 
 For a complete example using derived test fixtures, see
 [sample5](../samples/sample5_unittest.cc).
@@ -418,7 +418,7 @@ You're probably using an `ASSERT_*()` in a function that doesn't return `void`.
 
 ## My death test hangs (or seg-faults). How do I fix it? ##
 
-In Google Test, death tests are run in a child process and the way they work is
+In Google TestModel, death tests are run in a child process and the way they work is
 delicate. To write death tests you really need to understand how they work.
 Please make sure you have read this.
 
@@ -443,9 +443,9 @@ bullet - sorry!
 
 ## Should I use the constructor/destructor of the test fixture or the set-up/tear-down function? ##
 
-The first thing to remember is that Google Test does not reuse the
+The first thing to remember is that Google TestModel does not reuse the
 same test fixture object across multiple tests. For each `TEST_F`,
-Google Test will create a fresh test fixture object, _immediately_
+Google TestModel will create a fresh test fixture object, _immediately_
 call `SetUp()`, run the test, call `TearDown()`, and then
 _immediately_ delete the test fixture object. Therefore, there is no
 need to write a `SetUp()` or `TearDown()` function if the constructor
@@ -453,7 +453,7 @@ or destructor already does the job.
 
 You may still want to use `SetUp()/TearDown()` in the following cases:
   * If the tear-down operation could throw an exception, you must use `TearDown()` as opposed to the destructor, as throwing in a destructor leads to undefined behavior and usually will kill your program right away. Note that many standard libraries (like STL) may throw when exceptions are enabled in the compiler. Therefore you should prefer `TearDown()` if you want to write portable tests that work with or without exceptions.
-  * The assertion macros throw an exception when flag `--gtest_throw_on_failure` is specified. Therefore, you shouldn't use Google Test assertions in a destructor if you plan to run your tests with this flag.
+  * The assertion macros throw an exception when flag `--gtest_throw_on_failure` is specified. Therefore, you shouldn't use Google TestModel assertions in a destructor if you plan to run your tests with this flag.
   * In a constructor or destructor, you cannot make a virtual function call on this object. (You can call a method declared as virtual, but it will be statically bound.) Therefore, if you need to call a method that will be overriden in a derived class, you have to use `SetUp()/TearDown()`.
 
 ## The compiler complains "no matching function to call" when I use ASSERT\_PREDn. How do I fix it? ##
@@ -544,7 +544,7 @@ RUN_ALL_TESTS();
 This is wrong and dangerous. A test runner needs to see the return value of
 `RUN_ALL_TESTS()` in order to determine if a test has passed. If your `main()`
 function ignores it, your test will be considered successful even if it has a
-Google Test assertion failure. Very bad.
+Google TestModel assertion failure. Very bad.
 
 To help the users avoid this dangerous bug, the implementation of
 `RUN_ALL_TESTS()` causes gcc to raise this warning, when the return value is
@@ -576,8 +576,8 @@ wonder why it's never called.
 
 ## How do I jump to the line of a failure in Emacs directly? ##
 
-Google Test's failure message format is understood by Emacs and many other
-IDEs, like acme and XCode. If a Google Test message is in a compilation buffer
+Google TestModel's failure message format is understood by Emacs and many other
+IDEs, like acme and XCode. If a Google TestModel message is in a compilation buffer
 in Emacs, then it's clickable. You can now hit `enter` on a message to jump to
 the corresponding source code, or use `C-x `` to jump to the next failure.
 
@@ -610,14 +610,14 @@ TEST_F(BarTest, Abc) { ... }
 TEST_F(BarTest, Def) { ... }
 ```
 
-## The Google Test output is buried in a whole bunch of log messages. What do I do? ##
+## The Google TestModel output is buried in a whole bunch of log messages. What do I do? ##
 
-The Google Test output is meant to be a concise and human-friendly report. If
-your test generates textual output itself, it will mix with the Google Test
+The Google TestModel output is meant to be a concise and human-friendly report. If
+your test generates textual output itself, it will mix with the Google TestModel
 output, making it hard to read. However, there is an easy solution to this
 problem.
 
-Since most log messages go to stderr, we decided to let Google Test output go
+Since most log messages go to stderr, we decided to let Google TestModel output go
 to stdout. This way, you can easily separate the two using redirection. For
 example:
 ```
@@ -629,7 +629,7 @@ example:
 There are several good reasons:
   1. It's likely your test needs to change the states of its global variables. This makes it difficult to keep side effects from escaping one test and contaminating others, making debugging difficult. By using fixtures, each test has a fresh set of variables that's different (but with the same names). Thus, tests are kept independent of each other.
   1. Global variables pollute the global namespace.
-  1. Test fixtures can be reused via subclassing, which cannot be done easily with global variables. This is useful if many test cases have something in common.
+  1. TestModel fixtures can be reused via subclassing, which cannot be done easily with global variables. This is useful if many test cases have something in common.
 
 ## How do I test private class members without writing FRIEND\_TEST()s? ##
 
@@ -646,7 +646,7 @@ class Foo {
   ...
 };
 
-class FooTest : public ::testing::Test {
+class FooTest : public ::testing::TestModel {
  protected:
   ...
   void Test1() {...} // This accesses private members of class Foo.
@@ -668,7 +668,7 @@ class Foo {
   ...
 };
 
-class FooTest : public ::testing::Test {
+class FooTest : public ::testing::TestModel {
  protected:
   ...
   T1 get_private_member1(Foo* obj) {
@@ -838,7 +838,7 @@ TEST(MyDeathTest, CompoundStatement) {
 
 ## What syntax does the regular expression in ASSERT\_DEATH use? ##
 
-On POSIX systems, Google Test uses the POSIX Extended regular
+On POSIX systems, Google TestModel uses the POSIX Extended regular
 expression syntax
 (http://en.wikipedia.org/wiki/Regular_expression#POSIX_Extended_Regular_Expressions).
 On Windows, it uses a limited variant of regular expression
@@ -847,7 +847,7 @@ syntax. For more details, see the
 
 ## I have a fixture class Foo, but TEST\_F(Foo, Bar) gives me error "no matching function for call to Foo::Foo()". Why? ##
 
-Google Test needs to be able to create objects of your test fixture class, so
+Google TestModel needs to be able to create objects of your test fixture class, so
 it must have a default constructor. Normally the compiler will define one for
 you. However, there are cases where you have to define your own:
   * If you explicitly declare a non-default constructor for class `Foo`, then you need to define a default constructor, even if it would be empty.
@@ -866,11 +866,11 @@ The new NPTL thread library doesn't suffer from this problem, as it doesn't
 create a manager thread. However, if you don't control which machine your test
 runs on, you shouldn't depend on this.
 
-## Why does Google Test require the entire test case, instead of individual tests, to be named FOODeathTest when it uses ASSERT\_DEATH? ##
+## Why does Google TestModel require the entire test case, instead of individual tests, to be named FOODeathTest when it uses ASSERT\_DEATH? ##
 
-Google Test does not interleave tests from different test cases. That is, it
+Google TestModel does not interleave tests from different test cases. That is, it
 runs all tests in one test case first, and then runs all tests in the next test
-case, and so on. Google Test does this because it needs to set up a test case
+case, and so on. Google TestModel does this because it needs to set up a test case
 before the first test in it is run, and tear it down afterwords. Splitting up
 the test case would require multiple set-up and tear-down processes, which is
 inefficient and makes the semantics unclean.
@@ -898,7 +898,7 @@ You don't have to, but if you like, you may split up the test case into
 related:
 
 ```
-class FooTest : public ::testing::Test { ... };
+class FooTest : public ::testing::TestModel { ... };
 
 TEST_F(FooTest, Abc) { ... }
 TEST_F(FooTest, Def) { ... }
@@ -920,46 +920,46 @@ needs to be defined in the _same_ name space.
 
 ## How do I suppress the memory leak messages on Windows? ##
 
-Since the statically initialized Google Test singleton requires allocations on
+Since the statically initialized Google TestModel singleton requires allocations on
 the heap, the Visual C++ memory leak detector will report memory leaks at the
 end of the program run. The easiest way to avoid this is to use the
 `_CrtMemCheckpoint` and `_CrtMemDumpAllObjectsSince` calls to not report any
 statically initialized heap objects. See MSDN for more details and additional
 heap check/debug routines.
 
-## I am building my project with Google Test in Visual Studio and all I'm getting is a bunch of linker errors (or warnings). Help! ##
+## I am building my project with Google TestModel in Visual Studio and all I'm getting is a bunch of linker errors (or warnings). Help! ##
 
 You may get a number of the following linker error or warnings if you
-attempt to link your test project with the Google Test library when
+attempt to link your test project with the Google TestModel library when
 your project and the are not built using the same compiler settings.
 
   * LNK2005: symbol already defined in object
   * LNK4217: locally defined symbol 'symbol' imported in function 'function'
   * LNK4049: locally defined symbol 'symbol' imported
 
-The Google Test project (gtest.vcproj) has the Runtime Library option
+The Google TestModel project (gtest.vcproj) has the Runtime Library option
 set to /MT (use multi-threaded static libraries, /MTd for debug). If
 your project uses something else, for example /MD (use multi-threaded
 DLLs, /MDd for debug), you need to change the setting in the Google
-Test project to match your project's.
+TestModel project to match your project's.
 
 To update this setting open the project properties in the Visual
 Studio IDE then select the branch Configuration Properties | C/C++ |
 Code Generation and change the option "Runtime Library".  You may also try
 using gtest-md.vcproj instead of gtest.vcproj.
 
-## I put my tests in a library and Google Test doesn't run them. What's happening? ##
+## I put my tests in a library and Google TestModel doesn't run them. What's happening? ##
 Have you read a
 [warning](V1_7_Primer.md#important-note-for-visual-c-users) on
-the Google Test Primer page?
+the Google TestModel Primer page?
 
-## I want to use Google Test with Visual Studio but don't know where to start. ##
+## I want to use Google TestModel with Visual Studio but don't know where to start. ##
 Many people are in your position and one of the posted his solution to
 our mailing list. Here is his link:
 http://hassanjamilahmad.blogspot.com/2009/07/gtest-starters-help.html.
 
-## I am seeing compile errors mentioning std::type\_traits when I try to use Google Test on Solaris. ##
-Google Test uses parts of the standard C++ library that SunStudio does not support.
+## I am seeing compile errors mentioning std::type\_traits when I try to use Google TestModel on Solaris. ##
+Google TestModel uses parts of the standard C++ library that SunStudio does not support.
 Our users reported success using alternative implementations. Try running the build after runing this commad:
 
 `export CC=cc CXX=CC CXXFLAGS='-library=stlport4'`
@@ -972,7 +972,7 @@ production code and there is no easy way to ensure that the test-only
 code paths aren't run by mistake in production.  Such cleverness also
 leads to
 [Heisenbugs](http://en.wikipedia.org/wiki/Unusual_software_bug#Heisenbug).
-Therefore we strongly advise against the practice, and Google Test doesn't
+Therefore we strongly advise against the practice, and Google TestModel doesn't
 provide a way to do it.
 
 In general, the recommended way to cause the code to behave
@@ -986,20 +986,20 @@ you follow the rule of ending your test program names with `_test`,
 you can use the _horrible_ hack of sniffing your executable name
 (`argv[0]` in `main()`) to know whether the code is under test.
 
-## Google Test defines a macro that clashes with one defined by another library. How do I deal with that? ##
+## Google TestModel defines a macro that clashes with one defined by another library. How do I deal with that? ##
 
 In C++, macros don't obey namespaces.  Therefore two libraries that
 both define a macro of the same name will clash if you `#include` both
-definitions.  In case a Google Test macro clashes with another
-library, you can force Google Test to rename its macro to avoid the
+definitions.  In case a Google TestModel macro clashes with another
+library, you can force Google TestModel to rename its macro to avoid the
 conflict.
 
-Specifically, if both Google Test and some other code define macro
+Specifically, if both Google TestModel and some other code define macro
 `FOO`, you can add
 ```
   -DGTEST_DONT_DEFINE_FOO=1
 ```
-to the compiler flags to tell Google Test to change the macro's name
+to the compiler flags to tell Google TestModel to change the macro's name
 from `FOO` to `GTEST_FOO`. For example, with `-DGTEST_DONT_DEFINE_TEST=1`, you'll need to write
 ```
   GTEST_TEST(SomeTest, DoesThis) { ... }
@@ -1017,7 +1017,7 @@ Currently, the following `TEST`, `FAIL`, `SUCCEED`, and the basic comparison ass
 
 Yes.
 
-The rule is **all test methods in the same test case must use the same fixture class**. This means that the following is **allowed** because both tests use the same fixture class (`::testing::Test`).
+The rule is **all test methods in the same test case must use the same fixture class**. This means that the following is **allowed** because both tests use the same fixture class (`::testing::TestModel`).
 
 ```
 namespace foo {
@@ -1033,18 +1033,18 @@ TEST(CoolTest, DoSomething) {
 }  // namespace foo
 ```
 
-However, the following code is **not allowed** and will produce a runtime error from Google Test because the test methods are using different test fixture classes with the same test case name.
+However, the following code is **not allowed** and will produce a runtime error from Google TestModel because the test methods are using different test fixture classes with the same test case name.
 
 ```
 namespace foo {
-class CoolTest : public ::testing::Test {};  // Fixture foo::CoolTest
+class CoolTest : public ::testing::TestModel {};  // Fixture foo::CoolTest
 TEST_F(CoolTest, DoSomething) {
   SUCCEED();
 }
 }  // namespace foo
 
 namespace bar {
-class CoolTest : public ::testing::Test {};  // Fixture: bar::CoolTest
+class CoolTest : public ::testing::TestModel {};  // Fixture: bar::CoolTest
 TEST_F(CoolTest, DoSomething) {
   SUCCEED();
 }
@@ -1053,7 +1053,7 @@ TEST_F(CoolTest, DoSomething) {
 
 ## How do I build Google Testing Framework with Xcode 4? ##
 
-If you try to build Google Test's Xcode project with Xcode 4.0 or later, you may encounter an error message that looks like
+If you try to build Google TestModel's Xcode project with Xcode 4.0 or later, you may encounter an error message that looks like
 "Missing SDK in target gtest\_framework: /Developer/SDKs/MacOSX10.4u.sdk". That means that Xcode does not support the SDK the project is targeting. See the Xcode section in the [README](../../README.MD) file on how to resolve this.
 
 ## My question is not covered in your FAQ! ##
@@ -1074,7 +1074,7 @@ When asking a question, it's helpful to provide as much of the
 following information as possible (people cannot help you if there's
 not enough information in your question):
 
-  * the version (or the revision number if you check out from SVN directly) of Google Test you use (Google Test is under active development, so it's possible that your problem has been solved in a later version),
+  * the version (or the revision number if you check out from SVN directly) of Google TestModel you use (Google TestModel is under active development, so it's possible that your problem has been solved in a later version),
   * your operating system,
   * the name and version of your compiler,
   * the complete command line flags you give to your compiler,

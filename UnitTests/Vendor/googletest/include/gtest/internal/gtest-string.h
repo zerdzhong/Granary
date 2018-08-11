@@ -29,11 +29,11 @@
 //
 // Authors: wan@google.com (Zhanyong Wan), eefacm@gmail.com (Sean Mcafee)
 //
-// The Google C++ Testing Framework (Google Test)
+// The Google C++ Testing Framework (Google TestModel)
 //
 // This header file declares the String class and functions used internally by
-// Google Test.  They are subject to change without notice. They should not used
-// by code external to Google Test.
+// Google TestModel.  They are subject to change without notice. They should not used
+// by code external to Google TestModel.
 //
 // This header file is #included by <gtest/internal/gtest-internal.h>.
 // It should not be #included by other files.

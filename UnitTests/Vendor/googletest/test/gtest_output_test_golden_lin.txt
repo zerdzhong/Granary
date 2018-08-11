@@ -98,7 +98,7 @@ This failure is expected, and shouldn't have a trace.
 gtest_output_test_.cc:#: Failure
 Failed
 This failure is expected, and should have a trace.
-Google Test trace:
+Google TestModel trace:
 gtest_output_test_.cc:#: Expected trace
 gtest_output_test_.cc:#: Failure
 Failed
@@ -110,13 +110,13 @@ gtest_output_test_.cc:#: Failure
       Expected: 2
 To be equal to: n
       Which is: 1
-Google Test trace:
+Google TestModel trace:
 gtest_output_test_.cc:#: i = 1
 gtest_output_test_.cc:#: Failure
       Expected: 1
 To be equal to: n
       Which is: 2
-Google Test trace:
+Google TestModel trace:
 gtest_output_test_.cc:#: i = 2
 [0;31m[  FAILED  ] [mSCOPED_TRACETest.WorksInLoop
 [0;32m[ RUN      ] [mSCOPED_TRACETest.WorksInSubroutine
@@ -125,13 +125,13 @@ gtest_output_test_.cc:#: Failure
       Expected: 2
 To be equal to: n
       Which is: 1
-Google Test trace:
+Google TestModel trace:
 gtest_output_test_.cc:#: n = 1
 gtest_output_test_.cc:#: Failure
       Expected: 1
 To be equal to: n
       Which is: 2
-Google Test trace:
+Google TestModel trace:
 gtest_output_test_.cc:#: n = 2
 [0;31m[  FAILED  ] [mSCOPED_TRACETest.WorksInSubroutine
 [0;32m[ RUN      ] [mSCOPED_TRACETest.CanBeNested
@@ -140,7 +140,7 @@ gtest_output_test_.cc:#: Failure
       Expected: 1
 To be equal to: n
       Which is: 2
-Google Test trace:
+Google TestModel trace:
 gtest_output_test_.cc:#: n = 2
 gtest_output_test_.cc:#: 
 [0;31m[  FAILED  ] [mSCOPED_TRACETest.CanBeNested
@@ -149,25 +149,25 @@ gtest_output_test_.cc:#:
 gtest_output_test_.cc:#: Failure
 Failed
 This failure is expected, and should contain trace point A.
-Google Test trace:
+Google TestModel trace:
 gtest_output_test_.cc:#: A
 gtest_output_test_.cc:#: Failure
 Failed
 This failure is expected, and should contain trace point A and B.
-Google Test trace:
+Google TestModel trace:
 gtest_output_test_.cc:#: B
 gtest_output_test_.cc:#: A
 gtest_output_test_.cc:#: Failure
 Failed
 This failure is expected, and should contain trace point A, B, and C.
-Google Test trace:
+Google TestModel trace:
 gtest_output_test_.cc:#: C
 gtest_output_test_.cc:#: B
 gtest_output_test_.cc:#: A
 gtest_output_test_.cc:#: Failure
 Failed
 This failure is expected, and should contain trace point A, B, and D.
-Google Test trace:
+Google TestModel trace:
 gtest_output_test_.cc:#: D
 gtest_output_test_.cc:#: B
 gtest_output_test_.cc:#: A
@@ -177,17 +177,17 @@ gtest_output_test_.cc:#: A
 gtest_output_test_.cc:#: Failure
 Failed
 Expected failure #1 (in thread B, only trace B alive).
-Google Test trace:
+Google TestModel trace:
 gtest_output_test_.cc:#: Trace B
 gtest_output_test_.cc:#: Failure
 Failed
 Expected failure #2 (in thread A, trace A & B both alive).
-Google Test trace:
+Google TestModel trace:
 gtest_output_test_.cc:#: Trace A
 gtest_output_test_.cc:#: Failure
 Failed
 Expected failure #3 (in thread B, trace A & B both alive).
-Google Test trace:
+Google TestModel trace:
 gtest_output_test_.cc:#: Trace B
 gtest_output_test_.cc:#: Failure
 Failed
@@ -195,7 +195,7 @@ Expected failure #4 (in thread B, only trace A alive).
 gtest_output_test_.cc:#: Failure
 Failed
 Expected failure #5 (in thread A, only trace A alive).
-Google Test trace:
+Google TestModel trace:
 gtest_output_test_.cc:#: Trace A
 gtest_output_test_.cc:#: Failure
 Failed
@@ -671,7 +671,7 @@ Expected fatal failure.
 44 FAILED TESTS
 [0;33m  YOU HAVE 1 DISABLED TEST
 
-[mNote: Google Test filter = FatalFailureTest.*:LoggingTest.*
+[mNote: Google TestModel filter = FatalFailureTest.*:LoggingTest.*
 [==========] Running 4 tests from 2 test cases.
 [----------] Global test environment set-up.
 [----------] 3 tests from FatalFailureTest
@@ -722,7 +722,7 @@ Expected: (3) >= (a[i]), actual: 3 vs 6
 [  FAILED  ] LoggingTest.InterleavingLoggingAndAssertions
 
  4 FAILED TESTS
-Note: Google Test filter = *DISABLED_*
+Note: Google TestModel filter = *DISABLED_*
 [==========] Running 1 test from 1 test case.
 [----------] Global test environment set-up.
 [----------] 1 test from DisabledTestsWarningTest
@@ -731,7 +731,7 @@ Note: Google Test filter = *DISABLED_*
 [----------] Global test environment tear-down
 [==========] 1 test from 1 test case ran.
 [  PASSED  ] 1 test.
-Note: Google Test filter = PassingTest.*
+Note: Google TestModel filter = PassingTest.*
 Note: This is test shard 2 of 2.
 [==========] Running 1 test from 1 test case.
 [----------] Global test environment set-up.

@@ -68,7 +68,7 @@
 #include "gtest/internal/gtest-internal.h"
 #include "gtest/internal/gtest-string.h"
 
-// Indicates that this translation unit is part of Google Test's
+// Indicates that this translation unit is part of Google TestModel's
 // implementation.  It must come before gtest-internal-inl.h is
 // included, or there will be a compiler error.  This trick exists to
 // prevent the accidental inclusion of gtest-internal-inl.h in the

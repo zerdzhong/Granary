@@ -3,14 +3,14 @@
 
 #### Setup ####
 
-To build Google Test and your tests that use it, you need to tell your
+To build Google TestModel and your tests that use it, you need to tell your
 build system where to find its headers and source files.  The exact
 way to do it depends on which build system you use, and is usually
 straightforward.
 
 #### Build ####
 
-Suppose you put Google Test in directory `${GTEST_DIR}`.  To build it,
+Suppose you put Google TestModel in directory `${GTEST_DIR}`.  To build it,
 create a library build target (or a project as called by Visual Studio
 and Xcode) to compile
 
@@ -24,7 +24,7 @@ something like the following will do:
         -pthread -c ${GTEST_DIR}/src/gtest-all.cc
     ar -rv libgtest.a gtest-all.o
 
-(We need `-pthread` as Google Test uses threads.)
+(We need `-pthread` as Google TestModel uses threads.)
 
 Next, you should compile your test source file with
 `${GTEST_DIR}/include` in the system header search path, and link it
@@ -34,9 +34,9 @@ with gtest and any other necessary libraries:
         -o your_test
 
 As an example, the make/ directory contains a Makefile that you can
-use to build Google Test on systems where GNU make is available
+use to build Google TestModel on systems where GNU make is available
 (e.g. Linux, Mac OS X, and Cygwin).  It doesn't try to build Google
-Test's own tests.  Instead, it just builds the Google Test library and
+TestModel's own tests.  Instead, it just builds the Google TestModel library and
 a sample test.  You can use it as a starting point for your own build
 script.
 
@@ -53,7 +53,7 @@ it.
 
 ### Using CMake ###
 
-Google Test comes with a CMake build script (
+Google TestModel comes with a CMake build script (
 [CMakeLists.txt](CMakeLists.txt)) that can be used on a wide range of platforms ("C" stands for
 cross-platform.). If you don't have CMake installed already, you can
 download it for free from <http://www.cmake.org/>.
@@ -66,7 +66,7 @@ workflow starts with:
     cd mybuild
     cmake ${GTEST_DIR}  # Generate native build scripts.
 
-If you want to build Google Test's samples, you should replace the
+If you want to build Google TestModel's samples, you should replace the
 last command with
 
     cmake -Dgtest_build_samples=ON ${GTEST_DIR}
@@ -86,14 +86,14 @@ Before settling on CMake, we have been providing hand-maintained build
 projects/scripts for Visual Studio, Xcode, and Autotools.  While we
 continue to provide them for convenience, they are not actively
 maintained any more.  We highly recommend that you follow the
-instructions in the previous two sections to integrate Google Test
+instructions in the previous two sections to integrate Google TestModel
 with your existing build system.
 
 If you still need to use the legacy build scripts, here's how:
 
 The msvc\ folder contains two solutions with Visual C++ projects.
 Open the `gtest.sln` or `gtest-md.sln` file using Visual Studio, and you
-are ready to build Google Test the same way you build any Visual
+are ready to build Google TestModel the same way you build any Visual
 Studio project.  Files that have names ending with -md use DLL
 versions of Microsoft runtime libraries (the /MD or the /MDd compiler
 option).  Files without that suffix use static versions of the runtime
@@ -115,7 +115,7 @@ default build location.  See the "xcodebuild" man page for more
 information about building different configurations and building in
 different locations.
 
-If you wish to use the Google Test Xcode project with Xcode 4.x and
+If you wish to use the Google TestModel Xcode project with Xcode 4.x and
 above, you need to either:
 
  * update the SDK configuration options in xcode/Config/General.xconfig.
@@ -126,11 +126,11 @@ above, you need to either:
    supported by Apple, but has been reported to work
    (http://stackoverflow.com/questions/5378518).
 
-### Tweaking Google Test ###
+### Tweaking Google TestModel ###
 
-Google Test can be used in diverse environments.  The default
+Google TestModel can be used in diverse environments.  The default
 configuration may not work (or may not work well) out of the box in
-some environments.  However, you can easily tweak Google Test by
+some environments.  However, you can easily tweak Google TestModel by
 defining control macros on the compiler command line.  Generally,
 these macros are named like `GTEST_XYZ` and you define them to either 1
 or 0 to enable or disable a certain feature.
@@ -140,28 +140,28 @@ see file [include/gtest/internal/gtest-port.h](include/gtest/internal/gtest-port
 
 ### Choosing a TR1 Tuple Library ###
 
-Some Google Test features require the C++ Technical Report 1 (TR1)
+Some Google TestModel features require the C++ Technical Report 1 (TR1)
 tuple library, which is not yet available with all compilers.  The
-good news is that Google Test implements a subset of TR1 tuple that's
+good news is that Google TestModel implements a subset of TR1 tuple that's
 enough for its own need, and will automatically use this when the
 compiler doesn't provide TR1 tuple.
 
-Usually you don't need to care about which tuple library Google Test
+Usually you don't need to care about which tuple library Google TestModel
 uses.  However, if your project already uses TR1 tuple, you need to
-tell Google Test to use the same TR1 tuple library the rest of your
+tell Google TestModel to use the same TR1 tuple library the rest of your
 project uses, or the two tuple implementations will clash.  To do
 that, add
 
     -DGTEST_USE_OWN_TR1_TUPLE=0
 
-to the compiler flags while compiling Google Test and your tests.  If
-you want to force Google Test to use its own tuple library, just add
+to the compiler flags while compiling Google TestModel and your tests.  If
+you want to force Google TestModel to use its own tuple library, just add
 
     -DGTEST_USE_OWN_TR1_TUPLE=1
 
 to the compiler flags instead.
 
-If you don't want Google Test to use tuple at all, add
+If you don't want Google TestModel to use tuple at all, add
 
     -DGTEST_HAS_TR1_TUPLE=0
 
@@ -169,12 +169,12 @@ and all features using tuple will be disabled.
 
 ### Multi-threaded Tests ###
 
-Google Test is thread-safe where the pthread library is available.
+Google TestModel is thread-safe where the pthread library is available.
 After `#include "gtest/gtest.h"`, you can check the `GTEST_IS_THREADSAFE`
 macro to see whether this is the case (yes if the macro is `#defined` to
 1, no if it's undefined.).
 
-If Google Test doesn't correctly detect whether pthread is available
+If Google TestModel doesn't correctly detect whether pthread is available
 in your environment, you can force it with
 
     -DGTEST_HAS_PTHREAD=1
@@ -183,7 +183,7 @@ or
 
     -DGTEST_HAS_PTHREAD=0
 
-When Google Test uses pthread, you may need to add flags to your
+When Google TestModel uses pthread, you may need to add flags to your
 compiler and/or linker to select the pthread library, or you'll get
 link errors.  If you use the CMake script or the deprecated Autotools
 script, this is taken care of for you.  If you use your own build
@@ -192,8 +192,8 @@ figure out what flags to add.
 
 ### As a Shared Library (DLL) ###
 
-Google Test is compact, so most users can build and link it as a
-static library for the simplicity.  You can choose to use Google Test
+Google TestModel is compact, so most users can build and link it as a
+static library for the simplicity.  You can choose to use Google TestModel
 as a shared library (known as a DLL on Windows) if you prefer.
 
 To compile *gtest* as a shared library, add
@@ -214,24 +214,24 @@ Note: while the above steps aren't technically necessary today when
 using some compilers (e.g. GCC), they may become necessary in the
 future, if we decide to improve the speed of loading the library (see
 <http://gcc.gnu.org/wiki/Visibility> for details).  Therefore you are
-recommended to always add the above flags when using Google Test as a
-shared library.  Otherwise a future release of Google Test may break
+recommended to always add the above flags when using Google TestModel as a
+shared library.  Otherwise a future release of Google TestModel may break
 your build script.
 
 ### Avoiding Macro Name Clashes ###
 
 In C++, macros don't obey namespaces.  Therefore two libraries that
 both define a macro of the same name will clash if you `#include` both
-definitions.  In case a Google Test macro clashes with another
-library, you can force Google Test to rename its macro to avoid the
+definitions.  In case a Google TestModel macro clashes with another
+library, you can force Google TestModel to rename its macro to avoid the
 conflict.
 
-Specifically, if both Google Test and some other code define macro
+Specifically, if both Google TestModel and some other code define macro
 FOO, you can add
 
     -DGTEST_DONT_DEFINE_FOO=1
 
-to the compiler flags to tell Google Test to change the macro's name
+to the compiler flags to tell Google TestModel to change the macro's name
 from `FOO` to `GTEST_FOO`.  Currently `FOO` can be `FAIL`, `SUCCEED`,
 or `TEST`.  For example, with `-DGTEST_DONT_DEFINE_TEST=1`, you'll
 need to write
@@ -244,21 +244,21 @@ instead of
 
 in order to define a test.
 
-## Developing Google Test ##
+## Developing Google TestModel ##
 
-This section discusses how to make your own changes to Google Test.
+This section discusses how to make your own changes to Google TestModel.
 
-### Testing Google Test Itself ###
+### Testing Google TestModel Itself ###
 
 To make sure your changes work as intended and don't break existing
-functionality, you'll want to compile and run Google Test's own tests.
+functionality, you'll want to compile and run Google TestModel's own tests.
 For that you can use CMake:
 
     mkdir mybuild
     cd mybuild
     cmake -Dgtest_build_tests=ON ${GTEST_DIR}
 
-Make sure you have Python installed, as some of Google Test's tests
+Make sure you have Python installed, as some of Google TestModel's tests
 are written in Python.  If the cmake command complains about not being
 able to find Python (`Could NOT find PythonInterp (missing:
 PYTHON_EXECUTABLE)`), try telling it explicitly where your Python
@@ -266,7 +266,7 @@ executable can be found:
 
     cmake -DPYTHON_EXECUTABLE=path/to/python -Dgtest_build_tests=ON ${GTEST_DIR}
 
-Next, you can build Google Test and all of its own tests.  On \*nix,
+Next, you can build Google TestModel and all of its own tests.  On \*nix,
 this is usually done by 'make'.  To run the tests, do
 
     make test

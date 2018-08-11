@@ -2,11 +2,11 @@ Changes for 1.7.0:
 
 * New feature: death tests are supported on OpenBSD and in iOS
   simulator now.
-* New feature: Google Test now implements a protocol to allow
+* New feature: Google TestModel now implements a protocol to allow
   a test runner to detect that a test program has exited
   prematurely and report it as a failure (before it would be
   falsely reported as a success if the exit code is 0).
-* New feature: Test::RecordProperty() can now be used outside of the
+* New feature: TestModel::RecordProperty() can now be used outside of the
   lifespan of a test method, in which case it will be attributed to
   the current test case or the test program in the XML report.
 * New feature (potentially breaking): --gtest_list_tests now prints
@@ -30,7 +30,7 @@ Changes for 1.6.0:
 * New feature: ADD_FAILURE_AT() for reporting a test failure at the
   given source location -- useful for writing testing utilities.
 * New feature: the universal value printer is moved from Google Mock
-  to Google Test.
+  to Google TestModel.
 * New feature: type parameters and value parameters are reported in
   the XML report now.
 * A gtest_disable_pthreads CMake option.
@@ -46,7 +46,7 @@ Changes for 1.6.0:
   name is already used by another library.
 * --gtest_catch_exceptions is now true by default, allowing a test
   program to continue after an exception is thrown.
-* Value-parameterized test fixtures can now derive from Test and
+* Value-parameterized test fixtures can now derive from TestModel and
   WithParamInterface<T> separately, easing conversion of legacy tests.
 * Death test messages are clearly marked to make them more
   distinguishable from other messages.
@@ -63,14 +63,14 @@ Changes for 1.5.0:
    where the pthreads library is available.
  * New feature: predicates used inside EXPECT_TRUE() and friends
    can now generate custom failure messages.
- * New feature: Google Test can now be compiled as a DLL.
+ * New feature: Google TestModel can now be compiled as a DLL.
  * New feature: fused source files are included.
- * New feature: prints help when encountering unrecognized Google Test flags.
+ * New feature: prints help when encountering unrecognized Google TestModel flags.
  * Experimental feature: CMake build script (requires CMake 2.6.4+).
  * Experimental feature: the Pump script for meta programming.
  * double values streamed to an assertion are printed with enough precision
    to differentiate any two different values.
- * Google Test now works on Solaris and AIX.
+ * Google TestModel now works on Solaris and AIX.
  * Build and test script improvements.
  * Bug fixes and implementation clean-ups.
 
@@ -101,13 +101,13 @@ Changes for 1.4.0:
 Changes for 1.3.0:
 
  * New feature: death tests on Windows, Cygwin, and Mac.
- * New feature: ability to use Google Test assertions in other testing
+ * New feature: ability to use Google TestModel assertions in other testing
    frameworks.
  * New feature: ability to run disabled test via
    --gtest_also_run_disabled_tests.
  * New feature: the --help flag for printing the usage.
- * New feature: access to Google Test flag values in user code.
- * New feature: a script that packs Google Test into one .h and one
+ * New feature: access to Google TestModel flag values in user code.
+ * New feature: a script that packs Google TestModel into one .h and one
    .cc file for easy deployment.
  * New feature: support for distributing test functions to multiple
    machines (requires support from the test runner).
@@ -130,7 +130,7 @@ Changes for 1.2.0:
  * Changed the XML report format to match JUnit/Ant's.
  * Added tests to the Xcode project.
  * Added scons/SConscript for building with SCons.
- * Added src/gtest-all.cc for building Google Test from a single file.
+ * Added src/gtest-all.cc for building Google TestModel from a single file.
  * Fixed compatibility with Solaris and z/OS.
  * Enabled running Python tests on systems with python 2.3 installed,
    e.g. Mac OS X 10.4.
@@ -154,4 +154,4 @@ Changes for 1.0.1:
 
 Changes for 1.0.0:
 
- * Initial Open Source release of Google Test
+ * Initial Open Source release of Google TestModel

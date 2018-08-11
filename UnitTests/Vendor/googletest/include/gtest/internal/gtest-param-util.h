@@ -439,7 +439,7 @@ class TestMetaFactoryBase {
 // MakeAndRegisterTestInfo function. Since MakeAndRegisterTestInfo receives
 // ownership of test factory pointer, same factory object cannot be passed
 // into that method twice. But ParameterizedTestCaseInfo is going to call
-// it for each Test/Parameter value combination. Thus it needs meta factory
+// it for each TestModel/Parameter value combination. Thus it needs meta factory
 // creator class.
 template <class TestCase>
 class TestMetaFactory
@@ -473,7 +473,7 @@ class ParameterizedTestCaseInfoBase {
 
   // Base part of test case name for display purposes.
   virtual const string& GetTestCaseName() const = 0;
-  // Test case id to verify identity.
+  // TestModel case id to verify identity.
   virtual TypeId GetTestCaseTypeId() const = 0;
   // UnitTest class invokes this method to register tests in this
   // test case right before running them in RUN_ALL_TESTS macro.
@@ -510,9 +510,9 @@ class ParameterizedTestCaseInfo : public ParameterizedTestCaseInfoBase {
       const char* name, CodeLocation code_location)
       : test_case_name_(name), code_location_(code_location) {}
 
-  // Test case base name for display purposes.
+  // TestModel case base name for display purposes.
   virtual const string& GetTestCaseName() const { return test_case_name_; }
-  // Test case id to verify identity.
+  // TestModel case id to verify identity.
   virtual TypeId GetTestCaseTypeId() const { return GetTypeId<TestCase>(); }
   // TEST_P macro uses AddTestPattern() to record information
   // about a single test in a LocalTestInfo structure.
@@ -686,7 +686,7 @@ class ParameterizedTestCaseRegistry {
          it != test_case_infos_.end(); ++it) {
       if ((*it)->GetTestCaseName() == test_case_name) {
         if ((*it)->GetTestCaseTypeId() != GetTypeId<TestCase>()) {
-          // Complain about incorrect usage of Google Test facilities
+          // Complain about incorrect usage of Google TestModel facilities
           // and terminate the program since we cannot guaranty correct
           // test case setup and tear-down in this case.
           ReportInvalidTestCaseType(test_case_name, code_location);

@@ -28,15 +28,15 @@ versions must be specified as a sequence of numbers separated by periods.
 Compiler flag queries output the union of the sets of flags when combined.
 
  Examples:
-  gtest-config --min-version=1.0 || echo "Insufficient Google Test version."
+  gtest-config --min-version=1.0 || echo "Insufficient Google TestModel version."
 
   g++ $(gtest-config --cppflags --cxxflags) -o foo.o -c foo.cpp
   g++ $(gtest-config --ldflags --libs) -o foo foo.o
 
-  # When using a built but not installed Google Test:
+  # When using a built but not installed Google TestModel:
   g++ $(../../my_gtest_build/scripts/gtest-config ...) ...
 
-  # When using an installed Google Test, but with installation overrides:
+  # When using an installed Google TestModel, but with installation overrides:
   export GTEST_PREFIX="/opt"
   g++ $(gtest-config --libdir="/opt/lib64" ...) ...
 
@@ -55,7 +55,7 @@ Compiler flag queries output the union of the sets of flags when combined.
   --exec-prefix              executable installation prefix
   --libdir                   library installation directory
   --includedir               header file installation directory
-  --version                  the version of the Google Test installation
+  --version                  the version of the Google TestModel installation
 
  Version Queries:
   --min-version=VERSION      return 0 if the version is at least VERSION

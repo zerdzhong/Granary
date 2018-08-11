@@ -65,7 +65,8 @@ ThreadBase::~ThreadBase() {
     printf("Release ThreadBase, %p\n", this);
 
     if (isAlive()) {
-        pthread_cancel(tid_);
+        setIsAlive(false);
+        pthread_join(tid_, NULL);
     }
 
     pthread_rwlock_destroy(&rwlock_);

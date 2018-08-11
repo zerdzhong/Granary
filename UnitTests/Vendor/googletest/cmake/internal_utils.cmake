@@ -1,18 +1,18 @@
-# Defines functions and macros useful for building Google Test and
+# Defines functions and macros useful for building Google TestModel and
 # Google Mock.
 #
 # Note:
 #
 # - This file will be run twice when building Google Mock (once via
-#   Google Test's CMakeLists.txt, and once via Google Mock's).
+#   Google TestModel's CMakeLists.txt, and once via Google Mock's).
 #   Therefore it shouldn't have any side effects other than defining
 #   the functions and macros.
 #
 # - The functions/macros defined in this file may depend on Google
-#   Test and Google Mock's option() definitions, and thus must be
+#   TestModel and Google Mock's option() definitions, and thus must be
 #   called *after* the options have been defined.
 
-# Tweaks CMake's default compiler/linker settings to suit Google Test's needs.
+# Tweaks CMake's default compiler/linker settings to suit Google TestModel's needs.
 #
 # This must be a macro(), as inside a function string() can only
 # update variables in the function scope.
@@ -25,7 +25,7 @@ macro(fix_default_compiler_settings_)
              CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
              CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
       if (NOT BUILD_SHARED_LIBS AND NOT gtest_force_shared_crt)
-        # When Google Test is built as a shared library, it should also use
+        # When Google TestModel is built as a shared library, it should also use
         # shared runtime libraries.  Otherwise, it may end up with multiple
         # copies of runtime library data in different modules, resulting in
         # hard-to-find crashes. When it is built as a static library, it is
@@ -35,14 +35,14 @@ macro(fix_default_compiler_settings_)
         string(REPLACE "/MD" "-MT" ${flag_var} "${${flag_var}}")
       endif()
 
-      # We prefer more strict warning checking for building Google Test.
+      # We prefer more strict warning checking for building Google TestModel.
       # Replaces /W3 with /W4 in defaults.
       string(REPLACE "/W3" "/W4" ${flag_var} "${${flag_var}}")
     endforeach()
   endif()
 endmacro()
 
-# Defines the compiler/linker flags used to build Google Test and
+# Defines the compiler/linker flags used to build Google TestModel and
 # Google Mock.  You can tweak these definitions to suit your need.  A
 # variable's value is empty before it's explicitly assigned to.
 macro(config_compiler_and_linker)
@@ -62,7 +62,7 @@ macro(config_compiler_and_linker)
       set(cxx_base_flags "${cxx_base_flags} -wd4800")
       # Copy constructor and assignment operator could not be generated.
       set(cxx_base_flags "${cxx_base_flags} -wd4511 -wd4512")
-      # Compatibility warnings not applicable to Google Test.
+      # Compatibility warnings not applicable to Google TestModel.
       # Resolved overload was found by argument-dependent lookup.
       set(cxx_base_flags "${cxx_base_flags} -wd4675")
     endif()

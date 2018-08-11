@@ -1,7 +1,7 @@
 ########################################################################
-# CMake build script for Google Test.
+# CMake build script for Google TestModel.
 #
-# To run the tests for Google Test itself on Linux, use 'make test' or
+# To run the tests for Google TestModel itself on Linux, use 'make test' or
 # ctest.  You can select which tests to run using 'ctest -R regex'.
 # For more options, run 'ctest --help'.
 
@@ -10,7 +10,7 @@
 option(BUILD_SHARED_LIBS "Build shared libraries (DLLs)." OFF)
 
 # When other libraries are using a shared version of runtime libraries,
-# Google Test also has to use one.
+# Google TestModel also has to use one.
 option(
   gtest_force_shared_crt
   "Use shared (DLL) run-time lib even when Google Test is built as static lib."
@@ -56,17 +56,17 @@ if (gtest_hide_internal_symbols)
   set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
 endif()
 
-# Define helper functions and macros used by Google Test.
+# Define helper functions and macros used by Google TestModel.
 include(cmake/internal_utils.cmake)
 
 config_compiler_and_linker()  # Defined in internal_utils.cmake.
 
-# Where Google Test's .h files can be found.
+# Where Google TestModel's .h files can be found.
 include_directories(
   ${gtest_SOURCE_DIR}/include
   ${gtest_SOURCE_DIR})
 
-# Where Google Test's libraries can be found.
+# Where Google TestModel's libraries can be found.
 link_directories(${gtest_BINARY_DIR}/src)
 
 # Summary of tuple support for Microsoft Visual Studio:
@@ -84,7 +84,7 @@ endif()
 # Defines the gtest & gtest_main libraries.  User tests should link
 # with one of them.
 
-# Google Test libraries.  We build them using more strict warnings than what
+# Google TestModel libraries.  We build them using more strict warnings than what
 # are used for other targets, to ensure that gtest can be compiled by a user
 # aggressive about warnings.
 cxx_library(gtest "${cxx_strict}" src/gtest-all.cc)
@@ -130,10 +130,10 @@ endif()
 
 ########################################################################
 #
-# Google Test's own tests.
+# Google TestModel's own tests.
 #
 # You can skip this section if you aren't interested in testing
-# Google Test itself.
+# Google TestModel itself.
 #
 # The tests are not built by default.  To build them, set the
 # gtest_build_tests option to ON.  You can do it by running ccmake

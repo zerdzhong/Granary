@@ -67,7 +67,7 @@
 #include "gtest/gtest-message.h"
 #include "gtest/internal/gtest-string.h"
 
-// Indicates that this translation unit is part of Google Test's
+// Indicates that this translation unit is part of Google TestModel's
 // implementation.  It must come before gtest-internal-inl.h is
 // included, or there will be a compiler error.  This trick exists to
 // prevent the accidental inclusion of gtest-internal-inl.h in the
@@ -590,7 +590,7 @@ bool DeathTestImpl::Passed(bool status_ok) {
 # if GTEST_OS_WINDOWS
 // WindowsDeathTest implements death tests on Windows. Due to the
 // specifics of starting new processes on Windows, death tests there are
-// always threadsafe, and Google Test considers the
+// always threadsafe, and Google TestModel considers the
 // --gtest_death_test_style=fast setting to be equivalent to
 // --gtest_death_test_style=threadsafe there.
 //
@@ -941,7 +941,7 @@ struct ExecDeathTestArgs {
 
 #  if GTEST_OS_MAC
 inline char** GetEnviron() {
-  // When Google Test is built as a framework on MacOS X, the environ variable
+  // When Google TestModel is built as a framework on MacOS X, the environ variable
   // is unavailable. Apple's documentation (man environ) recommends using
   // _NSGetEnviron() instead.
   return *_NSGetEnviron();

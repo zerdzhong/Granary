@@ -721,7 +721,7 @@ struct Types50 {
 // errors).
 //
 // Our solution is to combine the best part of the two approaches: a
-// user would write Types<T1, ..., TN>, and Google Test will translate
+// user would write Types<T1, ..., TN>, and Google TestModel will translate
 // that to TypesN<T1, ..., TN> internally to make error messages
 // readable.  The translation is done by the 'type' member of the
 // Types template.
@@ -2429,7 +2429,7 @@ struct Templates50 {
 // errors).
 //
 // Our solution is to combine the best part of the two approaches: a
-// user would write Templates<T1, ..., TN>, and Google Test will translate
+// user would write Templates<T1, ..., TN>, and Google TestModel will translate
 // that to TemplatesN<T1, ..., TN> internally to make error messages
 // readable.  The translation is done by the 'type' member of the
 // Templates template.

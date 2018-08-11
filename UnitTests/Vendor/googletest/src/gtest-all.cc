@@ -29,9 +29,9 @@
 //
 // Author: mheule@google.com (Markus Heule)
 //
-// Google C++ Testing Framework (Google Test)
+// Google C++ Testing Framework (Google TestModel)
 //
-// Sometimes it's desirable to build Google Test by compiling a single file.
+// Sometimes it's desirable to build Google TestModel by compiling a single file.
 // This file serves this purpose.
 
 // This line ensures that gtest.h can be compiled on its own, even

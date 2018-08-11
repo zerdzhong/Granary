@@ -5,7 +5,7 @@
 _Google C++ Testing Framework_ helps you write better C++ tests.
 
 No matter whether you work on Linux, Windows, or a Mac, if you write C++ code,
-Google Test can help you.
+Google TestModel can help you.
 
 So what makes a good test, and how does Google C++ Testing Framework fit in? We believe:
   1. Tests should be _independent_ and _repeatable_. It's a pain to debug a test that succeeds or fails as a result of other tests.  Google C++ Testing Framework isolates the tests by running each of them on a different object. When a test fails, Google C++ Testing Framework allows you to run it in isolation for quick debugging.
@@ -23,34 +23,34 @@ So let's go!
 _Note:_ We sometimes refer to Google C++ Testing Framework informally
 as _Google Test_.
 
-# Setting up a New Test Project #
+# Setting up a New TestModel Project #
 
-To write a test program using Google Test, you need to compile Google
-Test into a library and link your test with it.  We provide build
+To write a test program using Google TestModel, you need to compile Google
+TestModel into a library and link your test with it.  We provide build
 files for some popular build systems: `msvc/` for Visual Studio,
 `xcode/` for Mac Xcode, `make/` for GNU make, `codegear/` for Borland
 C++ Builder, and the autotools script (deprecated) and
-`CMakeLists.txt` for CMake (recommended) in the Google Test root
+`CMakeLists.txt` for CMake (recommended) in the Google TestModel root
 directory.  If your build system is not on this list, you can take a
-look at `make/Makefile` to learn how Google Test should be compiled
+look at `make/Makefile` to learn how Google TestModel should be compiled
 (basically you want to compile `src/gtest-all.cc` with `GTEST_ROOT`
 and `GTEST_ROOT/include` in the header search path, where `GTEST_ROOT`
-is the Google Test root directory).
+is the Google TestModel root directory).
 
-Once you are able to compile the Google Test library, you should
+Once you are able to compile the Google TestModel library, you should
 create a project or build target for your test program.  Make sure you
 have `GTEST_ROOT/include` in the header search path so that the
 compiler can find `"gtest/gtest.h"` when compiling your test.  Set up
-your test project to link with the Google Test library (for example,
+your test project to link with the Google TestModel library (for example,
 in Visual Studio, this is done by adding a dependency on
 `gtest.vcproj`).
 
-If you still have questions, take a look at how Google Test's own
+If you still have questions, take a look at how Google TestModel's own
 tests are built and use them as examples.
 
 # Basic Concepts #
 
-When using Google Test, you start by writing _assertions_, which are statements
+When using Google TestModel, you start by writing _assertions_, which are statements
 that check whether a condition is true. An assertion's result can be _success_,
 _nonfatal failure_, or _fatal failure_. If a fatal failure occurs, it aborts
 the current function; otherwise the program continues normally.
@@ -70,11 +70,11 @@ assertion level and building up to tests and test cases.
 
 # Assertions #
 
-Google Test assertions are macros that resemble function calls. You test a
+Google TestModel assertions are macros that resemble function calls. You test a
 class or function by making assertions about its behavior. When an assertion
-fails, Google Test prints the assertion's source file and line number location,
+fails, Google TestModel prints the assertion's source file and line number location,
 along with a failure message. You may also supply a custom failure message
-which will be appended to Google Test's message.
+which will be appended to Google TestModel's message.
 
 The assertions come in pairs that test the same thing but have different
 effects on the current function. `ASSERT_*` versions generate fatal failures
@@ -133,18 +133,18 @@ This section describes assertions that compare two values.
 |`ASSERT_GT(`_val1_`, `_val2_`);`      |`EXPECT_GT(`_val1_`, `_val2_`);`      | _val1_ `>` _val2_ |
 |`ASSERT_GE(`_val1_`, `_val2_`);`      |`EXPECT_GE(`_val1_`, `_val2_`);`      | _val1_ `>=` _val2_ |
 
-In the event of a failure, Google Test prints both _val1_ and _val2_
+In the event of a failure, Google TestModel prints both _val1_ and _val2_
 . In `ASSERT_EQ*` and `EXPECT_EQ*` (and all other equality assertions
 we'll introduce later), you should put the expression you want to test
 in the position of _actual_, and put its expected value in _expected_,
-as Google Test's failure messages are optimized for this convention.
+as Google TestModel's failure messages are optimized for this convention.
 
 Value arguments must be comparable by the assertion's comparison
 operator or you'll get a compiler error.  We used to require the
 arguments to support the `<<` operator for streaming to an `ostream`,
 but it's no longer necessary since v1.6.0 (if `<<` is supported, it
 will be called to print the arguments when the assertion fails;
-otherwise Google Test will attempt to print them in the best way it
+otherwise Google TestModel will attempt to print them in the best way it
 can. For more details and how to customize the printing of the
 arguments, see this Google Mock [recipe](../../googlemock/docs/CookBook.md#teaching-google-mock-how-to-print-your-values).).
 
@@ -194,13 +194,13 @@ A `NULL` pointer and an empty string are considered _different_.
 _Availability_: Linux, Windows, Mac.
 
 See also: For more string comparison tricks (substring, prefix, suffix, and
-regular expression matching, for example), see the [Advanced Google Test Guide](V1_7_AdvancedGuide.md).
+regular expression matching, for example), see the [Advanced Google TestModel Guide](V1_7_AdvancedGuide.md).
 
 # Simple Tests #
 
 To create a test:
   1. Use the `TEST()` macro to define and name a test function, These are ordinary C++ functions that don't return a value.
-  1. In this function, along with any valid C++ statements you want to include, use the various Google Test assertions to check values.
+  1. In this function, along with any valid C++ statements you want to include, use the various Google TestModel assertions to check values.
   1. The test's result is determined by the assertions; if any assertion in the test fails (either fatally or non-fatally), or if the test crashes, the entire test fails. Otherwise, it succeeds.
 
 ```
@@ -237,7 +237,7 @@ TEST(FactorialTest, HandlesPositiveInput) {
 }
 ```
 
-Google Test groups the test results by test cases, so logically-related tests
+Google TestModel groups the test results by test cases, so logically-related tests
 should be in the same test case; in other words, the first argument to their
 `TEST()` should be the same. In the above example, we have two tests,
 `HandlesZeroInput` and `HandlesPositiveInput`, that belong to the same test
@@ -245,14 +245,14 @@ case `FactorialTest`.
 
 _Availability_: Linux, Windows, Mac.
 
-# Test Fixtures: Using the Same Data Configuration for Multiple Tests #
+# TestModel Fixtures: Using the Same Data Configuration for Multiple Tests #
 
 If you find yourself writing two or more tests that operate on similar data,
 you can use a _test fixture_. It allows you to reuse the same configuration of
 objects for several different tests.
 
 To create a fixture, just:
-  1. Derive a class from `::testing::Test` . Start its body with `protected:` or `public:` as we'll want to access fixture members from sub-classes.
+  1. Derive a class from `::testing::TestModel` . Start its body with `protected:` or `public:` as we'll want to access fixture members from sub-classes.
   1. Inside the class, declare any objects you plan to use.
   1. If necessary, write a default constructor or `SetUp()` function to prepare the objects for each test. A common mistake is to spell `SetUp()` as `Setup()` with a small `u` - don't let that happen to you.
   1. If necessary, write a destructor or `TearDown()` function to release any resources you allocated in `SetUp()` . To learn when you should use the constructor/destructor and when you should use `SetUp()/TearDown()`, read this [FAQ entry](V1_7_FAQ.md#should-i-use-the-constructordestructor-of-the-test-fixture-or-the-set-uptear-down-function).
@@ -278,12 +278,12 @@ Also, you must first define a test fixture class before using it in a
 `TEST_F()`, or you'll get the compiler error "`virtual outside class
 declaration`".
 
-For each test defined with `TEST_F()`, Google Test will:
+For each test defined with `TEST_F()`, Google TestModel will:
   1. Create a _fresh_ test fixture at runtime
   1. Immediately initialize it via `SetUp()` ,
   1. Run the test
   1. Clean up by calling `TearDown()`
-  1. Delete the test fixture.  Note that different tests in the same test case have different test fixture objects, and Google Test always deletes a test fixture before it creates the next one. Google Test does not reuse the same test fixture for multiple tests. Any changes one test makes to the fixture do not affect other tests.
+  1. Delete the test fixture.  Note that different tests in the same test case have different test fixture objects, and Google TestModel always deletes a test fixture before it creates the next one. Google TestModel does not reuse the same test fixture for multiple tests. Any changes one test makes to the fixture do not affect other tests.
 
 As an example, let's write tests for a FIFO queue class named `Queue`, which
 has the following interface:
@@ -302,7 +302,7 @@ class Queue {
 First, define a fixture class. By convention, you should give it the name
 `FooTest` where `Foo` is the class being tested.
 ```
-class QueueTest : public ::testing::Test {
+class QueueTest : public ::testing::TestModel {
  protected:
   virtual void SetUp() {
     q1_.Enqueue(1);
@@ -353,7 +353,7 @@ doesn't make sense. For example, the second assertion in the `Dequeue` test is
 which would lead to a segfault when `n` is `NULL`.
 
 When these tests run, the following happens:
-  1. Google Test constructs a `QueueTest` object (let's call it `t1` ).
+  1. Google TestModel constructs a `QueueTest` object (let's call it `t1` ).
   1. `t1.SetUp()` initializes `t1` .
   1. The first test ( `IsEmptyInitially` ) runs on `t1` .
   1. `t1.TearDown()` cleans up after the test finishes.
@@ -362,23 +362,23 @@ When these tests run, the following happens:
 
 _Availability_: Linux, Windows, Mac.
 
-_Note_: Google Test automatically saves all _Google Test_ flags when a test
+_Note_: Google TestModel automatically saves all _Google Test_ flags when a test
 object is constructed, and restores them when it is destructed.
 
 # Invoking the Tests #
 
-`TEST()` and `TEST_F()` implicitly register their tests with Google Test. So, unlike with many other C++ testing frameworks, you don't have to re-list all your defined tests in order to run them.
+`TEST()` and `TEST_F()` implicitly register their tests with Google TestModel. So, unlike with many other C++ testing frameworks, you don't have to re-list all your defined tests in order to run them.
 
 After defining your tests, you can run them with `RUN_ALL_TESTS()` , which returns `0` if all the tests are successful, or `1` otherwise. Note that `RUN_ALL_TESTS()` runs _all tests_ in your link unit -- they can be from different test cases, or even different source files.
 
 When invoked, the `RUN_ALL_TESTS()` macro:
-  1. Saves the state of all  Google Test flags.
+  1. Saves the state of all  Google TestModel flags.
   1. Creates a test fixture object for the first test.
   1. Initializes it via `SetUp()`.
   1. Runs the test on the fixture object.
   1. Cleans up the fixture via `TearDown()`.
   1. Deletes the fixture.
-  1. Restores the state of all Google Test flags.
+  1. Restores the state of all Google TestModel flags.
   1. Repeats the above steps for the next test, until all tests have run.
 
 In addition, if the text fixture's constructor generates a fatal failure in
@@ -392,7 +392,7 @@ exit code, not on its stdout/stderr output; thus your `main()` function must
 return the value of `RUN_ALL_TESTS()`.
 
 Also, you should call `RUN_ALL_TESTS()` only **once**. Calling it more than once
-conflicts with some advanced Google Test features (e.g. thread-safe death
+conflicts with some advanced Google TestModel features (e.g. thread-safe death
 tests) and thus is not supported.
 
 _Availability_: Linux, Windows, Mac.
@@ -407,7 +407,7 @@ You can start from this boilerplate:
 namespace {
 
 // The fixture for testing class Foo.
-class FooTest : public ::testing::Test {
+class FooTest : public ::testing::TestModel {
  protected:
   // You can remove any or all of the following functions if its body
   // is empty.
@@ -458,7 +458,7 @@ int main(int argc, char **argv) {
 ```
 
 The `::testing::InitGoogleTest()` function parses the command line for Google
-Test flags, and removes all recognized flags. This allows the user to control a
+TestModel flags, and removes all recognized flags. This allows the user to control a
 test program's behavior via various flags, which we'll cover in [AdvancedGuide](V1_7_AdvancedGuide.md).
 You must call this function before calling `RUN_ALL_TESTS()`, or the flags
 won't be properly initialized.
@@ -466,10 +466,10 @@ won't be properly initialized.
 On Windows, `InitGoogleTest()` also works with wide strings, so it can be used
 in programs compiled in `UNICODE` mode as well.
 
-But maybe you think that writing all those main() functions is too much work? We agree with you completely and that's why Google Test provides a basic implementation of main(). If it fits your needs, then just link your test with gtest\_main library and you are good to go.
+But maybe you think that writing all those main() functions is too much work? We agree with you completely and that's why Google TestModel provides a basic implementation of main(). If it fits your needs, then just link your test with gtest\_main library and you are good to go.
 
 ## Important note for Visual C++ users ##
-If you put your tests into a library and your `main()` function is in a different library or in your .exe file, those tests will not run. The reason is a [bug](https://connect.microsoft.com/feedback/viewfeedback.aspx?FeedbackID=244410&siteid=210) in Visual C++. When you define your tests, Google Test creates certain static objects to register them. These objects are not referenced from elsewhere but their constructors are still supposed to run. When Visual C++ linker sees that nothing in the library is referenced from other places it throws the library out. You have to reference your library with tests from your main program to keep the linker from discarding it. Here is how to do it. Somewhere in your library code declare a function:
+If you put your tests into a library and your `main()` function is in a different library or in your .exe file, those tests will not run. The reason is a [bug](https://connect.microsoft.com/feedback/viewfeedback.aspx?FeedbackID=244410&siteid=210) in Visual C++. When you define your tests, Google TestModel creates certain static objects to register them. These objects are not referenced from elsewhere but their constructors are still supposed to run. When Visual C++ linker sees that nothing in the library is referenced from other places it throws the library out. You have to reference your library with tests from your main program to keep the linker from discarding it. Here is how to do it. Somewhere in your library code declare a function:
 ```
 __declspec(dllexport) int PullInMyLibrary() { return 0; }
 ```
@@ -482,19 +482,19 @@ This will keep your tests referenced and will make them register themselves at s
 
 In addition, if you define your tests in a static library, add `/OPT:NOREF` to your main program linker options. If you use MSVC++ IDE, go to your .exe project properties/Configuration Properties/Linker/Optimization and set References setting to `Keep Unreferenced Data (/OPT:NOREF)`. This will keep Visual C++ linker from discarding individual symbols generated by your tests from the final executable.
 
-There is one more pitfall, though. If you use Google Test as a static library (that's how it is defined in gtest.vcproj) your tests must also reside in a static library. If you have to have them in a DLL, you _must_ change Google Test to build into a DLL as well. Otherwise your tests will not run correctly or will not run at all. The general conclusion here is: make your life easier - do not write your tests in libraries!
+There is one more pitfall, though. If you use Google TestModel as a static library (that's how it is defined in gtest.vcproj) your tests must also reside in a static library. If you have to have them in a DLL, you _must_ change Google TestModel to build into a DLL as well. Otherwise your tests will not run correctly or will not run at all. The general conclusion here is: make your life easier - do not write your tests in libraries!
 
 # Where to Go from Here #
 
-Congratulations! You've learned the Google Test basics. You can start writing
-and running Google Test tests, read some [samples](V1_7_Samples.md), or continue with
-[AdvancedGuide](V1_7_AdvancedGuide.md), which describes many more useful Google Test features.
+Congratulations! You've learned the Google TestModel basics. You can start writing
+and running Google TestModel tests, read some [samples](V1_7_Samples.md), or continue with
+[AdvancedGuide](V1_7_AdvancedGuide.md), which describes many more useful Google TestModel features.
 
 # Known Limitations #
 
-Google Test is designed to be thread-safe.  The implementation is
+Google TestModel is designed to be thread-safe.  The implementation is
 thread-safe on systems where the `pthreads` library is available.  It
-is currently _unsafe_ to use Google Test assertions from two threads
+is currently _unsafe_ to use Google TestModel assertions from two threads
 concurrently on other systems (e.g. Windows).  In most tests this is
 not an issue as usually the assertions are done in the main thread. If
 you want to help, you can volunteer to implement the necessary

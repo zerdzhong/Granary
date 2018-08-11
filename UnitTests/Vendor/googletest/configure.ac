@@ -23,7 +23,7 @@ AC_CONFIG_FILES([scripts/gtest-config], [chmod +x scripts/gtest-config])
 # targets.
 AM_INIT_AUTOMAKE([1.9 dist-bzip2 dist-zip foreign subdir-objects])
 
-# Check for programs used in building Google Test.
+# Check for programs used in building Google TestModel.
 AC_PROG_CC
 AC_PROG_CXX
 AC_LANG([C++])

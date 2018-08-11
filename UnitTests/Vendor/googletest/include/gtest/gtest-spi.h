@@ -29,8 +29,8 @@
 //
 // Author: wan@google.com (Zhanyong Wan)
 //
-// Utilities for testing Google Test itself and code that uses Google Test
-// (e.g. frameworks built on top of Google Test).
+// Utilities for testing Google TestModel itself and code that uses Google TestModel
+// (e.g. frameworks built on top of Google TestModel).
 
 #ifndef GTEST_INCLUDE_GTEST_GTEST_SPI_H_
 #define GTEST_INCLUDE_GTEST_GTEST_SPI_H_
@@ -39,11 +39,11 @@
 
 namespace testing {
 
-// This helper class can be used to mock out Google Test failure reporting
-// so that we can test Google Test or code that builds on Google Test.
+// This helper class can be used to mock out Google TestModel failure reporting
+// so that we can test Google TestModel or code that builds on Google TestModel.
 //
 // An object of this class appends a TestPartResult object to the
-// TestPartResultArray object given in the constructor whenever a Google Test
+// TestPartResultArray object given in the constructor whenever a Google TestModel
 // failure is reported. It can either intercept only failures that are
 // generated in the same thread that created this object or it can intercept
 // all generated failures. The scope of this mock object can be controlled with
@@ -58,7 +58,7 @@ class GTEST_API_ ScopedFakeTestPartResultReporter
   };
 
   // The c'tor sets this object as the test part result reporter used
-  // by Google Test.  The 'result' parameter specifies where to report the
+  // by Google TestModel.  The 'result' parameter specifies where to report the
   // results. This reporter will only catch failures generated in the current
   // thread. DEPRECATED
   explicit ScopedFakeTestPartResultReporter(TestPartResultArray* result);
@@ -112,9 +112,9 @@ class GTEST_API_ SingleFailureChecker {
 
 }  // namespace testing
 
-// A set of macros for testing Google Test assertions or code that's expected
-// to generate Google Test fatal failures.  It verifies that the given
-// statement will cause exactly one fatal Google Test failure with 'substr'
+// A set of macros for testing Google TestModel assertions or code that's expected
+// to generate Google TestModel fatal failures.  It verifies that the given
+// statement will cause exactly one fatal Google TestModel failure with 'substr'
 // being part of the failure message.
 //
 // There are two different versions of this macro. EXPECT_FATAL_FAILURE only
@@ -169,9 +169,9 @@ class GTEST_API_ SingleFailureChecker {
     }\
   } while (::testing::internal::AlwaysFalse())
 
-// A macro for testing Google Test assertions or code that's expected to
-// generate Google Test non-fatal failures.  It asserts that the given
-// statement will cause exactly one non-fatal Google Test failure with 'substr'
+// A macro for testing Google TestModel assertions or code that's expected to
+// generate Google TestModel non-fatal failures.  It asserts that the given
+// statement will cause exactly one non-fatal Google TestModel failure with 'substr'
 // being part of the failure message.
 //
 // There are two different versions of this macro. EXPECT_NONFATAL_FAILURE only

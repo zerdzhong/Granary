@@ -32,7 +32,7 @@ $$ This meta comment fixes auto-indentation in Emacs. }}
 //
 // Author: wan@google.com (Zhanyong Wan)
 
-// Implements a subset of TR1 tuple needed by Google Test and Google Mock.
+// Implements a subset of TR1 tuple needed by Google TestModel and Google Mock.
 
 #ifndef GTEST_INCLUDE_GTEST_INTERNAL_GTEST_TUPLE_H_
 #define GTEST_INCLUDE_GTEST_INTERNAL_GTEST_TUPLE_H_
@@ -92,7 +92,7 @@ namespace tr1 {
 template <$for i, [[typename T$i = void]]>
 class tuple;
 
-// Anything in namespace gtest_internal is Google Test's INTERNAL
+// Anything in namespace gtest_internal is Google TestModel's INTERNAL
 // IMPLEMENTATION DETAIL and MUST NOT BE USED DIRECTLY in user code.
 namespace gtest_internal {
 

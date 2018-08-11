@@ -274,7 +274,7 @@ test_fused_gtest_test_SOURCES = $(FUSED_GTEST_SRC) \
                                 samples/sample1.cc samples/sample1_unittest.cc
 test_fused_gtest_test_CPPFLAGS = -I"$(srcdir)/fused-src"
 
-# Build rules for putting fused Google Test files into the distribution
+# Build rules for putting fused Google TestModel files into the distribution
 # package. The user can also create those files by manually running
 # scripts/fuse_gtest_files.py.
 $(test_fused_gtest_test_SOURCES): fused-gtest
@@ -298,13 +298,13 @@ endif
 CLEANFILES = core
 
 # Disables 'make install' as installing a compiled version of Google
-# Test can lead to undefined behavior due to violation of the
+# TestModel can lead to undefined behavior due to violation of the
 # One-Definition Rule.
 
 install-exec-local:
-	echo "'make install' is dangerous and not supported. Instead, see README for how to integrate Google Test into your build system."
+	echo "'make install' is dangerous and not supported. Instead, see README for how to integrate Google TestModel into your build system."
 	false
 
 install-data-local:
-	echo "'make install' is dangerous and not supported. Instead, see README for how to integrate Google Test into your build system."
+	echo "'make install' is dangerous and not supported. Instead, see README for how to integrate Google TestModel into your build system."
 	false

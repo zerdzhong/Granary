@@ -41,7 +41,7 @@
 //     GTEST_DEFINE_int32_(name, default_val, doc)
 //     GTEST_DEFINE_string_(name, default_val, doc)
 //
-//   Test filtering:
+//   TestModel filtering:
 //     GTEST_TEST_FILTER_ENV_VAR_ - The name of an environment variable that
 //                                  will be used if --GTEST_FLAG(test_filter)
 //                                  is not provided.

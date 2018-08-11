@@ -29,7 +29,7 @@
 //
 // Authors: wan@google.com (Zhanyong Wan), eefacm@gmail.com (Sean Mcafee)
 //
-// The Google C++ Testing Framework (Google Test)
+// The Google C++ Testing Framework (Google TestModel)
 //
 // This header file defines internal utilities needed for implementing
 // death tests.  They are subject to change without notice.
@@ -46,7 +46,7 @@ namespace internal {
 
 GTEST_DECLARE_string_(internal_run_death_test);
 
-// Names of the flags (needed for parsing Google Test flags).
+// Names of the flags (needed for parsing Google TestModel flags).
 const char kDeathTestStyleFlag[] = "death_test_style";
 const char kDeathTestUseFork[] = "death_test_use_fork";
 const char kInternalRunDeathTestFlag[] = "internal_run_death_test";

@@ -1,7 +1,7 @@
 
 
 Now that you have read [Primer](V1_6_Primer.md) and learned how to write tests
-using Google Test, it's time to learn some new tricks. This document
+using Google TestModel, it's time to learn some new tricks. This document
 will show you more assertions as well as how to construct complex
 failure messages, propagate fatal failures, reuse and speed up your
 test fixtures, and use various flags with your tests.
@@ -24,7 +24,7 @@ Generates a success. This does NOT make the overall test succeed. A test is
 considered successful only if none of its assertions fail during its execution.
 
 Note: `SUCCEED()` is purely documentary and currently doesn't generate any
-user-visible output. However, we may add `SUCCEED()` messages to Google Test's
+user-visible output. However, we may add `SUCCEED()` messages to Google TestModel's
 output in the future.
 
 | `FAIL();`  | `ADD_FAILURE();` | `ADD_FAILURE_AT("`_file\_path_`", `_line\_number_`);` |
@@ -72,7 +72,7 @@ _Availability_: Linux, Windows, Mac; since version 1.1.0.
 
 ## Predicate Assertions for Better Error Messages ##
 
-Even though Google Test has a rich set of assertions, they can never be
+Even though Google TestModel has a rich set of assertions, they can never be
 complete, as it's impossible (nor a good idea) to anticipate all the scenarios
 a user might run into. Therefore, sometimes a user has to use `EXPECT_TRUE()`
 to check a complex expression, for lack of a better macro. This has the problem
@@ -82,7 +82,7 @@ failure message by themselves, streaming it into `EXPECT_TRUE()`. However, this
 is awkward especially when the expression has side-effects or is expensive to
 evaluate.
 
-Google Test gives you three different options to solve this problem:
+Google TestModel gives you three different options to solve this problem:
 
 ### Using an Existing Boolean Function ###
 
@@ -301,7 +301,7 @@ the loss of precision there.
 
 In general, for floating-point comparison to make sense, the user needs to
 carefully choose the error bound. If they don't want or care to, comparing in
-terms of Units in the Last Place (ULPs) is a good default, and Google Test
+terms of Units in the Last Place (ULPs) is a good default, and Google TestModel
 provides assertions to do this. Full details about ULPs are quite long; if you
 want to learn more, see
 [this article on float comparison](http://www.cygnus-software.com/papers/comparingfloats/comparingfloats.htm).
@@ -404,7 +404,7 @@ You can use assertions in any C++ function. In particular, it doesn't
 have to be a method of the test fixture class. The one constraint is
 that assertions that generate a fatal failure (`FAIL*` and `ASSERT_*`)
 can only be used in void-returning functions. This is a consequence of
-Google Test not using exceptions. By placing it in a non-void function
+Google TestModel not using exceptions. By placing it in a non-void function
 you'll get a confusing compile error like
 `"error: void value not ignored as it ought to be"`.
 
@@ -430,9 +430,9 @@ leaving your object in a partially-constructed state. Likewise, a fatal
 assertion failure in a destructor may leave your object in a
 partially-destructed state. Use assertions carefully in these situations!
 
-# Teaching Google Test How to Print Your Values #
+# Teaching Google TestModel How to Print Your Values #
 
-When a test assertion such as `EXPECT_EQ` fails, Google Test prints the
+When a test assertion such as `EXPECT_EQ` fails, Google TestModel prints the
 argument values to help you debug.  It does this using a
 user-extensible value printer.
 
@@ -450,7 +450,7 @@ than to dump the bytes.  To do that, define `<<` for your type:
 
 namespace foo {
 
-class Bar { ... };  // We want Google Test to be able to print instances of this.
+class Bar { ... };  // We want Google TestModel to be able to print instances of this.
 
 // It's important that the << operator is defined in the SAME
 // namespace that defines Bar.  C++'s look-up rules rely on that.
@@ -483,11 +483,11 @@ void PrintTo(const Bar& bar, ::std::ostream* os) {
 ```
 
 If you have defined both `<<` and `PrintTo()`, the latter will be used
-when Google Test is concerned.  This allows you to customize how the value
-appears in Google Test's output without affecting code that relies on the
+when Google TestModel is concerned.  This allows you to customize how the value
+appears in Google TestModel's output without affecting code that relies on the
 behavior of its `<<` operator.
 
-If you want to print a value `x` using Google Test's value printer
+If you want to print a value `x` using Google TestModel's value printer
 yourself, just call `::testing::PrintToString(`_x_`)`, which
 returns an `std::string`:
 
@@ -519,9 +519,9 @@ see [Exception Assertions](#exception-assertions).
 
 If you want to test `EXPECT_*()/ASSERT_*()` failures in your test code, see [Catching Failures](#catching-failures).
 
-## How to Write a Death Test ##
+## How to Write a Death TestModel ##
 
-Google Test has the following macros to support death tests:
+Google TestModel has the following macros to support death tests:
 
 | **Fatal assertion** | **Nonfatal assertion** | **Verifies** |
 |:--------------------|:-----------------------|:-------------|
@@ -550,7 +550,7 @@ code, it is _not_ considered a crash by `EXPECT_DEATH`.  Use
 the exit code more precisely.
 
 A predicate here must accept an `int` and return a `bool`. The death test
-succeeds only if the predicate returns `true`. Google Test defines a few
+succeeds only if the predicate returns `true`. Google TestModel defines a few
 predicates that handle the most common cases:
 
 ```
@@ -575,7 +575,7 @@ Note that a death test only cares about three things:
   1. (in the case of `ASSERT_EXIT` and `EXPECT_EXIT`) does the exit status satisfy _predicate_?  Or (in the case of `ASSERT_DEATH` and `EXPECT_DEATH`) is the exit status non-zero?  And
   1. does the stderr output match _regex_?
 
-In particular, if _statement_ generates an `ASSERT_*` or `EXPECT_*` failure, it will **not** cause the death test to fail, as Google Test assertions don't abort the process.
+In particular, if _statement_ generates an `ASSERT_*` or `EXPECT_*` failure, it will **not** cause the death test to fail, as Google TestModel assertions don't abort the process.
 
 To write a death test, simply use one of the above macros inside your test
 function. For example,
@@ -611,7 +611,7 @@ If a test fixture class is shared by normal tests and death tests, you
 can use typedef to introduce an alias for the fixture class and avoid
 duplicating its code:
 ```
-class FooTest : public ::testing::Test { ... };
+class FooTest : public ::testing::TestModel { ... };
 
 typedef FooTest FooDeathTest;
 
@@ -628,11 +628,11 @@ _Availability:_ Linux, Windows (requires MSVC 8.0 or above), Cygwin, and Mac (th
 
 ## Regular Expression Syntax ##
 
-On POSIX systems (e.g. Linux, Cygwin, and Mac), Google Test uses the
+On POSIX systems (e.g. Linux, Cygwin, and Mac), Google TestModel uses the
 [POSIX extended regular expression](http://www.opengroup.org/onlinepubs/009695399/basedefs/xbd_chap09.html#tag_09_04)
 syntax in death tests. To learn about this syntax, you may want to read this [Wikipedia entry](http://en.wikipedia.org/wiki/Regular_expression#POSIX_Extended_Regular_Expressions).
 
-On Windows, Google Test uses its own simple regular expression
+On Windows, Google TestModel uses its own simple regular expression
 implementation. It lacks many features you can find in POSIX extended
 regular expressions.  For example, we don't support union (`"x|y"`),
 grouping (`"(xy)"`), brackets (`"[xy]"`), and repetition count
@@ -663,7 +663,7 @@ and `y` denote regular expressions.):
 | `xy` | matches `x` followed by `y`       |
 
 To help you determine which capability is available on your system,
-Google Test defines macro `GTEST_USES_POSIX_RE=1` when it uses POSIX
+Google TestModel defines macro `GTEST_USES_POSIX_RE=1` when it uses POSIX
 extended regular expressions, or `GTEST_USES_SIMPLE_RE=1` when it uses
 the simple version.  If you want your death tests to work in both
 cases, you can either `#if` on these macros or use the more limited
@@ -704,16 +704,16 @@ arrange that kind of environment. For example, statically-initialized modules
 may start threads before main is ever reached. Once threads have been created,
 it may be difficult or impossible to clean them up.
 
-Google Test has three features intended to raise awareness of threading issues.
+Google TestModel has three features intended to raise awareness of threading issues.
 
   1. A warning is emitted if multiple threads are running when a death test is encountered.
-  1. Test cases with a name ending in "DeathTest" are run before all other tests.
+  1. TestModel cases with a name ending in "DeathTest" are run before all other tests.
   1. It uses `clone()` instead of `fork()` to spawn the child process on Linux (`clone()` is not available on Cygwin and Mac), as `fork()` is more likely to cause the child to hang when the parent process has multiple threads.
 
 It's perfectly fine to create threads inside a death test statement; they are
 executed in a separate process and cannot affect the parent.
 
-## Death Test Styles ##
+## Death TestModel Styles ##
 
 The "threadsafe" death test style was introduced in order to help mitigate the
 risks of testing in a possibly multithreaded environment. It trades increased
@@ -755,7 +755,7 @@ int main(int argc, char** argv) {
 
 The _statement_ argument of `ASSERT_EXIT()` can be any valid C++ statement.
 If it leaves the current function via a `return` statement or by throwing an exception,
-the death test is considered to have failed.  Some Google Test macros may return
+the death test is considered to have failed.  Some Google TestModel macros may return
 from the current function (e.g. `ASSERT_TRUE()`), so be sure to avoid them in _statement_.
 
 Since _statement_ runs in the child process, any in-memory side effect (e.g.
@@ -868,7 +868,7 @@ TEST(FooTest, Bar) {
 ```
 
 Since we don't use exceptions, it is technically impossible to
-implement the intended behavior here.  To alleviate this, Google Test
+implement the intended behavior here.  To alleviate this, Google TestModel
 provides two solutions.  You could use either the
 `(ASSERT|EXPECT)_NO_FATAL_FAILURE` assertions or the
 `HasFatalFailure()` function.  They are described in the following two
@@ -881,7 +881,7 @@ failure in it, the test will continue after the subroutine
 returns. This may not be what you want.
 
 Often people want fatal failures to propagate like exceptions.  For
-that Google Test offers the following macros:
+that Google TestModel offers the following macros:
 
 | **Fatal assertion** | **Nonfatal assertion** | **Verifies** |
 |:--------------------|:-----------------------|:-------------|
@@ -905,15 +905,15 @@ EXPECT_NO_FATAL_FAILURE({
 _Availability:_ Linux, Windows, Mac. Assertions from multiple threads
 are currently not supported.
 
-### Checking for Failures in the Current Test ###
+### Checking for Failures in the Current TestModel ###
 
-`HasFatalFailure()` in the `::testing::Test` class returns `true` if an
+`HasFatalFailure()` in the `::testing::TestModel` class returns `true` if an
 assertion in the current test has suffered a fatal failure. This
 allows functions to catch fatal failures in a sub-routine and return
 early.
 
 ```
-class Test {
+class TestModel {
  public:
   ...
   static bool HasFatalFailure();
@@ -935,10 +935,10 @@ TEST(FooTest, Bar) {
 ```
 
 If `HasFatalFailure()` is used outside of `TEST()` , `TEST_F()` , or a test
-fixture, you must add the `::testing::Test::` prefix, as in:
+fixture, you must add the `::testing::TestModel::` prefix, as in:
 
 ```
-if (::testing::Test::HasFatalFailure())
+if (::testing::TestModel::HasFatalFailure())
   return;
 ```
 
@@ -974,28 +974,28 @@ will output XML like this:
 ```
 
 _Note_:
-  * `RecordProperty()` is a static member of the `Test` class. Therefore it needs to be prefixed with `::testing::Test::` if used outside of the `TEST` body and the test fixture class.
-  * `key` must be a valid XML attribute name, and cannot conflict with the ones already used by Google Test (`name`, `status`,     `time`, and `classname`).
+  * `RecordProperty()` is a static member of the `TestModel` class. Therefore it needs to be prefixed with `::testing::TestModel::` if used outside of the `TEST` body and the test fixture class.
+  * `key` must be a valid XML attribute name, and cannot conflict with the ones already used by Google TestModel (`name`, `status`,     `time`, and `classname`).
 
 _Availability_: Linux, Windows, Mac.
 
-# Sharing Resources Between Tests in the Same Test Case #
+# Sharing Resources Between Tests in the Same TestModel Case #
 
 
 
-Google Test creates a new test fixture object for each test in order to make
+Google TestModel creates a new test fixture object for each test in order to make
 tests independent and easier to debug. However, sometimes tests use resources
 that are expensive to set up, making the one-copy-per-test model prohibitively
 expensive.
 
 If the tests don't change the resource, there's no harm in them sharing a
-single resource copy. So, in addition to per-test set-up/tear-down, Google Test
+single resource copy. So, in addition to per-test set-up/tear-down, Google TestModel
 also supports per-test-case set-up/tear-down. To use it:
 
   1. In your test fixture class (say `FooTest` ), define as `static` some member variables to hold the shared resources.
   1. In the same test fixture class, define a `static void SetUpTestCase()` function (remember not to spell it as **`SetupTestCase`** with a small `u`!) to set up the shared resources and a `static void TearDownTestCase()` function to tear them down.
 
-That's it! Google Test automatically calls `SetUpTestCase()` before running the
+That's it! Google TestModel automatically calls `SetUpTestCase()` before running the
 _first test_ in the `FooTest` test case (i.e. before creating the first
 `FooTest` object), and calls `TearDownTestCase()` after running the _last test_
 in it (i.e. after deleting the last `FooTest` object). In between, the tests
@@ -1009,7 +1009,7 @@ test.
 
 Here's an example of per-test-case set-up and tear-down:
 ```
-class FooTest : public ::testing::Test {
+class FooTest : public ::testing::TestModel {
  protected:
   // Per-test-case set-up.
   // Called before the first test in this test case.
@@ -1065,7 +1065,7 @@ class Environment {
 };
 ```
 
-Then, you register an instance of your environment class with Google Test by
+Then, you register an instance of your environment class with Google TestModel by
 calling the `::testing::AddGlobalTestEnvironment()` function:
 
 ```
@@ -1080,7 +1080,7 @@ It's OK to register multiple environment objects. In this case, their `SetUp()`
 will be called in the order they are registered, and their `TearDown()` will be
 called in the reverse order.
 
-Note that Google Test takes ownership of the registered environment objects.
+Note that Google TestModel takes ownership of the registered environment objects.
 Therefore **do not delete them** by yourself.
 
 You should call `AddGlobalTestEnvironment()` before `RUN_ALL_TESTS()` is
@@ -1142,11 +1142,11 @@ Here are some other situations when value-parameterized tests come handy:
 ## How to Write Value-Parameterized Tests ##
 
 To write value-parameterized tests, first you should define a fixture
-class.  It must be derived from both `::testing::Test` and
+class.  It must be derived from both `::testing::TestModel` and
 `::testing::WithParamInterface<T>` (the latter is a pure interface),
 where `T` is the type of your parameter values.  For convenience, you
 can just derive the fixture class from `::testing::TestWithParam<T>`,
-which itself is derived from both `::testing::Test` and
+which itself is derived from both `::testing::TestModel` and
 `::testing::WithParamInterface<T>`. `T` can be any copyable type. If
 it's a raw pointer, you are responsible for managing the lifespan of
 the pointed values.
@@ -1159,7 +1159,7 @@ class FooTest : public ::testing::TestWithParam<const char*> {
 };
 
 // Or, when you want to add parameters to a pre-existing fixture class:
-class BaseTest : public ::testing::Test {
+class BaseTest : public ::testing::TestModel {
   ...
 };
 class BarTest : public BaseTest,
@@ -1186,7 +1186,7 @@ TEST_P(FooTest, HasBlahBlah) {
 ```
 
 Finally, you can use `INSTANTIATE_TEST_CASE_P` to instantiate the test
-case with any set of parameters you want. Google Test defines a number of
+case with any set of parameters you want. Google TestModel defines a number of
 functions for generating test parameters. They return what we call
 (surprise!) _parameter generators_. Here is a summary of them,
 which are all in the `testing` namespace:
@@ -1196,7 +1196,7 @@ which are all in the `testing` namespace:
 | `Values(v1, v2, ..., vN)`   | Yields values `{v1, v2, ..., vN}`.                                                                                |
 | `ValuesIn(container)` and `ValuesIn(begin, end)` | Yields values from a C-style array, an STL-style container, or an iterator range `[begin, end)`. `container`, `begin`, and `end` can be expressions whose values are determined at run time.  |
 | `Bool()`                    | Yields sequence `{false, true}`.                                                                                  |
-| `Combine(g1, g2, ..., gN)`  | Yields all combinations (the Cartesian product for the math savvy) of the values generated by the `N` generators. This is only available if your system provides the `<tr1/tuple>` header. If you are sure your system does, and Google Test disagrees, you can override it by defining `GTEST_HAS_TR1_TUPLE=1`. See comments in [include/gtest/internal/gtest-port.h](../include/gtest/internal/gtest-port.h) for more information. |
+| `Combine(g1, g2, ..., gN)`  | Yields all combinations (the Cartesian product for the math savvy) of the values generated by the `N` generators. This is only available if your system provides the `<tr1/tuple>` header. If you are sure your system does, and Google TestModel disagrees, you can override it by defining `GTEST_HAS_TR1_TUPLE=1`. See comments in [include/gtest/internal/gtest-port.h](../include/gtest/internal/gtest-port.h) for more information. |
 
 For more details, see the comments at the definitions of these functions in the [source code](../include/gtest/gtest-param-test.h).
 
@@ -1292,11 +1292,11 @@ types.  You only need to write the test logic once, although you must
 know the type list when writing typed tests.  Here's how you do it:
 
 First, define a fixture class template.  It should be parameterized
-by a type.  Remember to derive it from `::testing::Test`:
+by a type.  Remember to derive it from `::testing::TestModel`:
 
 ```
 template <typename T>
-class FooTest : public ::testing::Test {
+class FooTest : public ::testing::TestModel {
  public:
   ...
   typedef std::list<T> List;
@@ -1365,7 +1365,7 @@ First, define a fixture class template, as we did with typed tests:
 
 ```
 template <typename T>
-class FooTest : public ::testing::Test {
+class FooTest : public ::testing::TestModel {
   ...
 };
 ```
@@ -1525,7 +1525,7 @@ Your test code should be something like:
 
 ```
 namespace my_namespace {
-class FooTest : public ::testing::Test {
+class FooTest : public ::testing::TestModel {
  protected:
   ...
 };
@@ -1538,14 +1538,14 @@ TEST_F(FooTest, Baz) { ... }
 
 # Catching Failures #
 
-If you are building a testing utility on top of Google Test, you'll
+If you are building a testing utility on top of Google TestModel, you'll
 want to test your utility.  What framework would you use to test it?
-Google Test, of course.
+Google TestModel, of course.
 
 The challenge is to verify that your testing utility reports failures
 correctly.  In frameworks that report a failure by throwing an
 exception, you could catch the exception and assert on it.  But Google
-Test doesn't use exceptions, so how do we test that a piece of code
+TestModel doesn't use exceptions, so how do we test that a piece of code
 generates an expected failure?
 
 `"gtest/gtest-spi.h"` contains some constructs to do this.  After
@@ -1568,12 +1568,12 @@ For technical reasons, there are some caveats:
   1. _statement_ in `EXPECT_FATAL_FAILURE()` cannot reference local non-static variables or non-static members of `this` object.
   1. _statement_ in `EXPECT_FATAL_FAILURE()` cannot return a value.
 
-_Note:_ Google Test is designed with threads in mind.  Once the
+_Note:_ Google TestModel is designed with threads in mind.  Once the
 synchronization primitives in `"gtest/internal/gtest-port.h"` have
-been implemented, Google Test will become thread-safe, meaning that
+been implemented, Google TestModel will become thread-safe, meaning that
 you can then use assertions in multiple threads concurrently.  Before
 
-that, however, Google Test only supports single-threaded usage.  Once
+that, however, Google TestModel only supports single-threaded usage.  Once
 thread-safe, `EXPECT_FATAL_FAILURE()` and `EXPECT_NONFATAL_FAILURE()`
 will capture failures in the current thread only. If _statement_
 creates new threads, failures in these threads will be ignored.  If
@@ -1584,7 +1584,7 @@ the following macros:
 |:-----------------------------------------------------------------|
 | `EXPECT_NONFATAL_FAILURE_ON_ALL_THREADS(`_statement, substring_`);` |
 
-# Getting the Current Test's Name #
+# Getting the Current TestModel's Name #
 
 Sometimes a function may need to know the name of the currently running test.
 For example, you may be using the `SetUp()` method of your test fixture to set
@@ -1627,9 +1627,9 @@ functions called from them.
 
 _Availability:_ Linux, Windows, Mac.
 
-# Extending Google Test by Handling Test Events #
+# Extending Google TestModel by Handling TestModel Events #
 
-Google Test provides an <b>event listener API</b> to let you receive
+Google TestModel provides an <b>event listener API</b> to let you receive
 notifications about the progress of a test program and test
 failures. The events you can listen to include the start and end of
 the test program, a test case, or a test method, among others. You may
@@ -1666,7 +1666,7 @@ state.  Here's an example:
   class MinimalistPrinter : public ::testing::EmptyTestEventListener {
     // Called before a test starts.
     virtual void OnTestStart(const ::testing::TestInfo& test_info) {
-      printf("*** Test %s.%s starting.\n",
+      printf("*** TestModel %s.%s starting.\n",
              test_info.test_case_name(), test_info.name());
     }
 
@@ -1682,7 +1682,7 @@ state.  Here's an example:
 
     // Called after a test ends.
     virtual void OnTestEnd(const ::testing::TestInfo& test_info) {
-      printf("*** Test %s.%s ending.\n",
+      printf("*** TestModel %s.%s ending.\n",
              test_info.test_case_name(), test_info.name());
     }
   };
@@ -1691,7 +1691,7 @@ state.  Here's an example:
 ## Using Event Listeners ##
 
 To use the event listener you have defined, add an instance of it to
-the Google Test event listener list (represented by class
+the Google TestModel event listener list (represented by class
 [TestEventListeners](../include/gtest/gtest.h#L929)
 - note the "s" at the end of the name) in your
 `main()` function, before calling `RUN_ALL_TESTS()`:
@@ -1701,7 +1701,7 @@ int main(int argc, char** argv) {
   // Gets hold of the event listener list.
   ::testing::TestEventListeners& listeners =
       ::testing::UnitTest::GetInstance()->listeners();
-  // Adds a listener to the end.  Google Test takes the ownership.
+  // Adds a listener to the end.  Google TestModel takes the ownership.
   listeners.Append(new MinimalistPrinter);
   return RUN_ALL_TESTS();
 }
@@ -1747,9 +1747,9 @@ attributed to the right test by the former.
 We have a sample of failure-raising listener
 [here](../samples/sample10_unittest.cc).
 
-# Running Test Programs: Advanced Options #
+# Running TestModel Programs: Advanced Options #
 
-Google Test test programs are ordinary executables. Once built, you can run
+Google TestModel test programs are ordinary executables. Once built, you can run
 them directly and affect their behavior via the following environment variables
 and/or command line flags. For the flags to work, your programs must call
 `::testing::InitGoogleTest()` before calling `RUN_ALL_TESTS()`.
@@ -1780,7 +1780,7 @@ int main(int argc, char** argv) {
 
 This section shows various options for choosing which tests to run.
 
-### Listing Test Names ###
+### Listing TestModel Names ###
 
 Sometimes it is necessary to list the available tests in a program before
 running them so that a filter may be applied if needed. Including the flag
@@ -1801,10 +1801,10 @@ _Availability:_ Linux, Windows, Mac.
 
 ### Running a Subset of the Tests ###
 
-By default, a Google Test program runs all tests the user has defined.
+By default, a Google TestModel program runs all tests the user has defined.
 Sometimes, you want to run only a subset of the tests (e.g. for debugging or
 quickly verifying a change). If you set the `GTEST_FILTER` environment variable
-or the `--gtest_filter` flag to a filter string, Google Test will only run the
+or the `--gtest_filter` flag to a filter string, Google TestModel will only run the
 tests whose full names (in the form of `TestCaseName.TestName`) match the
 filter.
 
@@ -1840,21 +1840,21 @@ If you need to disable all tests in a test case, you can either add `DISABLED_`
 to the front of the name of each test, or alternatively add it to the front of
 the test case name.
 
-For example, the following tests won't be run by Google Test, even though they
+For example, the following tests won't be run by Google TestModel, even though they
 will still be compiled:
 
 ```
 // Tests that Foo does Abc.
 TEST(FooTest, DISABLED_DoesAbc) { ... }
 
-class DISABLED_BarTest : public ::testing::Test { ... };
+class DISABLED_BarTest : public ::testing::TestModel { ... };
 
 // Tests that Bar does Xyz.
 TEST_F(DISABLED_BarTest, DoesXyz) { ... }
 ```
 
 _Note:_ This feature should only be used for temporary pain-relief. You still
-have to fix the disabled tests at a later date. As a reminder, Google Test will
+have to fix the disabled tests at a later date. As a reminder, Google TestModel will
 print a banner warning you if a test program contains any disabled tests.
 
 _Tip:_ You can easily count the number of disabled tests you have
@@ -1904,34 +1904,34 @@ You can specify the `--gtest_shuffle` flag (or set the `GTEST_SHUFFLE`
 environment variable to `1`) to run the tests in a program in a random
 order. This helps to reveal bad dependencies between tests.
 
-By default, Google Test uses a random seed calculated from the current
+By default, Google TestModel uses a random seed calculated from the current
 time. Therefore you'll get a different order every time. The console
 output includes the random seed value, such that you can reproduce an
 order-related test failure later. To specify the random seed
 explicitly, use the `--gtest_random_seed=SEED` flag (or set the
 `GTEST_RANDOM_SEED` environment variable), where `SEED` is an integer
-between 0 and 99999. The seed value 0 is special: it tells Google Test
+between 0 and 99999. The seed value 0 is special: it tells Google TestModel
 to do the default behavior of calculating the seed from the current
 time.
 
-If you combine this with `--gtest_repeat=N`, Google Test will pick a
+If you combine this with `--gtest_repeat=N`, Google TestModel will pick a
 different random seed and re-shuffle the tests in each iteration.
 
 _Availability:_ Linux, Windows, Mac; since v1.4.0.
 
-## Controlling Test Output ##
+## Controlling TestModel Output ##
 
 This section teaches how to tweak the way test results are reported.
 
 ### Colored Terminal Output ###
 
-Google Test can use colors in its terminal output to make it easier to spot
+Google TestModel can use colors in its terminal output to make it easier to spot
 the separation between tests, and whether tests passed.
 
 You can set the GTEST\_COLOR environment variable or set the `--gtest_color`
 command line flag to `yes`, `no`, or `auto` (the default) to enable colors,
-disable colors, or let Google Test decide. When the value is `auto`, Google
-Test will use colors if and only if the output goes to a terminal and (on
+disable colors, or let Google TestModel decide. When the value is `auto`, Google
+TestModel will use colors if and only if the output goes to a terminal and (on
 non-Windows platforms) the `TERM` environment variable is set to `xterm` or
 `xterm-color`.
 
@@ -1939,17 +1939,17 @@ _Availability:_ Linux, Windows, Mac.
 
 ### Suppressing the Elapsed Time ###
 
-By default, Google Test prints the time it takes to run each test.  To
+By default, Google TestModel prints the time it takes to run each test.  To
 suppress that, run the test program with the `--gtest_print_time=0`
 command line flag.  Setting the `GTEST_PRINT_TIME` environment
 variable to `0` has the same effect.
 
-_Availability:_ Linux, Windows, Mac.  (In Google Test 1.3.0 and lower,
+_Availability:_ Linux, Windows, Mac.  (In Google TestModel 1.3.0 and lower,
 the default behavior is that the elapsed time is **not** printed.)
 
 ### Generating an XML Report ###
 
-Google Test can emit a detailed XML report to a file in addition to its normal
+Google TestModel can emit a detailed XML report to a file in addition to its normal
 textual output. The report contains the duration of each test, and thus can
 help you identify slow tests.
 
@@ -1960,17 +1960,17 @@ create the file at the given location. You can also just use the string
 the current directory.
 
 If you specify a directory (for example, `"xml:output/directory/"` on Linux or
-`"xml:output\directory\"` on Windows), Google Test will create the XML file in
+`"xml:output\directory\"` on Windows), Google TestModel will create the XML file in
 that directory, named after the test executable (e.g. `foo_test.xml` for test
 program `foo_test` or `foo_test.exe`). If the file already exists (perhaps left
-over from a previous run), Google Test will pick a different name (e.g.
+over from a previous run), Google TestModel will pick a different name (e.g.
 `foo_test_1.xml`) to avoid overwriting it.
 
 The report uses the format described here.  It is based on the
 `junitreport` Ant task and can be parsed by popular continuous build
 systems like [Hudson](https://hudson.dev.java.net/). Since that format
 was originally intended for Java, a little interpretation is required
-to make it apply to Google Test tests, as shown here:
+to make it apply to Google TestModel tests, as shown here:
 
 ```
 <testsuites name="AllTests" ...>
@@ -1985,8 +1985,8 @@ to make it apply to Google Test tests, as shown here:
 ```
 
   * The root `<testsuites>` element corresponds to the entire test program.
-  * `<testsuite>` elements correspond to Google Test test cases.
-  * `<testcase>` elements correspond to Google Test test functions.
+  * `<testsuite>` elements correspond to Google TestModel test cases.
+  * `<testcase>` elements correspond to Google TestModel test functions.
 
 For instance, the following program
 
@@ -2018,10 +2018,10 @@ could generate this report:
 
 Things to note:
 
-  * The `tests` attribute of a `<testsuites>` or `<testsuite>` element tells how many test functions the Google Test program or test case contains, while the `failures` attribute tells how many of them failed.
+  * The `tests` attribute of a `<testsuites>` or `<testsuite>` element tells how many test functions the Google TestModel program or test case contains, while the `failures` attribute tells how many of them failed.
   * The `time` attribute expresses the duration of the test, test case, or entire test program in milliseconds.
-  * Each `<failure>` element corresponds to a single failed Google Test assertion.
-  * Some JUnit concepts don't apply to Google Test, yet we have to conform to the DTD. Therefore you'll see some dummy elements and attributes in the report. You can safely ignore these parts.
+  * Each `<failure>` element corresponds to a single failed Google TestModel assertion.
+  * Some JUnit concepts don't apply to Google TestModel, yet we have to conform to the DTD. Therefore you'll see some dummy elements and attributes in the report. You can safely ignore these parts.
 
 _Availability:_ Linux, Windows, Mac.
 
@@ -2031,7 +2031,7 @@ _Availability:_ Linux, Windows, Mac.
 
 When running test programs under a debugger, it's very convenient if the
 debugger can catch an assertion failure and automatically drop into interactive
-mode. Google Test's _break-on-failure_ mode supports this behavior.
+mode. Google TestModel's _break-on-failure_ mode supports this behavior.
 
 To enable it, set the `GTEST_BREAK_ON_FAILURE` environment variable to a value
 other than `0` . Alternatively, you can use the `--gtest_break_on_failure`
@@ -2039,11 +2039,11 @@ command line flag.
 
 _Availability:_ Linux, Windows, Mac.
 
-### Disabling Catching Test-Thrown Exceptions ###
+### Disabling Catching TestModel-Thrown Exceptions ###
 
-Google Test can be used either with or without exceptions enabled.  If
+Google TestModel can be used either with or without exceptions enabled.  If
 a test throws a C++ exception or (on Windows) a structured exception
-(SEH), by default Google Test catches it, reports it as a test
+(SEH), by default Google TestModel catches it, reports it as a test
 failure, and continues with the next test method.  This maximizes the
 coverage of a test run.  Also, on Windows an uncaught exception will
 cause a pop-up window, so catching the exceptions allows you to run
@@ -2060,8 +2060,8 @@ the call stack when an exception is thrown.  To achieve that, set the
 ### Letting Another Testing Framework Drive ###
 
 If you work on a project that has already been using another testing
-framework and is not ready to completely switch to Google Test yet,
-you can get much of Google Test's benefit by using its assertions in
+framework and is not ready to completely switch to Google TestModel yet,
+you can get much of Google TestModel's benefit by using its assertions in
 your existing tests.  Just change your `main()` function to look
 like:
 
@@ -2070,28 +2070,28 @@ like:
 
 int main(int argc, char** argv) {
   ::testing::GTEST_FLAG(throw_on_failure) = true;
-  // Important: Google Test must be initialized.
+  // Important: Google TestModel must be initialized.
   ::testing::InitGoogleTest(&argc, argv);
 
   ... whatever your existing testing framework requires ...
 }
 ```
 
-With that, you can use Google Test assertions in addition to the
+With that, you can use Google TestModel assertions in addition to the
 native assertions your testing framework provides, for example:
 
 ```
 void TestFooDoesBar() {
   Foo foo;
-  EXPECT_LE(foo.Bar(1), 100);     // A Google Test assertion.
+  EXPECT_LE(foo.Bar(1), 100);     // A Google TestModel assertion.
   CPPUNIT_ASSERT(foo.IsEmpty());  // A native assertion.
 }
 ```
 
-If a Google Test assertion fails, it will print an error message and
+If a Google TestModel assertion fails, it will print an error message and
 throw an exception, which will be treated as a failure by your host
 testing framework.  If you compile your code with exceptions disabled,
-a failed Google Test assertion will instead exit your program with a
+a failed Google TestModel assertion will instead exit your program with a
 non-zero code, which will also signal a test failure to your test
 runner.
 
@@ -2102,24 +2102,24 @@ the `--gtest_throw_on_failure` flag on the command-line or setting the
 
 _Availability:_ Linux, Windows, Mac; since v1.3.0.
 
-## Distributing Test Functions to Multiple Machines ##
+## Distributing TestModel Functions to Multiple Machines ##
 
 If you have more than one machine you can use to run a test program,
 you might want to run the test functions in parallel and get the
 result faster.  We call this technique _sharding_, where each machine
 is called a _shard_.
 
-Google Test is compatible with test sharding.  To take advantage of
-this feature, your test runner (not part of Google Test) needs to do
+Google TestModel is compatible with test sharding.  To take advantage of
+this feature, your test runner (not part of Google TestModel) needs to do
 the following:
 
   1. Allocate a number of machines (shards) to run the tests.
   1. On each shard, set the `GTEST_TOTAL_SHARDS` environment variable to the total number of shards.  It must be the same for all shards.
   1. On each shard, set the `GTEST_SHARD_INDEX` environment variable to the index of the shard.  Different shards must be assigned different indices, which must be in the range `[0, GTEST_TOTAL_SHARDS - 1]`.
-  1. Run the same test program on all shards.  When Google Test sees the above two environment variables, it will select a subset of the test functions to run.  Across all shards, each test function in the program will be run exactly once.
+  1. Run the same test program on all shards.  When Google TestModel sees the above two environment variables, it will select a subset of the test functions to run.  Across all shards, each test function in the program will be run exactly once.
   1. Wait for all shards to finish, then collect and report the results.
 
-Your project may have tests that were written without Google Test and
+Your project may have tests that were written without Google TestModel and
 thus don't understand this protocol.  In order for your test runner to
 figure out which test supports sharding, it can set the environment
 variable `GTEST_SHARD_STATUS_FILE` to a non-existent file path.  If a
@@ -2142,7 +2142,7 @@ parallel, you would set `GTEST_TOTAL_SHARDS` to 3 on all machines, and
 set `GTEST_SHARD_INDEX` to 0, 1, and 2 on the machines respectively.
 Then you would run the same `foo_test` on each machine.
 
-Google Test reserves the right to change how the work is distributed
+Google TestModel reserves the right to change how the work is distributed
 across the shards, but here's one possible scenario:
 
   * Machine #0 runs `A.V` and `B.X`.
@@ -2151,9 +2151,9 @@ across the shards, but here's one possible scenario:
 
 _Availability:_ Linux, Windows, Mac; since version 1.3.0.
 
-# Fusing Google Test Source Files #
+# Fusing Google TestModel Source Files #
 
-Google Test's implementation consists of ~30 files (excluding its own
+Google TestModel's implementation consists of ~30 files (excluding its own
 tests).  Sometimes you may want them to be packaged up in two files (a
 `.h` and a `.cc`) instead, such that you can easily copy them to a new
 machine and start hacking there.  For this we provide an experimental
@@ -2166,13 +2166,13 @@ python fuse_gtest_files.py OUTPUT_DIR
 
 and you should see an `OUTPUT_DIR` directory being created with files
 `gtest/gtest.h` and `gtest/gtest-all.cc` in it.  These files contain
-everything you need to use Google Test.  Just copy them to anywhere
+everything you need to use Google TestModel.  Just copy them to anywhere
 you want and you are ready to write tests.  You can use the
 [scripts/test/Makefile](../scripts/test/Makefile)
 file as an example on how to compile your tests against them.
 
 # Where to Go from Here #
 
-Congratulations! You've now learned more advanced Google Test tools and are
+Congratulations! You've now learned more advanced Google TestModel tools and are
 ready to tackle more complex testing tasks. If you want to dive even deeper, you
 can read the [Frequently-Asked Questions](V1_6_FAQ.md).
