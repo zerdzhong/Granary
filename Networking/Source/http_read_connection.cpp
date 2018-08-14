@@ -5,6 +5,7 @@
 //
 
 #include "http_read_connection.hpp"
+#include "base_connection.hpp"
 #include "curl.h"
 #include <sstream>
 
@@ -53,6 +54,9 @@ url_(std::move(url)), handle_(nullptr)
         range_str_ = stringStream.str();
     }
 
+    head_data_ = NewConnectionReadData(nullptr, 0, 0, kReadDataTypeHeader);
+    body_data_ = NewConnectionReadData(nullptr, 0, 0, kReadDataTypeBody);
+
     setupHandle();
 }
 
@@ -60,14 +64,41 @@ HttpReadConnection::~HttpReadConnection() {
     cleanupHandle();
 }
 
+#pragma mark- Public
+
+void HttpReadConnection::SyncRead() {
+    if (nullptr == handle_) {
+        setupHandle();
+    }
+
+    int res = curl_easy_perform(handle_);
+
+    ReadConnectionFinished(res);
+}
+
+void HttpReadConnection::ReadConnectionFinished(int code) {
+
+    if (nullptr != listener_) {
+        listener_->OnDataFinish(this, code);
+    }
+
+    if (nullptr != handle_) {
+        curl_easy_cleanup(handle_);
+        handle_ = nullptr;
+    }
+
+}
+
 #pragma mark- Internal CURL Callback
 
 size_t HttpReadConnection::ReceiveData(char *data, size_t size, size_t nmemb) {
-    return 0;
+    size_t real_size = size * nmemb;
+    return receiveData(data, real_size, kReadDataTypeBody);
 }
 
 size_t HttpReadConnection::ReceiveHeader(char *data, size_t size, size_t nmemb) {
-    return 0;
+    size_t real_size = size * nmemb;
+    return receiveData(data, real_size, kReadDataTypeHeader);
 }
 
 int HttpReadConnection::ReceiveProgress(long long dltotal, long long dlnow) {
@@ -75,6 +106,29 @@ int HttpReadConnection::ReceiveProgress(long long dltotal, long long dlnow) {
 }
 
 #pragma mark- Private
+
+size_t HttpReadConnection::receiveData(char *data, size_t size, int type) {
+
+    ConnectionReadData *read_data = nullptr;
+
+    if (kReadDataTypeHeader == type) {
+        read_data = head_data_;
+        read_data->offset += read_data->size;
+    } else if (kReadDataTypeBody == type) {
+        read_data = body_data_;
+        read_data->offset = request_start_ + received_size_;
+        received_size_ += size;
+    }
+
+    read_data->data = data;
+    read_data->size = size;
+
+    if (nullptr != listener_) {
+        listener_->OnData(this, read_data);
+    }
+
+    return size;
+}
 
 void HttpReadConnection::setupHandle() {
     if (nullptr != handle_) {

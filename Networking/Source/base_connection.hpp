@@ -12,12 +12,23 @@ typedef enum {
     kReadDataTypeHeader,
 } ReadDataType;
 
-typedef struct ConnectionReadData {
+typedef struct {
     char *data;
     size_t offset;
     size_t size;
     ReadDataType type;
-};
+} ConnectionReadData;
+
+static ConnectionReadData* NewConnectionReadData(char* data, size_t offset, size_t size, ReadDataType type)
+{
+    auto *read_data = new ConnectionReadData();
+    read_data->data = data;
+    read_data->offset = offset;
+    read_data->size = size;
+    read_data->type = type;
+
+    return read_data;
+}
 
 class BaseConnection;
 
