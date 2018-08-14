@@ -5,17 +5,32 @@
 #ifndef GRANARY_HTTP_READ_CONNECTION_HPP
 #define GRANARY_HTTP_READ_CONNECTION_HPP
 
-
+#include <string>
 #include "base_connection.hpp"
 
+typedef void CURL;
 
 class HttpReadConnection : public BaseConnection {
 public:
-    explicit HttpReadConnection(const char *url, size_t offset, size_t length);
+    explicit HttpReadConnection(std::string url, size_t offset, size_t length);
+    ~HttpReadConnection();
 
-    const char *url();
+    //curl callback
+    size_t ReceiveData(char *data, size_t size, size_t nmemb);
+    size_t ReceiveHeader(char *data, size_t size, size_t nmemb);
+    int ReceiveProgress(long long dltotal, long long dlnow);
+
+    std::string url();
+    CURL* handle();
+
 private:
-    const char *url_;
+    void setupHandle();
+    void cleanupHandle();
+
+private:
+    std::string url_;
+    std::string range_str_;
+    CURL *handle_;
 };
 
 

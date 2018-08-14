@@ -28,7 +28,7 @@ static const char *TEST_INVALID_URLS[] = {
         "ftp://www.zhihu.com",
         "",
 };
-#define TEST_INVALID_URLS_COUNT 5
+#define TEST_INVALID_URLS_COUNT 4
 
 
 TEST(ReadConnectionTest, initWithValidURLs) {
@@ -40,6 +40,7 @@ TEST(ReadConnectionTest, initWithValidURLs) {
         ASSERT_EQ(read_connection->url(), TEST_VALID_URLS[i]);
         ASSERT_EQ(read_connection->request_start(), i);
         ASSERT_EQ(read_connection->request_size(), i);
+        ASSERT_NE(read_connection->handle(), nullptr);
 
         delete(read_connection);
     }
