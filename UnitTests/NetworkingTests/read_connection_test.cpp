@@ -49,8 +49,8 @@ TEST(ReadConnectionTest, initWithValidURLs) {
 
 TEST(ReadConnectionTest, initWithInvalidURLs) {
 
-    for (int i = 0; i < TEST_INVALID_URLS_COUNT; ++i) {
-        HttpReadConnection *read_task = new HttpReadConnection(TEST_INVALID_URLS[i], 0, 0);
+    for (auto &url : TEST_INVALID_URLS) {
+        HttpReadConnection *read_task = new HttpReadConnection(url, 0, 0);
 
         ASSERT_NE(nullptr, read_task);
 
@@ -71,6 +71,45 @@ TEST(ReadConnectionTest, SyncRead) {
 
     delete(read_connection1);
     delete(read_connection2);
+}
+
+class TestConnectionListener : public ConnectionListener {
+public:
+    TestConnectionListener():received_size_(0), call_finish_(false){
+
+    }
+    void OnReady(BaseConnection *connection) override {
+
+    }
+    void OnData(BaseConnection *connection, ConnectionReadData *read_data) override {
+        if (kReadDataTypeBody == read_data->type) {
+            received_size_ += read_data->size;
+        }
+    }
+    void OnDataFinish(BaseConnection *connection, int err_code) override {
+        call_finish_ = true;
+    }
+
+public:
+    size_t received_size_;
+    bool call_finish_;
+};
+
+TEST(ReadConnectionTest, Listener) {
+
+    TestConnectionListener *listener = new TestConnectionListener();
+
+    HttpReadConnection *read_connection1 = new HttpReadConnection("https://www.baidu.com", 0, 0);
+    read_connection1->setListener(listener);
+
+    read_connection1->SyncRead();
+
+    ASSERT_EQ(read_connection1->listener(), listener);
+    ASSERT_EQ(listener->received_size_, read_connection1->received_size());
+    ASSERT_EQ(true, listener->call_finish_);
+
+    delete(listener);
+    delete(read_connection1);
 }
 
 

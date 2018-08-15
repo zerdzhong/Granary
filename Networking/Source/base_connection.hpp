@@ -5,7 +5,7 @@
 #ifndef GRANARY_BASE_CONNECTION_HPP
 #define GRANARY_BASE_CONNECTION_HPP
 
-#include <stdio.h>
+#include <cstdio>
 
 typedef enum {
     kReadDataTypeBody = 0,
@@ -34,15 +34,15 @@ class BaseConnection;
 
 class ConnectionListener {
 public:
-    virtual void OnReady(BaseConnection *connection);
-    virtual void OnData(BaseConnection *connection, ConnectionReadData *read_data);
-    virtual void OnDataFinish(BaseConnection *connection, int err_code);
+    virtual void OnReady(BaseConnection *connection) = 0;
+    virtual void OnData(BaseConnection *connection, ConnectionReadData *read_data) = 0;
+    virtual void OnDataFinish(BaseConnection *connection, int err_code) = 0;
 };
 
 class BaseConnection {
 public:
     BaseConnection();
-    void registListener(ConnectionListener *listener);
+    void setListener(ConnectionListener *listener);
     ConnectionListener* listener();
 
     size_t request_start();

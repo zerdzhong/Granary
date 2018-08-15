@@ -13,7 +13,7 @@ listener_(nullptr)
 
 }
 
-void BaseConnection::registListener(ConnectionListener *listener) {
+void BaseConnection::setListener(ConnectionListener *listener) {
     listener_ = listener;
 }
 
