@@ -59,8 +59,18 @@ TEST(ReadConnectionTest, initWithInvalidURLs) {
 }
 
 TEST(ReadConnectionTest, SyncRead) {
-    HttpReadConnection *read_connection = new HttpReadConnection("https://www.baidu.com", 0, 0);
-    read_connection->SyncRead();
-    ASSERT_GT(read_connection->received_size(), 0);
+    HttpReadConnection *read_connection1 = new HttpReadConnection("https://www.baidu.com", 0, 0);
+    read_connection1->SyncRead();
+    ASSERT_GT(read_connection1->received_size(), 0);
+
+    HttpReadConnection *read_connection2 = new HttpReadConnection("https://www.baidu.com", 0, 0);
+    read_connection2->SyncRead();
+    ASSERT_GT(read_connection2->received_size(), 0);
+
+    ASSERT_EQ(read_connection1->received_size(), read_connection2->received_size());
+
+    delete(read_connection1);
+    delete(read_connection2);
 }
+
 
