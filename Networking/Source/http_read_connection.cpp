@@ -19,7 +19,7 @@ static size_t header_callback(char *buffer, size_t size,
 }
 
 int xfer_callback(void *clientp, curl_off_t dltotal, curl_off_t dlnow,
-                  curl_off_t ultotal, curl_off_t ulnow)
+                  curl_off_t , curl_off_t )
 {
     auto * readTask = (HttpReadConnection *) clientp;
     return readTask->ReceiveProgress(dltotal, dlnow);
@@ -62,6 +62,16 @@ url_(std::move(url)), handle_(nullptr)
 
 HttpReadConnection::~HttpReadConnection() {
     cleanupHandle();
+
+    if (head_data_) {
+        delete head_data_;
+        head_data_ = nullptr;
+    }
+
+    if (body_data_) {
+        delete body_data_;
+        body_data_ = nullptr;
+    }
 }
 
 #pragma mark- Public
@@ -120,11 +130,15 @@ size_t HttpReadConnection::receiveData(char *data, size_t size, int type) {
         received_size_ += size;
     }
 
+    assert(read_data);
+
     read_data->data = data;
     read_data->size = size;
 
     if (nullptr != listener_) {
         listener_->OnData(this, read_data);
+    } else {
+        //add a default implement write to file/console?
     }
 
     return size;

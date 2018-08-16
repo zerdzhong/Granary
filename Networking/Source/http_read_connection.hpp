@@ -20,7 +20,7 @@ public:
     size_t ReceiveHeader(char *data, size_t size, size_t nmemb);
     int ReceiveProgress(long long dltotal, long long dlnow);
 
-    //
+    //Read
     void SyncRead();
     void ReadConnectionFinished(int code);
 
