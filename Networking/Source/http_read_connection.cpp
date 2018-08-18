@@ -40,10 +40,12 @@ size_t write_callback(char *data, size_t size, size_t nmemb, void *userdata)
     return readTask->ReceiveData(data, size, nmemb);
 }
 
+#define kDefaultRetryCount 3
+
 #pragma mark- Life cycle
 
 HttpReadConnection::HttpReadConnection(std::string url, size_t offset, size_t length) :
-url_(std::move(url)), handle_(nullptr)
+url_(std::move(url)), handle_(nullptr), retry_count_(kDefaultRetryCount)
 {
     request_start_ = offset;
     request_size_ = length;
@@ -81,9 +83,11 @@ void HttpReadConnection::SyncRead() {
         setupHandle();
     }
 
-    int res = curl_easy_perform(handle_);
+    CURLcode curl_code = curl_easy_perform(handle_);
 
-    ReadConnectionFinished(res);
+    HttpConnectionCode result_code = errorReason(curl_code );
+
+    ReadConnectionFinished(result_code);
 }
 
 void HttpReadConnection::ReadConnectionFinished(int code) {
@@ -144,6 +148,89 @@ size_t HttpReadConnection::receiveData(char *data, size_t size, int type) {
     return size;
 }
 
+HttpConnectionCode HttpReadConnection::errorReason(int code) {
+
+    HttpConnectionCode result = CONN_DOWNLOAD_OK;
+
+    if (CURLE_OK != code) {
+        switch(code) {
+            case CURLE_URL_MALFORMAT:
+                result = CONN_INVALID_URL;
+                break;
+            case CURLE_COULDNT_CONNECT:
+                result = CONN_TCP_CONN_FAILED;
+                break;
+            case CURLE_OPERATION_TIMEDOUT:
+                result = CONN_TIMEOUT;
+                break;
+            case CURLE_TOO_MANY_REDIRECTS:
+                result = HTTP_OVER_REDIRECT;
+                break;
+            case CURLE_ABORTED_BY_CALLBACK:
+                result = CONN_USER_CANCEL;
+                break;
+            default:
+                result = static_cast<HttpConnectionCode>(code);
+                break;
+        }
+
+        return result;
+    }
+
+    int protocol_code = 0;
+    curl_easy_getinfo(handle_, CURLINFO_PROTOCOL, &protocol_code);
+
+    if (CURLPROTO_HTTP != protocol_code &&  CURLPROTO_HTTPS != protocol_code) {
+        result = CONN_UNSUPPORT_PROTOCOL;
+    }
+
+    long response_code = 0;
+    curl_easy_getinfo(handle_, CURLINFO_RESPONSE_CODE, &response_code);
+
+    switch(response_code) {
+        case 400:
+            result = HTTP_BAD_REQUEST;
+            break;
+        case 401:
+            result = HTTP_UNAUTHORIZED;
+            break;
+        case 403:
+            result = HTTP_FORBIDDEN;
+            break;
+        case 404:
+            result = HTTP_NOT_FOUND;
+            break;
+        case 408:
+            result = HTTP_TIMEOUT;
+            break;
+        case 416:
+            result = HTTP_RANGE_ERROR;
+            break;
+        case 502:
+            result = HTTP_SERVER_502;
+            break;
+        case 503:
+            result = HTTP_SERVER_503;
+            break;
+        case 504:
+            result = HTTP_SERVER_504;
+            break;
+        default: {
+            if (response_code >= 400 && response_code < 500) {
+                result = HTTP_OTHER_4XX;
+                break;
+            }
+            if (response_code >= 500 && response_code < 600) {
+                result = HTTP_SERVER_ERROR;
+                break;
+            }
+            break;
+        }
+    }
+
+    return result;
+}
+
 void HttpReadConnection::setupHandle() {
     if (nullptr != handle_) {
         return;
@@ -197,7 +284,7 @@ void HttpReadConnection::cleanupHandle() {
     handle_ = nullptr;
 }
 
-#pragma mark- Getters
+#pragma mark- Getters & Setters
 
 std::string HttpReadConnection::url() {
     return url_;
@@ -207,3 +294,10 @@ CURL* HttpReadConnection::handle() {
     return handle_;
 }
 
+uint8_t HttpReadConnection::retry_count() {
+    return retry_count_;
+}
+
+void HttpReadConnection::set_retry_count(uint8_t retry_count) {
+    retry_count_ = retry_count;
+}
