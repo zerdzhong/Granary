@@ -112,4 +112,20 @@ TEST(ReadConnectionTest, Listener) {
     delete(read_connection1);
 }
 
+TEST(ReadConnectionTest, EffectiveUrl) {
+    HttpReadConnection *read_connection = new HttpReadConnection("https://t.cn", 0, 0);
+    read_connection->SyncRead();
+
+    std::cout<< read_connection->effective_url_<< std::endl;
+}
+
+TEST(ReadConnectionTest, Retry) {
+    HttpReadConnection *read_connection = new HttpReadConnection("https://www.google.com", 0, 0);
+    read_connection->set_retry_count(2);
+    read_connection->SyncRead();
+
+    ASSERT_EQ(2, read_connection->retry_count());
+    ASSERT_EQ(read_connection->retry_count(), read_connection->request_count_);
+}
+
 

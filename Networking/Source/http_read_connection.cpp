@@ -45,7 +45,11 @@ size_t write_callback(char *data, size_t size, size_t nmemb, void *userdata)
 #pragma mark- Life cycle
 
 HttpReadConnection::HttpReadConnection(std::string url, size_t offset, size_t length) :
-url_(std::move(url)), handle_(nullptr), retry_count_(kDefaultRetryCount)
+url_(std::move(url)),
+handle_(nullptr),
+retry_count_(kDefaultRetryCount),
+stopped_(false),
+request_count_(0)
 {
     request_start_ = offset;
     request_size_ = length;
@@ -83,11 +87,7 @@ void HttpReadConnection::SyncRead() {
         setupHandle();
     }
 
-    CURLcode curl_code = curl_easy_perform(handle_);
-
-    HttpConnectionCode result_code = errorReason(curl_code );
-
-    ReadConnectionFinished(result_code);
+    SyncRead(retry_count_);
 }
 
 void HttpReadConnection::ReadConnectionFinished(int code) {
@@ -121,6 +121,24 @@ int HttpReadConnection::ReceiveProgress(long long dltotal, long long dlnow) {
 
 #pragma mark- Private
 
+void HttpReadConnection::SyncRead(int8_t retry_count) {
+
+    if (retry_count == 0) {
+        return;
+    }
+
+    CURLcode curl_code = curl_easy_perform(handle_);
+    refreshEffectiveUrl();
+    HttpConnectionCode result_code = errorReason(curl_code);
+
+    if (CONN_OK != result_code) {
+        request_count_ ++;
+        SyncRead(--retry_count);
+    }
+
+    ReadConnectionFinished(result_code);
+}
+
 size_t HttpReadConnection::receiveData(char *data, size_t size, int type) {
 
     ConnectionReadData *read_data = nullptr;
@@ -150,7 +168,7 @@ size_t HttpReadConnection::receiveData(char *data, size_t size, int type) {
 
 HttpConnectionCode HttpReadConnection::errorReason(int code) {
 
-    HttpConnectionCode result = CONN_DOWNLOAD_OK;
+    HttpConnectionCode result = CONN_OK;
 
     if (CURLE_OK != code) {
         switch(code) {
@@ -268,6 +286,13 @@ void HttpReadConnection::setupHandle() {
     curl_easy_setopt(easy_handle, CURLOPT_PROGRESSDATA, this);
 #endif
 
+    //time out 1 byte/s 10s
+    curl_easy_setopt(easy_handle, CURLOPT_LOW_SPEED_LIMIT, 1);
+    curl_easy_setopt(easy_handle, CURLOPT_LOW_SPEED_TIME, 10);
+
+    curl_easy_setopt(easy_handle, CURLOPT_TIMEOUT, 20L);
+
+
     if (0 != request_size_) {
         curl_easy_setopt(easy_handle, CURLOPT_RANGE, range_str_.c_str());
     }
@@ -282,6 +307,16 @@ void HttpReadConnection::cleanupHandle() {
 
     curl_easy_cleanup(handle_);
     handle_ = nullptr;
+}
+
+void HttpReadConnection::refreshEffectiveUrl() {
+    if (nullptr == handle_) {
+        return;
+    }
+
+    char *p = nullptr;
+    curl_easy_getinfo(handle_, CURLINFO_EFFECTIVE_URL, &p);
+    if (p) effective_url_ = p;
 }
 
 #pragma mark- Getters & Setters
