@@ -120,7 +120,7 @@ TEST(ReadConnectionTest, EffectiveUrl) {
 }
 
 TEST(ReadConnectionTest, Retry) {
-    HttpReadConnection *read_connection = new HttpReadConnection("https://www.google.com", 0, 0);
+    HttpReadConnection *read_connection = new HttpReadConnection("http://unavailable.zdzhong.com/", 0, 0);
     read_connection->set_retry_count(2);
     read_connection->SyncRead();
 

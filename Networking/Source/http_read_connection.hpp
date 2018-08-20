@@ -62,7 +62,7 @@ private:
     void setupHandle();
     void cleanupHandle();
     void refreshEffectiveUrl();
-    void SyncRead(int8_t retry_count);
+    void SyncRead(uint8_t retry_count);
     size_t receiveData(char *data, size_t size, int type);
     HttpConnectionCode errorReason(int code);
 private:
@@ -75,7 +75,7 @@ private:
     std::string effective_url_;
 
     uint8_t request_count_;
-    int8_t retry_count_;
+    uint8_t retry_count_;
     bool stopped_;
 };
 

@@ -121,18 +121,18 @@ int HttpReadConnection::ReceiveProgress(long long dltotal, long long dlnow) {
 
 #pragma mark- Private
 
-void HttpReadConnection::SyncRead(int8_t retry_count) {
+void HttpReadConnection::SyncRead(uint8_t retry_count) {
 
     if (retry_count == 0) {
         return;
     }
 
     CURLcode curl_code = curl_easy_perform(handle_);
+    request_count_ ++;
     refreshEffectiveUrl();
     HttpConnectionCode result_code = errorReason(curl_code);
 
     if (CONN_OK != result_code) {
-        request_count_ ++;
         SyncRead(--retry_count);
     }
 
