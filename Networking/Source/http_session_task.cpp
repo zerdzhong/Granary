@@ -2,7 +2,7 @@
 // Created by zhongzhendong on 2018/8/11.
 //
 
-#include "base_connection.hpp"
+#include "http_session_task.hpp"
 
 BaseConnection::BaseConnection():
 request_size_(0),

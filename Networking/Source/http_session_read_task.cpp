@@ -4,8 +4,8 @@
 // Created by zhongzhendong on 2018/8/11.
 //
 
-#include "http_read_connection.hpp"
-#include "base_connection.hpp"
+#include "http_session_read_task.hpp"
+#include "http_session_task.hpp"
 #include "curl.h"
 #include <sstream>
 
@@ -14,14 +14,14 @@
 static size_t header_callback(char *buffer, size_t size,
                               size_t nitems, void *userdata)
 {
-    auto * readTask = (HttpReadConnection *) userdata;
+    auto * readTask = (HttpSessionReadTask *) userdata;
     return readTask->ReceiveHeader(buffer, size, nitems);
 }
 
 int xfer_callback(void *clientp, curl_off_t dltotal, curl_off_t dlnow,
                   curl_off_t , curl_off_t )
 {
-    auto * readTask = (HttpReadConnection *) clientp;
+    auto * readTask = (HttpSessionReadTask *) clientp;
     return readTask->ReceiveProgress(dltotal, dlnow);
 }
 
@@ -36,7 +36,7 @@ int progress_callback(void *clientp,   double dltotal,   double dlnow,   double 
 
 size_t write_callback(char *data, size_t size, size_t nmemb, void *userdata)
 {
-    auto * readTask = (HttpReadConnection *) userdata;
+    auto * readTask = (HttpSessionReadTask *) userdata;
     return readTask->ReceiveData(data, size, nmemb);
 }
 
@@ -44,7 +44,7 @@ size_t write_callback(char *data, size_t size, size_t nmemb, void *userdata)
 
 #pragma mark- Life cycle
 
-HttpReadConnection::HttpReadConnection(std::string url, size_t offset, size_t length) :
+HttpSessionReadTask::HttpSessionReadTask(std::string url, size_t offset, size_t length) :
 url_(std::move(url)),
 handle_(nullptr),
 retry_count_(kDefaultRetryCount),
@@ -66,7 +66,7 @@ request_count_(0)
     setupHandle();
 }
 
-HttpReadConnection::~HttpReadConnection() {
+HttpSessionReadTask::~HttpSessionReadTask() {
     cleanupHandle();
 
     if (head_data_) {
@@ -82,7 +82,7 @@ HttpReadConnection::~HttpReadConnection() {
 
 #pragma mark- Public
 
-void HttpReadConnection::SyncRead() {
+void HttpSessionReadTask::SyncRead() {
     if (nullptr == handle_) {
         setupHandle();
     }
@@ -90,7 +90,7 @@ void HttpReadConnection::SyncRead() {
     SyncRead(retry_count_);
 }
 
-void HttpReadConnection::ReadConnectionFinished(int code) {
+void HttpSessionReadTask::ReadConnectionFinished(int code) {
 
     if (nullptr != listener_) {
         listener_->OnDataFinish(this, code);
@@ -105,23 +105,23 @@ void HttpReadConnection::ReadConnectionFinished(int code) {
 
 #pragma mark- Internal CURL Callback
 
-size_t HttpReadConnection::ReceiveData(char *data, size_t size, size_t nmemb) {
+size_t HttpSessionReadTask::ReceiveData(char *data, size_t size, size_t nmemb) {
     size_t real_size = size * nmemb;
     return receiveData(data, real_size, kReadDataTypeBody);
 }
 
-size_t HttpReadConnection::ReceiveHeader(char *data, size_t size, size_t nmemb) {
+size_t HttpSessionReadTask::ReceiveHeader(char *data, size_t size, size_t nmemb) {
     size_t real_size = size * nmemb;
     return receiveData(data, real_size, kReadDataTypeHeader);
 }
 
-int HttpReadConnection::ReceiveProgress(long long dltotal, long long dlnow) {
+int HttpSessionReadTask::ReceiveProgress(long long dltotal, long long dlnow) {
     return 0;
 }
 
 #pragma mark- Private
 
-void HttpReadConnection::SyncRead(uint8_t retry_count) {
+void HttpSessionReadTask::SyncRead(uint8_t retry_count) {
 
     if (retry_count == 0) {
         return;
@@ -139,7 +139,7 @@ void HttpReadConnection::SyncRead(uint8_t retry_count) {
     ReadConnectionFinished(result_code);
 }
 
-size_t HttpReadConnection::receiveData(char *data, size_t size, int type) {
+size_t HttpSessionReadTask::receiveData(char *data, size_t size, int type) {
 
     ConnectionReadData *read_data = nullptr;
 
@@ -166,7 +166,7 @@ size_t HttpReadConnection::receiveData(char *data, size_t size, int type) {
     return size;
 }
 
-HttpConnectionCode HttpReadConnection::errorReason(int code) {
+HttpConnectionCode HttpSessionReadTask::errorReason(int code) {
 
     HttpConnectionCode result = CONN_OK;
 
@@ -249,7 +249,7 @@ HttpConnectionCode HttpReadConnection::errorReason(int code) {
     return result;
 }
 
-void HttpReadConnection::setupHandle() {
+void HttpSessionReadTask::setupHandle() {
     if (nullptr != handle_) {
         return;
     }
@@ -300,7 +300,7 @@ void HttpReadConnection::setupHandle() {
     handle_ = easy_handle;
 }
 
-void HttpReadConnection::cleanupHandle() {
+void HttpSessionReadTask::cleanupHandle() {
     if (nullptr == handle_) {
         return;
     }
@@ -309,7 +309,7 @@ void HttpReadConnection::cleanupHandle() {
     handle_ = nullptr;
 }
 
-void HttpReadConnection::refreshEffectiveUrl() {
+void HttpSessionReadTask::refreshEffectiveUrl() {
     if (nullptr == handle_) {
         return;
     }
@@ -321,18 +321,18 @@ void HttpReadConnection::refreshEffectiveUrl() {
 
 #pragma mark- Getters & Setters
 
-std::string HttpReadConnection::url() {
+std::string HttpSessionReadTask::url() {
     return url_;
 }
 
-CURL* HttpReadConnection::handle() {
+CURL* HttpSessionReadTask::handle() {
     return handle_;
 }
 
-uint8_t HttpReadConnection::retry_count() {
+uint8_t HttpSessionReadTask::retry_count() {
     return retry_count_;
 }
 
-void HttpReadConnection::set_retry_count(uint8_t retry_count) {
+void HttpSessionReadTask::set_retry_count(uint8_t retry_count) {
     retry_count_ = retry_count;
 }

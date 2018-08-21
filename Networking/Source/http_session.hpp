@@ -7,23 +7,15 @@
 
 #include "thread_base.hpp"
 
-class HttpConnection;
+class HttpSessionThread;
 
-class HttpConnectionThread: public ThreadBase {
-public:
-    void run() override;
-
-private:
-    HttpConnection *connection_;
-};
-
-class HttpConnection {
+class HttpSession {
 public:
     void Start();
     void runInternal();
 
 private:
-    HttpConnectionThread *thread_;
+    HttpSessionThread *thread_;
 };
 
 

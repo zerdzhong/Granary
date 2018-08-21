@@ -7,7 +7,7 @@
 #define private public
 #define protected public
 
-#include "http_read_connection.hpp"
+#include "http_session_read_task.hpp"
 #include <curl/curl.h>
 
 #undef private
@@ -31,10 +31,10 @@ static const char *TEST_INVALID_URLS[] = {
 #define TEST_INVALID_URLS_COUNT 4
 
 
-TEST(ReadConnectionTest, initWithValidURLs) {
+TEST(SessionReadTaskTest, initWithValidURLs) {
 
     for (int i = 0; i < TEST_VALID_URLS_COUNT; ++i) {
-        HttpReadConnection *read_connection = new HttpReadConnection(TEST_VALID_URLS[i], i, i);
+        HttpSessionReadTask *read_connection = new HttpSessionReadTask(TEST_VALID_URLS[i], i, i);
 
         ASSERT_NE(nullptr, read_connection);
         ASSERT_EQ(read_connection->url(), TEST_VALID_URLS[i]);
@@ -47,10 +47,10 @@ TEST(ReadConnectionTest, initWithValidURLs) {
 }
 
 
-TEST(ReadConnectionTest, initWithInvalidURLs) {
+TEST(SessionReadTaskTest, initWithInvalidURLs) {
 
     for (auto &url : TEST_INVALID_URLS) {
-        HttpReadConnection *read_task = new HttpReadConnection(url, 0, 0);
+        HttpSessionReadTask *read_task = new HttpSessionReadTask(url, 0, 0);
 
         ASSERT_NE(nullptr, read_task);
 
@@ -58,12 +58,12 @@ TEST(ReadConnectionTest, initWithInvalidURLs) {
     }
 }
 
-TEST(ReadConnectionTest, SyncRead) {
-    HttpReadConnection *read_connection1 = new HttpReadConnection("https://www.baidu.com", 0, 0);
+TEST(SessionReadTaskTest, SyncRead) {
+    HttpSessionReadTask *read_connection1 = new HttpSessionReadTask("https://www.baidu.com", 0, 0);
     read_connection1->SyncRead();
     ASSERT_GT(read_connection1->received_size(), 0);
 
-    HttpReadConnection *read_connection2 = new HttpReadConnection("https://www.baidu.com", 0, 0);
+    HttpSessionReadTask *read_connection2 = new HttpSessionReadTask("https://www.baidu.com", 0, 0);
     read_connection2->SyncRead();
     ASSERT_GT(read_connection2->received_size(), 0);
 
@@ -95,11 +95,11 @@ public:
     bool call_finish_;
 };
 
-TEST(ReadConnectionTest, Listener) {
+TEST(SessionReadTaskTest, Listener) {
 
     TestConnectionListener *listener = new TestConnectionListener();
 
-    HttpReadConnection *read_connection1 = new HttpReadConnection("https://www.baidu.com", 0, 0);
+    HttpSessionReadTask *read_connection1 = new HttpSessionReadTask("https://www.baidu.com", 0, 0);
     read_connection1->setListener(listener);
 
     read_connection1->SyncRead();
@@ -112,15 +112,15 @@ TEST(ReadConnectionTest, Listener) {
     delete(read_connection1);
 }
 
-TEST(ReadConnectionTest, EffectiveUrl) {
-    HttpReadConnection *read_connection = new HttpReadConnection("https://t.cn", 0, 0);
+TEST(SessionReadTaskTest, EffectiveUrl) {
+    HttpSessionReadTask *read_connection = new HttpSessionReadTask("https://t.cn", 0, 0);
     read_connection->SyncRead();
 
     std::cout<< read_connection->effective_url_<< std::endl;
 }
 
-TEST(ReadConnectionTest, Retry) {
-    HttpReadConnection *read_connection = new HttpReadConnection("http://unavailable.zdzhong.com/", 0, 0);
+TEST(SessionReadTaskTest, Retry) {
+    HttpSessionReadTask *read_connection = new HttpSessionReadTask("http://unavailable.zdzhong.com/", 0, 0);
     read_connection->set_retry_count(2);
     read_connection->SyncRead();
 

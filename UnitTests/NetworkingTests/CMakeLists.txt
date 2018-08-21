@@ -2,7 +2,7 @@ project(NetworkingTests)
 
 include_directories(${gtests_SOURCE_DIR}/include ${gtests_SOURCE_DIR})
 
-add_executable(NetworkingTests read_connection_test.cpp)
+add_executable(NetworkingTests session_read_task_test.cpp)
 
 include_directories(../../Networking/Source)
 

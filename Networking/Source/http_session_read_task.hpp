@@ -6,16 +6,14 @@
 #define GRANARY_HTTP_READ_CONNECTION_HPP
 
 #include <string>
-#include "base_connection.hpp"
+#include "http_session_task.hpp"
 
 typedef void CURL;
 
 typedef enum {
     CONN_OK      = 0,        //download success
-    CONN_INVAL_HANDLE     = 1000,     // invalid handle
-    CONN_CURL_RUNNING       ,
-    CONN_INVAL_PARAM        ,           //invalid parameter
-    CONN_RT_ERR             ,           //runtime error
+    CONN_RT_ERR = 1000      ,         //invalid parameter
+    CONN_INVALID_PARAM      ,           //runtime error
     CONN_OUT_OF_MEMORY      ,           //out of memory
     CONN_FAILED_INIT        ,           //initialization failed
     CONN_TIMEOUT            ,           //timeout
@@ -39,10 +37,10 @@ typedef enum {
     HTTP_SERVER_ERROR           ,        //HTTP 5xx
 } HttpConnectionCode;
 
-class HttpReadConnection : public BaseConnection {
+class HttpSessionReadTask : public BaseConnection {
 public:
-    explicit HttpReadConnection(std::string url, size_t offset, size_t length);
-    ~HttpReadConnection();
+    explicit HttpSessionReadTask(std::string url, size_t offset, size_t length);
+    ~HttpSessionReadTask();
 
     //curl callback
     size_t ReceiveData(char *data, size_t size, size_t nmemb);
