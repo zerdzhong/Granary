@@ -49,6 +49,7 @@ public:
 
     //Read
     void SyncRead();
+    void Cancel();
     void ReadConnectionFinished(int code);
 
     std::string url();
@@ -59,10 +60,11 @@ public:
 private:
     void setupHandle();
     void cleanupHandle();
-    void refreshEffectiveUrl();
     void SyncRead(uint8_t retry_count);
     size_t receiveData(char *data, size_t size, int type);
-    HttpConnectionCode errorReason(int code);
+    HttpConnectionCode parseErrorReason(int code);
+    std::string parseEffectiveUrl();
+
 private:
     std::string url_;
     std::string range_str_;
@@ -71,6 +73,7 @@ private:
     ConnectionReadData *body_data_;
 
     std::string effective_url_;
+    HttpConnectionCode result_code_;
 
     uint8_t request_count_;
     uint8_t retry_count_;

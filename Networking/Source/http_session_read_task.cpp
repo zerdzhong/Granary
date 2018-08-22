@@ -58,7 +58,10 @@ request_count_(0)
         std::ostringstream stringStream;
         stringStream << request_start_ << "-" <<request_start_ + request_size_ - 1;
         range_str_ = stringStream.str();
+    } else {
+        range_str_ = "0-";
     }
+
 
     head_data_ = NewConnectionReadData(nullptr, 0, 0, kReadDataTypeHeader);
     body_data_ = NewConnectionReadData(nullptr, 0, 0, kReadDataTypeBody);
@@ -90,9 +93,13 @@ void HttpSessionReadTask::SyncRead() {
     SyncRead(retry_count_);
 }
 
+void HttpSessionReadTask::Cancel() {
+    stopped_ = true;
+}
+
 void HttpSessionReadTask::ReadConnectionFinished(int code) {
 
-    if (nullptr != listener_) {
+    if (nullptr != listener_ && !stopped_) {
         listener_->OnDataFinish(this, code);
     }
 
@@ -129,14 +136,14 @@ void HttpSessionReadTask::SyncRead(uint8_t retry_count) {
 
     CURLcode curl_code = curl_easy_perform(handle_);
     request_count_ ++;
-    refreshEffectiveUrl();
-    HttpConnectionCode result_code = errorReason(curl_code);
+    effective_url_ = parseEffectiveUrl();
+    result_code_ = parseErrorReason(curl_code);
 
-    if (CONN_OK != result_code) {
+    if (CONN_OK != result_code_) {
         SyncRead(--retry_count);
     }
 
-    ReadConnectionFinished(result_code);
+    ReadConnectionFinished(result_code_);
 }
 
 size_t HttpSessionReadTask::receiveData(char *data, size_t size, int type) {
@@ -157,7 +164,7 @@ size_t HttpSessionReadTask::receiveData(char *data, size_t size, int type) {
     read_data->data = data;
     read_data->size = size;
 
-    if (nullptr != listener_) {
+    if (nullptr != listener_ && !stopped_) {
         listener_->OnData(this, read_data);
     } else {
         //add a default implement write to file/console?
@@ -166,7 +173,7 @@ size_t HttpSessionReadTask::receiveData(char *data, size_t size, int type) {
     return size;
 }
 
-HttpConnectionCode HttpSessionReadTask::errorReason(int code) {
+HttpConnectionCode HttpSessionReadTask::parseErrorReason(int code) {
 
     HttpConnectionCode result = CONN_OK;
 
@@ -270,6 +277,11 @@ void HttpSessionReadTask::setupHandle() {
     curl_easy_setopt(easy_handle, CURLOPT_WRITEFUNCTION, write_callback);
     curl_easy_setopt(easy_handle, CURLOPT_WRITEDATA, this);
 
+    //Allow redirect
+    curl_easy_setopt(easy_handle, CURLOPT_FOLLOWLOCATION, 1L);
+    curl_easy_setopt(easy_handle, CURLOPT_AUTOREFERER, 1L);
+    curl_easy_setopt(easy_handle, CURLOPT_MAXREDIRS, 30L);
+
     //SSL setting
 #ifdef WITHOUT_SSL
     curl_easy_setopt(easy_handle, CURLOPT_SSL_VERIFYHOST, 0L);
@@ -292,10 +304,7 @@ void HttpSessionReadTask::setupHandle() {
 
     curl_easy_setopt(easy_handle, CURLOPT_TIMEOUT, 20L);
 
-
-    if (0 != request_size_) {
-        curl_easy_setopt(easy_handle, CURLOPT_RANGE, range_str_.c_str());
-    }
+    curl_easy_setopt(easy_handle, CURLOPT_RANGE, range_str_.c_str());
 
     handle_ = easy_handle;
 }
@@ -309,14 +318,12 @@ void HttpSessionReadTask::cleanupHandle() {
     handle_ = nullptr;
 }
 
-void HttpSessionReadTask::refreshEffectiveUrl() {
-    if (nullptr == handle_) {
-        return;
-    }
+std::string HttpSessionReadTask::parseEffectiveUrl() {
+    assert(handle_);
 
     char *p = nullptr;
     curl_easy_getinfo(handle_, CURLINFO_EFFECTIVE_URL, &p);
-    if (p) effective_url_ = p;
+    return p;
 }
 
 #pragma mark- Getters & Setters

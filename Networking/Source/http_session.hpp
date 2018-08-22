@@ -6,11 +6,13 @@
 #define GRANARY_HTTP_CONNECTION_HPP
 
 #include "thread_base.hpp"
+#include <string>
 
 class HttpSessionThread;
 
 class HttpSession {
 public:
+    void ReadTaskWithUrl(std::string url);
     void Start();
     void runInternal();
 
