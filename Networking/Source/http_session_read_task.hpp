@@ -37,7 +37,7 @@ typedef enum {
     HTTP_SERVER_ERROR           ,        //HTTP 5xx
 } HttpConnectionCode;
 
-class HttpSessionReadTask : public BaseConnection {
+class HttpSessionReadTask : public HttpSessionTask {
 public:
     explicit HttpSessionReadTask(std::string url, size_t offset, size_t length);
     ~HttpSessionReadTask();
@@ -69,8 +69,8 @@ private:
     std::string url_;
     std::string range_str_;
     CURL *handle_;
-    ConnectionReadData *head_data_;
-    ConnectionReadData *body_data_;
+    HttpSessionTaskData *head_data_;
+    HttpSessionTaskData *body_data_;
 
     std::string effective_url_;
     HttpConnectionCode result_code_;

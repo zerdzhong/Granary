@@ -17,11 +17,11 @@ typedef struct {
     size_t offset;
     size_t size;
     ReadDataType type;
-} ConnectionReadData;
+} HttpSessionTaskData;
 
-static ConnectionReadData* NewConnectionReadData(char* data, size_t offset, size_t size, ReadDataType type)
+static HttpSessionTaskData* NewSessionTaskData(char *data, size_t offset, size_t size, ReadDataType type)
 {
-    auto *read_data = new ConnectionReadData();
+    auto *read_data = new HttpSessionTaskData();
     read_data->data = data;
     read_data->offset = offset;
     read_data->size = size;
@@ -30,27 +30,27 @@ static ConnectionReadData* NewConnectionReadData(char* data, size_t offset, size
     return read_data;
 }
 
-class BaseConnection;
+class HttpSessionTask;
 
-class ConnectionListener {
+class HttpSessionTaskListener {
 public:
-    virtual void OnReady(BaseConnection *connection) = 0;
-    virtual void OnData(BaseConnection *connection, ConnectionReadData *read_data) = 0;
-    virtual void OnDataFinish(BaseConnection *connection, int err_code) = 0;
+    virtual void OnReady(HttpSessionTask *connection) = 0;
+    virtual void OnData(HttpSessionTask *connection, HttpSessionTaskData *read_data) = 0;
+    virtual void OnDataFinish(HttpSessionTask *connection, int err_code) = 0;
 };
 
-class BaseConnection {
+class HttpSessionTask {
 public:
-    BaseConnection();
-    void setListener(ConnectionListener *listener);
-    ConnectionListener* listener();
+    HttpSessionTask();
+    void setListener(HttpSessionTaskListener *listener);
+    HttpSessionTaskListener* listener();
 
     size_t request_start();
     size_t request_size();
     size_t received_size();
 
 protected:
-    ConnectionListener* listener_;
+    HttpSessionTaskListener* listener_;
     size_t request_start_;
     size_t request_size_;
     size_t received_size_;

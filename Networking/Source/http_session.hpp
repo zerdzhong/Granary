@@ -12,7 +12,8 @@ class HttpSessionThread;
 
 class HttpSession {
 public:
-    void ReadTaskWithUrl(std::string url);
+    void ReadTask(std::string url);
+    void ReadTask(std::string url, size_t offset, size_t length);
     void Start();
     void runInternal();
 

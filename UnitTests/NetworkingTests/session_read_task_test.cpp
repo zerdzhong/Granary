@@ -37,15 +37,15 @@ static const char *TEST_INVALID_URLS[] = {
 TEST(SessionReadTaskTest, initWithValidURLs) {
 
     for (int i = 0; i < TEST_VALID_URLS_COUNT; ++i) {
-        HttpSessionReadTask *read_connection = new HttpSessionReadTask(TEST_VALID_URLS[i], i, i);
+        HttpSessionReadTask *read_session_task = new HttpSessionReadTask(TEST_VALID_URLS[i], i, i);
 
-        ASSERT_NE(nullptr, read_connection);
-        ASSERT_EQ(read_connection->url(), TEST_VALID_URLS[i]);
-        ASSERT_EQ(read_connection->request_start(), i);
-        ASSERT_EQ(read_connection->request_size(), i);
-        ASSERT_NE(read_connection->handle(), nullptr);
+        ASSERT_NE(nullptr, read_session_task);
+        ASSERT_EQ(read_session_task->url(), TEST_VALID_URLS[i]);
+        ASSERT_EQ(read_session_task->request_start(), i);
+        ASSERT_EQ(read_session_task->request_size(), i);
+        ASSERT_NE(read_session_task->handle(), nullptr);
 
-        delete(read_connection);
+        delete(read_session_task);
     }
 }
 
@@ -62,30 +62,30 @@ TEST(SessionReadTaskTest, initWithInvalidURLs) {
 }
 
 TEST(SessionReadTaskTest, SyncRead) {
-    HttpSessionReadTask *read_connection1 = new HttpSessionReadTask("https://www.baidu.com", 0, 0);
-    read_connection1->SyncRead();
-    ASSERT_GT(read_connection1->received_size(), 0);
+    HttpSessionReadTask *read_session_task1 = new HttpSessionReadTask("https://www.baidu.com", 0, 0);
+    read_session_task1->SyncRead();
+    ASSERT_GT(read_session_task1->received_size(), 0);
 
-    HttpSessionReadTask *read_connection2 = new HttpSessionReadTask("https://www.baidu.com", 0, 0);
-    read_connection2->SyncRead();
-    ASSERT_GT(read_connection2->received_size(), 0);
+    HttpSessionReadTask *read_session_task2 = new HttpSessionReadTask("https://www.baidu.com", 0, 0);
+    read_session_task2->SyncRead();
+    ASSERT_GT(read_session_task2->received_size(), 0);
 
-    ASSERT_EQ(read_connection1->received_size(), read_connection2->received_size());
+    ASSERT_EQ(read_session_task1->received_size(), read_session_task2->received_size());
 
-    delete(read_connection1);
-    delete(read_connection2);
+    delete(read_session_task1);
+    delete(read_session_task2);
 }
 
-class MockConnectionListener : public ConnectionListener {
+class MockConnectionListener : public HttpSessionTaskListener {
 public:
     MockConnectionListener():received_size_(0){
 
     }
-    MOCK_METHOD1(OnReady, void(BaseConnection *connection));
-    MOCK_METHOD2(OnData, void(BaseConnection *connection, ConnectionReadData *data));
-    MOCK_METHOD2(OnDataFinish, void(BaseConnection *connection, int err_code));
+    MOCK_METHOD1(OnReady, void(HttpSessionTask *session_task));
+    MOCK_METHOD2(OnData, void(HttpSessionTask *session_task, HttpSessionTaskData *data));
+    MOCK_METHOD2(OnDataFinish, void(HttpSessionTask *session_task, int err_code));
 
-    void UpdateReceiveSize(BaseConnection *connection, ConnectionReadData *data) {
+    void UpdateReceiveSize(HttpSessionTask *session_task, HttpSessionTaskData *data) {
         if (data->type == kReadDataTypeBody) {
             received_size_ += data->size;
         }
@@ -100,9 +100,9 @@ TEST(SessionReadTaskTest, Listener) {
 
     MockConnectionListener *mock_listener = new MockConnectionListener();
 
-    HttpSessionReadTask *read_connection1 = new HttpSessionReadTask("https://www.baidu.com", 0, 0);
-    read_connection1->setListener(mock_listener);
-    ASSERT_EQ(read_connection1->listener(), mock_listener);
+    HttpSessionReadTask *read_session_task1 = new HttpSessionReadTask("https://www.baidu.com", 0, 0);
+    read_session_task1->setListener(mock_listener);
+    ASSERT_EQ(read_session_task1->listener(), mock_listener);
 
     //call OnDataFinish 1 time
     EXPECT_CALL(*mock_listener, OnDataFinish(_, _)).Times(1);
@@ -110,28 +110,28 @@ TEST(SessionReadTaskTest, Listener) {
     //call OnData when receive data
     ON_CALL(*mock_listener, OnData(_, _))
             .WillByDefault(Invoke(mock_listener,&MockConnectionListener::UpdateReceiveSize));
-    ASSERT_EQ(mock_listener->received_size_, read_connection1->received_size());
+    ASSERT_EQ(mock_listener->received_size_, read_session_task1->received_size());
 
-    read_connection1->SyncRead();
+    read_session_task1->SyncRead();
 
     delete(mock_listener);
-    delete(read_connection1);
+    delete(read_session_task1);
 }
 
 TEST(SessionReadTaskTest, EffectiveUrl) {
-    HttpSessionReadTask *read_connection = new HttpSessionReadTask("https://t.cn", 0, 0);
-    read_connection->SyncRead();
+    HttpSessionReadTask *read_session_task = new HttpSessionReadTask("https://t.cn", 0, 0);
+    read_session_task->SyncRead();
 
-    std::cout<< read_connection->effective_url_<< std::endl;
+    std::cout<< read_session_task->effective_url_<< std::endl;
 }
 
 TEST(SessionReadTaskTest, Retry) {
-    HttpSessionReadTask *read_connection = new HttpSessionReadTask("http://unavailable.zdzhong.com/", 0, 0);
-    read_connection->set_retry_count(2);
-    read_connection->SyncRead();
+    HttpSessionReadTask *read_session_task = new HttpSessionReadTask("http://unavailable.zdzhong.com/", 0, 0);
+    read_session_task->set_retry_count(2);
+    read_session_task->SyncRead();
 
-    ASSERT_EQ(2, read_connection->retry_count());
-    ASSERT_EQ(read_connection->retry_count(), read_connection->request_count_);
+    ASSERT_EQ(2, read_session_task->retry_count());
+    ASSERT_EQ(read_session_task->retry_count(), read_session_task->request_count_);
 }
 
 

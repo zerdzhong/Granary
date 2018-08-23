@@ -63,8 +63,8 @@ request_count_(0)
     }
 
 
-    head_data_ = NewConnectionReadData(nullptr, 0, 0, kReadDataTypeHeader);
-    body_data_ = NewConnectionReadData(nullptr, 0, 0, kReadDataTypeBody);
+    head_data_ = NewSessionTaskData(nullptr, 0, 0, kReadDataTypeHeader);
+    body_data_ = NewSessionTaskData(nullptr, 0, 0, kReadDataTypeBody);
 
     setupHandle();
 }
@@ -148,7 +148,7 @@ void HttpSessionReadTask::SyncRead(uint8_t retry_count) {
 
 size_t HttpSessionReadTask::receiveData(char *data, size_t size, int type) {
 
-    ConnectionReadData *read_data = nullptr;
+    HttpSessionTaskData *read_data = nullptr;
 
     if (kReadDataTypeHeader == type) {
         read_data = head_data_;
