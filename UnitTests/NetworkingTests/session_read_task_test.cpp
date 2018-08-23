@@ -3,6 +3,7 @@
 //
 
 #include "gtest/gtest.h"
+#include "gmock/gmock.h"
 
 #define private public
 #define protected public
@@ -13,6 +14,8 @@
 #undef private
 #undef protected
 
+using ::testing::_;
+using ::testing::Invoke;
 
 static const char *TEST_VALID_URLS[] = {
         "https://gensho.ftp.acc.umu.se/pub/gimp/gimp/v2.10/osx/gimp-2.10.4-x86_64.dmg",
@@ -73,42 +76,45 @@ TEST(SessionReadTaskTest, SyncRead) {
     delete(read_connection2);
 }
 
-class TestConnectionListener : public ConnectionListener {
+class MockConnectionListener : public ConnectionListener {
 public:
-    TestConnectionListener():received_size_(0), call_finish_(false){
+    MockConnectionListener():received_size_(0){
 
     }
-    void OnReady(BaseConnection *connection) override {
+    MOCK_METHOD1(OnReady, void(BaseConnection *connection));
+    MOCK_METHOD2(OnData, void(BaseConnection *connection, ConnectionReadData *data));
+    MOCK_METHOD2(OnDataFinish, void(BaseConnection *connection, int err_code));
 
-    }
-    void OnData(BaseConnection *connection, ConnectionReadData *read_data) override {
-        if (kReadDataTypeBody == read_data->type) {
-            received_size_ += read_data->size;
+    void UpdateReceiveSize(BaseConnection *connection, ConnectionReadData *data) {
+        if (data->type == kReadDataTypeBody) {
+            received_size_ += data->size;
         }
-    }
-    void OnDataFinish(BaseConnection *connection, int err_code) override {
-        call_finish_ = true;
     }
 
 public:
     size_t received_size_;
-    bool call_finish_;
 };
+
 
 TEST(SessionReadTaskTest, Listener) {
 
-    TestConnectionListener *listener = new TestConnectionListener();
+    MockConnectionListener *mock_listener = new MockConnectionListener();
 
     HttpSessionReadTask *read_connection1 = new HttpSessionReadTask("https://www.baidu.com", 0, 0);
-    read_connection1->setListener(listener);
+    read_connection1->setListener(mock_listener);
+    ASSERT_EQ(read_connection1->listener(), mock_listener);
+
+    //call OnDataFinish 1 time
+    EXPECT_CALL(*mock_listener, OnDataFinish(_, _)).Times(1);
+
+    //call OnData when receive data
+    ON_CALL(*mock_listener, OnData(_, _))
+            .WillByDefault(Invoke(mock_listener,&MockConnectionListener::UpdateReceiveSize));
+    ASSERT_EQ(mock_listener->received_size_, read_connection1->received_size());
 
     read_connection1->SyncRead();
 
-    ASSERT_EQ(read_connection1->listener(), listener);
-    ASSERT_EQ(listener->received_size_, read_connection1->received_size());
-    ASSERT_EQ(true, listener->call_finish_);
-
-    delete(listener);
+    delete(mock_listener);
     delete(read_connection1);
 }
 
