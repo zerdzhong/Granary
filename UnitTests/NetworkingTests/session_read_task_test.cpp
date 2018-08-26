@@ -9,13 +9,13 @@
 #define protected public
 
 #include "http_session_read_task.hpp"
-#include <curl/curl.h>
 
 #undef private
 #undef protected
 
 using ::testing::_;
 using ::testing::Invoke;
+using ::testing::AtLeast;
 
 static const char *TEST_VALID_URLS[] = {
         "https://gensho.ftp.acc.umu.se/pub/gimp/gimp/v2.10/osx/gimp-2.10.4-x86_64.dmg",
@@ -31,8 +31,6 @@ static const char *TEST_INVALID_URLS[] = {
         "ftp://www.zhihu.com",
         "",
 };
-#define TEST_INVALID_URLS_COUNT 4
-
 
 TEST(SessionReadTaskTest, initWithValidURLs) {
 
@@ -106,10 +104,12 @@ TEST(SessionReadTaskTest, Listener) {
 
     //call OnDataFinish 1 time
     EXPECT_CALL(*mock_listener, OnDataFinish(_, _)).Times(1);
+    //call OnDataFinish at least 1 time
+    EXPECT_CALL(*mock_listener, OnData(_, _)).Times(AtLeast(1));
 
     //call OnData when receive data
     ON_CALL(*mock_listener, OnData(_, _))
-            .WillByDefault(Invoke(mock_listener,&MockConnectionListener::UpdateReceiveSize));
+            .WillByDefault(Invoke(mock_listener, &MockConnectionListener::UpdateReceiveSize));
     ASSERT_EQ(mock_listener->received_size_, read_session_task1->received_size());
 
     read_session_task1->SyncRead();

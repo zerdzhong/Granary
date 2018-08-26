@@ -34,9 +34,9 @@ class HttpSessionTask;
 
 class HttpSessionTaskListener {
 public:
-    virtual void OnReady(HttpSessionTask *connection) = 0;
-    virtual void OnData(HttpSessionTask *connection, HttpSessionTaskData *read_data) = 0;
-    virtual void OnDataFinish(HttpSessionTask *connection, int err_code) = 0;
+    virtual void OnReady(HttpSessionTask *session_task) = 0;
+    virtual void OnData(HttpSessionTask *session_task, HttpSessionTaskData *read_data) = 0;
+    virtual void OnDataFinish(HttpSessionTask *session_task, int err_code) = 0;
 };
 
 class HttpSessionTask {

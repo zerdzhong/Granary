@@ -60,7 +60,7 @@ public:
 private:
     void setupHandle();
     void cleanupHandle();
-    void SyncRead(uint8_t retry_count);
+    int SyncRead(uint8_t retry_count);
     size_t receiveData(char *data, size_t size, int type);
     HttpConnectionCode parseErrorReason(int code);
     std::string parseEffectiveUrl();
