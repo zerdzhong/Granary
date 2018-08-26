@@ -13,8 +13,6 @@ void* ThreadBase::start_func(void *arg) {
 
 int ThreadBase::Start() {
 
-    pthread_rwlock_init(&rwlock_, NULL);
-
     if (pthread_create(&tid_, NULL, start_func, this) != 0) {
         printf("create a new thread failed!\n");
         return -1;
@@ -60,14 +58,22 @@ void ThreadBase::setIsAlive(bool is_alive) {
     pthread_rwlock_unlock(&rwlock_);
 }
 
+void ThreadBase::setThreadName(std::string name) {
+    thread_name_ = name;
+}
+
 
 ThreadBase::~ThreadBase() {
     printf("Release ThreadBase, %p\n", this);
 
     if (isAlive()) {
         setIsAlive(false);
-        pthread_join(tid_, NULL);
+        pthread_join(tid_, nullptr);
     }
 
     pthread_rwlock_destroy(&rwlock_);
+}
+
+ThreadBase::ThreadBase() {
+    pthread_rwlock_init(&rwlock_, nullptr);
 }

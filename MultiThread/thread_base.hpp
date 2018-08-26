@@ -6,6 +6,7 @@
 #define GRANARY_THREAD_BASE_HPP
 
 #include <pthread.h>
+#include <string>
 
 class ThreadBase {
 public:
@@ -18,6 +19,9 @@ public:
 
     virtual void run() = 0;
     virtual ~ThreadBase();
+    ThreadBase();
+
+    void setThreadName(std::string name);
 
 protected:
     static void* start_func(void* arg);
@@ -27,6 +31,7 @@ private:
     pthread_rwlock_t rwlock_;
     pthread_t tid_;
     bool is_alive_;
+    std::string thread_name_;
 };
 
 
