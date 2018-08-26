@@ -102,7 +102,7 @@ TEST_F(HttpSessionTestFixture, ReadTask) {
 
 }
 
-void* add_task_1(void * pVoid) {
+void* add_task(void * pVoid) {
     auto *session = (HttpSession *) pVoid;
     int count = 10;
     while (count > 0) {
@@ -114,26 +114,16 @@ void* add_task_1(void * pVoid) {
     return nullptr;
 }
 
-void* add_task_2(void * pVoid) {
-    auto *session = (HttpSession *) pVoid;
-    int count = 10;
-    while (count > 0) {
-        session->ReadTask("http://www.zhihu.com");
-        count --;
-        usleep(1000);
-    }
-    return nullptr;
-}
-
 TEST_F(HttpSessionTestFixture, Tasks) {
 
     real_session_->Start();
 
     pthread_t add_task_thread_1, add_task_thread_2;
 
-    pthread_create(&add_task_thread_1, nullptr, add_task_1, real_session_);
-    pthread_create(&add_task_thread_2, nullptr, add_task_2, real_session_);
+    pthread_create(&add_task_thread_1, nullptr, add_task, real_session_);
+    pthread_create(&add_task_thread_2, nullptr, add_task, real_session_);
 
     waitUntilAllFinish(20);
 
+    ASSERT_EQ(request_done_, 20);
 }

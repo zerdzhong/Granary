@@ -131,7 +131,8 @@ TEST(SessionReadTaskTest, Retry) {
     read_session_task->SyncRead();
 
     ASSERT_EQ(2, read_session_task->retry_count());
-    ASSERT_EQ(read_session_task->retry_count(), read_session_task->request_count_);
+    ASSERT_EQ(read_session_task->retry_count(), 2);
+    ASSERT_EQ(read_session_task->request_count_, 2);
 }
 
 

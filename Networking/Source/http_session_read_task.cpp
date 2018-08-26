@@ -92,25 +92,20 @@ void HttpSessionReadTask::SyncRead() {
 
     assert(handle_);
 
-    int curl_code = SyncRead(retry_count_);
+    int result_code = SyncRead(retry_count_);
 
-    ReadConnectionFinished(curl_code);
+    ReadConnectionFinished(result_code);
 }
 
 void HttpSessionReadTask::Cancel() {
     stopped_ = true;
 }
 
-void HttpSessionReadTask::ReadConnectionFinished(int curl_code) {
-
-    effective_url_ = parseEffectiveUrl();
-
-    int response_code = 0;
-    response_code = parseErrorReason(curl_code);
+void HttpSessionReadTask::ReadConnectionFinished(int finish_code) {
 
     //callback data finish
     if (nullptr != listener_ && !stopped_) {
-        listener_->OnDataFinish(this, response_code);
+        listener_->OnDataFinish(this, finish_code);
     }
 
     //clean up
@@ -136,7 +131,6 @@ int HttpSessionReadTask::ReceiveProgress(long long dltotal, long long dlnow) {
 #pragma mark- Private
 
 int HttpSessionReadTask::SyncRead(uint8_t retry_count) {
-
     if (retry_count == 0) {
         return -1;
     }
@@ -144,7 +138,10 @@ int HttpSessionReadTask::SyncRead(uint8_t retry_count) {
     int curl_code = curl_easy_perform(handle_);
     request_count_ ++;
 
-    if (CONN_OK != result_code_) {
+    effective_url_ = parseEffectiveUrl();
+    int response_code = parseErrorReason(curl_code);
+
+    if (CONN_OK != response_code) {
         int res = SyncRead(--retry_count);
         curl_code = res == -1 ? curl_code : res;
     }
