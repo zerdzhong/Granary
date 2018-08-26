@@ -8,7 +8,7 @@ else()
             "${gtest_SOURCE_DIR}/include" "${gmock_SOURCE_DIR}/include")
 endif()
 
-add_executable(NetworkingTests session_read_task_test.cpp)
+add_executable(NetworkingTests session_read_task_test.cpp session_test.cpp)
 
 include_directories(../../Networking/Source)
 
