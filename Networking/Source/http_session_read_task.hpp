@@ -11,7 +11,8 @@
 typedef void CURL;
 
 typedef enum {
-    CONN_OK      = 0,        //download success
+    CONN_DEFAUT  = 0,
+    CONN_OK                 ,        //download success
     CONN_RT_ERR = 1000      ,         //invalid parameter
     CONN_INVALID_PARAM      ,           //runtime error
     CONN_OUT_OF_MEMORY      ,           //out of memory
@@ -48,7 +49,7 @@ public:
     int ReceiveProgress(long long dltotal, long long dlnow);
 
     //Read
-    void SyncRead();
+    HttpConnectionCode SyncRead();
     void Cancel();
     void ReadConnectionFinished(int code);
 
@@ -60,7 +61,7 @@ public:
 private:
     void setupHandle();
     void cleanupHandle();
-    int SyncRead(uint8_t retry_count);
+    HttpConnectionCode SyncRead(uint8_t retry_count);
     size_t receiveData(char *data, size_t size, int type);
     HttpConnectionCode parseErrorReason(int code);
     std::string parseEffectiveUrl();

@@ -76,6 +76,29 @@ TEST(SessionReadTaskTest, SyncRead) {
     delete(read_session_task2);
 }
 
+TEST(SessionReadTaskTest, ReadRange) {
+    HttpSessionReadTask *read_session_task = new HttpSessionReadTask("http://www.zdzhong.com/", 0, 8);
+    read_session_task->SyncRead();
+    ASSERT_EQ(read_session_task->received_size(), 8);
+
+    delete(read_session_task);
+}
+
+TEST(SessionReadTaskTest, ResultCode) {
+    HttpSessionReadTask *read_session_task = new HttpSessionReadTask("https://www.baidu.com", 0, 0);
+    HttpConnectionCode result = read_session_task->SyncRead();
+
+    ASSERT_EQ(result, read_session_task->result_code_);
+    ASSERT_EQ(CONN_OK, read_session_task->result_code_);
+
+    HttpSessionReadTask *read_session_task1 = new HttpSessionReadTask(UNAVAILABLE_URL, 0, 0);
+    read_session_task1->SyncRead();
+
+    ASSERT_EQ(HTTP_NOT_FOUND, read_session_task1->result_code_);
+
+    delete(read_session_task);
+}
+
 class MockConnectionListener : public HttpSessionTaskListener {
 public:
     MockConnectionListener():received_size_(0){

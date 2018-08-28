@@ -85,16 +85,18 @@ HttpSessionReadTask::~HttpSessionReadTask() {
 
 #pragma mark- Public
 
-void HttpSessionReadTask::SyncRead() {
+HttpConnectionCode HttpSessionReadTask::SyncRead() {
     if (nullptr == handle_) {
         setupHandle();
     }
 
     assert(handle_);
 
-    int result_code = SyncRead(retry_count_);
+    result_code_ = SyncRead(retry_count_);
 
-    ReadConnectionFinished(result_code);
+    ReadConnectionFinished(result_code_);
+
+    return result_code_;
 }
 
 void HttpSessionReadTask::Cancel() {
@@ -129,23 +131,23 @@ int HttpSessionReadTask::ReceiveProgress(long long dltotal, long long dlnow) {
 
 #pragma mark- Private
 
-int HttpSessionReadTask::SyncRead(uint8_t retry_count) {
+HttpConnectionCode HttpSessionReadTask::SyncRead(uint8_t retry_count) {
     if (retry_count == 0) {
-        return -1;
+        return CONN_DEFAUT;
     }
 
     int curl_code = curl_easy_perform(handle_);
     request_count_ ++;
 
     effective_url_ = parseEffectiveUrl();
-    int response_code = parseErrorReason(curl_code);
+    HttpConnectionCode response_code = parseErrorReason(curl_code);
 
     if (CONN_OK != response_code) {
-        int res = SyncRead(--retry_count);
-        curl_code = res == -1 ? curl_code : res;
+        HttpConnectionCode res = SyncRead(--retry_count);
+        response_code =  (CONN_DEFAUT == res) ? response_code : res;
     }
 
-    return curl_code;
+    return response_code;
 }
 
 size_t HttpSessionReadTask::receiveData(char *data, size_t size, int type) {
@@ -197,17 +199,17 @@ HttpConnectionCode HttpSessionReadTask::parseErrorReason(int code) {
                 result = CONN_USER_CANCEL;
                 break;
             default:
-                result = static_cast<HttpConnectionCode>(code);
+                result = CONN_OK;
                 break;
         }
 
         return result;
     }
 
-    int protocol_code = 0;
-    curl_easy_getinfo(handle_, CURLINFO_PROTOCOL, &protocol_code);
+    long protocol;
+    curl_easy_getinfo(handle_, CURLINFO_PROTOCOL, &protocol);
 
-    if (CURLPROTO_HTTP != protocol_code &&  CURLPROTO_HTTPS != protocol_code) {
+    if (CURLPROTO_HTTP != protocol &&  CURLPROTO_HTTPS != protocol) {
         result = CONN_UNSUPPORT_PROTOCOL;
     }
 
