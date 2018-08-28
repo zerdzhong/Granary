@@ -127,3 +127,7 @@ TEST_F(HttpSessionTestFixture, Tasks) {
 
     ASSERT_EQ(request_done_, 20);
 }
+
+TEST_F(HttpSessionTestFixture, ) {
+
+}

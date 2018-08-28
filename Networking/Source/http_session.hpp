@@ -23,6 +23,7 @@ public:
 
     HttpSessionReadTask* ReadTask(std::string url);
     HttpSessionReadTask* ReadTaskWithInfo(std::string url, size_t offset, size_t length);
+
     void Start();
     void runInternal();
 

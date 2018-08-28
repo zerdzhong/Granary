@@ -32,6 +32,8 @@ static const char *TEST_INVALID_URLS[] = {
         "",
 };
 
+static auto UNAVAILABLE_URL = "http://unavailable.zdzhong.com/a";
+
 TEST(SessionReadTaskTest, initWithValidURLs) {
 
     for (int i = 0; i < TEST_VALID_URLS_COUNT; ++i) {
@@ -126,7 +128,7 @@ TEST(SessionReadTaskTest, EffectiveUrl) {
 }
 
 TEST(SessionReadTaskTest, Retry) {
-    HttpSessionReadTask *read_session_task = new HttpSessionReadTask("http://unavailable.zdzhong.com/", 0, 0);
+    HttpSessionReadTask *read_session_task = new HttpSessionReadTask(UNAVAILABLE_URL, 0, 0);
     read_session_task->set_retry_count(2);
     read_session_task->SyncRead();
 
