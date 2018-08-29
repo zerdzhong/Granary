@@ -121,7 +121,7 @@ public:
 
 TEST(SessionReadTaskTest, Listener) {
 
-    MockConnectionListener *mock_listener = new MockConnectionListener();
+    auto *mock_listener = new MockConnectionListener();
 
     HttpSessionReadTask *read_session_task1 = new HttpSessionReadTask("https://www.baidu.com", 0, 0);
     read_session_task1->setListener(mock_listener);

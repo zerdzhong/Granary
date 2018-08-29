@@ -5,6 +5,7 @@
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
 #include <pthread.h>
+#include "http_session_read_task.hpp"
 
 #define private public
 #define protected public
@@ -31,15 +32,15 @@ class HttpSessionTestFixture : public ::testing::Test, public HttpSessionTaskLis
 
 public:
     HttpSessionTestFixture() {
-        real_session_ = new HttpSession();
-        real_session_->setListener(this);
+        test_session_ = new HttpSession();
+        test_session_->setListener(this);
 
         pthread_mutex_init(&mutex_, nullptr);
         pthread_cond_init(&cond_, nullptr);
     }
 
     ~HttpSessionTestFixture() override {
-        delete real_session_;
+        delete test_session_;
 
         pthread_mutex_destroy(&mutex_);
         pthread_cond_destroy(&cond_);
@@ -78,7 +79,7 @@ protected:
     }
 
 protected:
-    HttpSession *real_session_;
+    HttpSession *test_session_;
 
     pthread_cond_t cond_;
     pthread_mutex_t mutex_;
@@ -90,16 +91,30 @@ protected:
 
 TEST_F(HttpSessionTestFixture, ReadTask) {
 
-    real_session_->ReadTask("http://www.baidu.com");
-    ASSERT_EQ(real_session_->pending_tasks_.size(), 1);
-    real_session_->ReadTask("http://www.baidu.com");
-    ASSERT_EQ(real_session_->pending_tasks_.size(), 2);
+    test_session_->ReadTask("http://www.baidu.com");
+    ASSERT_EQ(test_session_->pending_tasks_.size(), 1);
+    test_session_->ReadTask("http://www.baidu.com");
+    ASSERT_EQ(test_session_->pending_tasks_.size(), 2);
 
-    real_session_->Start();
+    test_session_->Start();
     waitUntilAllFinish(2);
 
     ASSERT_EQ(request_done_, 2);
 
+}
+
+TEST_F(HttpSessionTestFixture, ReadTaskWithRange) {
+    HttpSessionReadTask *task1 = test_session_->ReadTaskWithInfo("http://www.baidu.com", 0, 8);
+    ASSERT_EQ(test_session_->pending_tasks_.size(), 1);
+    HttpSessionReadTask *task2 = test_session_->ReadTaskWithInfo("http://www.baidu.com",0, 10);
+    ASSERT_EQ(test_session_->pending_tasks_.size(), 2);
+
+    test_session_->Start();
+    waitUntilAllFinish(2);
+
+    ASSERT_EQ(request_done_, 2);
+    ASSERT_EQ(task1->received_size(), 8);
+    ASSERT_EQ(task2->received_size(), 10);
 }
 
 void* add_task(void * pVoid) {
@@ -116,12 +131,12 @@ void* add_task(void * pVoid) {
 
 TEST_F(HttpSessionTestFixture, Tasks) {
 
-    real_session_->Start();
+    test_session_->Start();
 
     pthread_t add_task_thread_1, add_task_thread_2;
 
-    pthread_create(&add_task_thread_1, nullptr, add_task, real_session_);
-    pthread_create(&add_task_thread_2, nullptr, add_task, real_session_);
+    pthread_create(&add_task_thread_1, nullptr, add_task, test_session_);
+    pthread_create(&add_task_thread_2, nullptr, add_task, test_session_);
 
     waitUntilAllFinish(20);
 
