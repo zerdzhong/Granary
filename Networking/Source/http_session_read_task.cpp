@@ -133,7 +133,7 @@ int HttpSessionReadTask::ReceiveProgress(long long dltotal, long long dlnow) {
 
 HttpConnectionCode HttpSessionReadTask::SyncRead(uint8_t retry_count) {
     if (retry_count == 0) {
-        return CONN_DEFAUT;
+        return CONN_DEFAULT;
     }
 
     int curl_code = curl_easy_perform(handle_);
@@ -144,7 +144,7 @@ HttpConnectionCode HttpSessionReadTask::SyncRead(uint8_t retry_count) {
 
     if (CONN_OK != response_code) {
         HttpConnectionCode res = SyncRead(--retry_count);
-        response_code =  (CONN_DEFAUT == res) ? response_code : res;
+        response_code =  (CONN_DEFAULT == res) ? response_code : res;
     }
 
     return response_code;

@@ -11,7 +11,7 @@
 typedef void CURL;
 
 typedef enum {
-    CONN_DEFAUT  = 0,
+    CONN_DEFAULT  = 0,
     CONN_OK                 ,        //download success
     CONN_RT_ERR = 1000      ,         //invalid parameter
     CONN_INVALID_PARAM      ,           //runtime error

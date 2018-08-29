@@ -81,8 +81,8 @@ protected:
 protected:
     HttpSession *test_session_;
 
-    pthread_cond_t cond_;
-    pthread_mutex_t mutex_;
+    pthread_cond_t cond_{};
+    pthread_mutex_t mutex_{};
 
     uint8_t request_done_ = 0;
     uint8_t request_count_ = 0;
@@ -143,6 +143,3 @@ TEST_F(HttpSessionTestFixture, Tasks) {
     ASSERT_EQ(request_done_, 20);
 }
 
-TEST_F(HttpSessionTestFixture, ) {
-
-}
