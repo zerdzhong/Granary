@@ -119,7 +119,7 @@ TEST_F(HttpSessionTestFixture, ReadTaskWithRange) {
 }
 
 TEST_F(HttpSessionTestFixture, CancelTask) {
-    HttpSessionReadTask *task = test_session_->ReadTask("http://dno-501-1001-ilp.youku.com/v1-100100011/8003758-1534840-958102-752258/1534922536_82.ts?auth_key=1566458559-0-0-7e7be7446453cac95c3e6d68a8769a4a");
+    HttpSessionReadTask *task = test_session_->ReadTask("https://gensho.ftp.acc.umu.se/pub/gimp/gimp/v2.10/osx/gimp-2.10.4-x86_64.dmg");
     test_session_->Start();
 
     usleep(10000);
