@@ -104,9 +104,11 @@ void HttpSessionReadTask::Cancel() {
 }
 
 void HttpSessionReadTask::ReadConnectionFinished(int finish_code) {
+    HttpConnectionCode response_code = parseErrorReason(finish_code);
+
     //callback data finish
-    if (nullptr != listener_ && !stopped_) {
-        listener_->OnDataFinish(this, finish_code);
+    if (nullptr != listener_) {
+        listener_->OnDataFinish(this, response_code);
     }
 
     //clean up

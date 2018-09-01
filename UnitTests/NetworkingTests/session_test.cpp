@@ -34,6 +34,7 @@ public:
     HttpSessionTestFixture() {
         test_session_ = new HttpSession();
         test_session_->setListener(this);
+        test_session_->setTaskAutoDelete(false);
 
         pthread_mutex_init(&mutex_, nullptr);
         pthread_cond_init(&cond_, nullptr);
@@ -115,6 +116,20 @@ TEST_F(HttpSessionTestFixture, ReadTaskWithRange) {
     ASSERT_EQ(request_done_, 2);
     ASSERT_EQ(task1->received_size(), 8);
     ASSERT_EQ(task2->received_size(), 10);
+}
+
+TEST_F(HttpSessionTestFixture, CancelTask) {
+    HttpSessionReadTask *task = test_session_->ReadTask("https://gensho.ftp.acc.umu.se/pub/gimp/gimp/v2.10/osx/gimp-2.10.4-x86_64.dmg");
+    test_session_->Start();
+
+    sleep(5);
+    size_t received_size1 = task->received_size();
+    test_session_->CancelTask(task);
+    size_t received_size2 = task->received_size();
+
+    waitUntilAllFinish(1);
+
+    ASSERT_EQ(received_size1, received_size2);
 }
 
 void* add_task(void * pVoid) {

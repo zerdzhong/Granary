@@ -24,11 +24,15 @@ public:
     HttpSessionReadTask* ReadTask(std::string url);
     HttpSessionReadTask* ReadTaskWithInfo(std::string url, size_t offset, size_t length);
 
+    void CancelTask(HttpSessionTask *task);
+
     void Start();
     void runInternal();
 
     void setListener(HttpSessionTaskListener *listener);
     HttpSessionTaskListener* listener();
+
+    void setTaskAutoDelete(bool auto_delete);
 
 private:
     //callback
@@ -44,12 +48,14 @@ private:
     HttpSessionThread *thread_;
     std::vector<HttpSessionReadTask *> pending_tasks_;
     std::vector<HttpSessionReadTask *> running_tasks_;
+    std::vector<HttpSessionReadTask *> undelete_finish_tasks_;
 
     pthread_mutex_t tasks_mutex_;
     pthread_cond_t task_cond_;
 
     CURLM *curl_multi_handle_;
     int  is_handle_running_;
+    bool task_auto_delete_;
 
     HttpSessionTaskListener* listener_;
 };

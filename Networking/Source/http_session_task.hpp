@@ -45,9 +45,9 @@ public:
     void setListener(HttpSessionTaskListener *listener);
     HttpSessionTaskListener* listener();
 
-    size_t request_start();
-    size_t request_size();
-    size_t received_size();
+    virtual size_t request_start();
+    virtual size_t request_size();
+    virtual size_t received_size();
 
 protected:
     HttpSessionTaskListener* listener_;

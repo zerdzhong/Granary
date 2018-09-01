@@ -33,7 +33,11 @@ void HttpSessionThread::run() {
 
 #pragma mark- Life cycle
 
-HttpSession::HttpSession():is_handle_running_(0),listener_(nullptr) {
+HttpSession::HttpSession():
+is_handle_running_(0),
+listener_(nullptr),
+task_auto_delete_(true)
+{
     pthread_mutex_init(&tasks_mutex_, nullptr);
     pthread_cond_init(&task_cond_, nullptr);
 
@@ -43,6 +47,7 @@ HttpSession::HttpSession():is_handle_running_(0),listener_(nullptr) {
 HttpSession::~HttpSession() {
     pthread_mutex_destroy(&tasks_mutex_);
     pthread_cond_destroy(&task_cond_);
+
 
     if (thread_) {
         delete thread_;
@@ -75,6 +80,17 @@ HttpSessionReadTask* HttpSession::ReadTaskWithInfo(std::string url, size_t offse
     pthread_mutex_unlock(&tasks_mutex_);
 
     return read_task;
+}
+
+void HttpSession::CancelTask(HttpSessionTask *task) {
+    HttpSessionReadTask *read_task;
+    if (nullptr != dynamic_cast<HttpSessionReadTask *>(task)) {
+        read_task = dynamic_cast<HttpSessionReadTask *>(task);
+
+        read_task->Cancel();
+
+        handleTaskFinish(read_task, CURLE_ABORTED_BY_CALLBACK);
+    }
 }
 
 void HttpSession::setListener(HttpSessionTaskListener *listener) {
@@ -161,12 +177,14 @@ void HttpSession::handleTaskFinish(HttpSessionReadTask *task, int curl_code) {
     pthread_mutex_lock(&tasks_mutex_);
 
     task->ReadConnectionFinished(curl_code);
-
     curl_multi_remove_handle(curl_multi_handle_, task->handle());
-
     running_tasks_.erase(std::remove(running_tasks_.begin(), running_tasks_.end(), task), running_tasks_.end());
 
-    delete task;
+    if (task_auto_delete_) {
+        delete task;
+    } else {
+        undelete_finish_tasks_.push_back(task);
+    }
 
     pthread_mutex_unlock(&tasks_mutex_);
 }
@@ -189,5 +207,9 @@ void HttpSession::OnDataFinish(HttpSessionTask *session_task, int err_code) {
     if (nullptr != listener_) {
         listener_->OnDataFinish(session_task, err_code);
     }
+}
+
+void HttpSession::setTaskAutoDelete(bool auto_delete) {
+    task_auto_delete_ = auto_delete;
 }
 
