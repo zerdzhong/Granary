@@ -45,14 +45,35 @@ task_auto_delete_(true)
 }
 
 HttpSession::~HttpSession() {
+
+    if (!task_auto_delete_) {
+        clearFinishedTask();
+    }
+
     pthread_mutex_destroy(&tasks_mutex_);
     pthread_cond_destroy(&task_cond_);
-
 
     if (thread_) {
         delete thread_;
         thread_ = nullptr;
     }
+}
+
+void HttpSession::clearFinishedTask() {
+    if (task_auto_delete_ && !finished_tasks_.empty() ) {
+        return;
+    }
+
+    pthread_mutex_lock(&tasks_mutex_);
+
+    for (auto task : finished_tasks_)
+    {
+        delete task;
+    }
+
+    finished_tasks_.clear();
+
+    pthread_mutex_unlock(&tasks_mutex_);
 }
 
 #pragma mark- Public
@@ -86,6 +107,12 @@ void HttpSession::CancelTask(HttpSessionTask *task) {
     HttpSessionReadTask *read_task;
     if (nullptr != dynamic_cast<HttpSessionReadTask *>(task)) {
         read_task = dynamic_cast<HttpSessionReadTask *>(task);
+
+        if(!finished_tasks_.empty() && std::find(finished_tasks_.begin(),
+                finished_tasks_.end(),
+                read_task) != finished_tasks_.end()) {
+            return;;
+        }
 
         read_task->Cancel();
 
@@ -183,7 +210,7 @@ void HttpSession::handleTaskFinish(HttpSessionReadTask *task, int curl_code) {
     if (task_auto_delete_) {
         delete task;
     } else {
-        undelete_finish_tasks_.push_back(task);
+        finished_tasks_.push_back(task);
     }
 
     pthread_mutex_unlock(&tasks_mutex_);

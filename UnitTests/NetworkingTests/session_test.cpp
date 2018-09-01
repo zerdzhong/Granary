@@ -119,17 +119,18 @@ TEST_F(HttpSessionTestFixture, ReadTaskWithRange) {
 }
 
 TEST_F(HttpSessionTestFixture, CancelTask) {
-    HttpSessionReadTask *task = test_session_->ReadTask("https://gensho.ftp.acc.umu.se/pub/gimp/gimp/v2.10/osx/gimp-2.10.4-x86_64.dmg");
+    HttpSessionReadTask *task = test_session_->ReadTask("http://dno-501-1001-ilp.youku.com/v1-100100011/8003758-1534840-958102-752258/1534922536_82.ts?auth_key=1566458559-0-0-7e7be7446453cac95c3e6d68a8769a4a");
     test_session_->Start();
 
-    sleep(5);
+    usleep(10000);
     size_t received_size1 = task->received_size();
     test_session_->CancelTask(task);
-    size_t received_size2 = task->received_size();
 
     waitUntilAllFinish(1);
+    size_t received_size2 = task->received_size();
 
     ASSERT_EQ(received_size1, received_size2);
+    ASSERT_GT(received_size1, 0);
 }
 
 void* add_task(void * pVoid) {

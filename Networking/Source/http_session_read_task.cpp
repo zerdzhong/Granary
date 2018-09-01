@@ -110,9 +110,6 @@ void HttpSessionReadTask::ReadConnectionFinished(int finish_code) {
     if (nullptr != listener_) {
         listener_->OnDataFinish(this, response_code);
     }
-
-    //clean up
-    cleanupHandle();
 }
 
 #pragma mark- Internal CURL Callback

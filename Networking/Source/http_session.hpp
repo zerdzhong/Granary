@@ -44,11 +44,13 @@ private:
     void handleCurlMessage();
     void handleTaskFinish(HttpSessionReadTask *task, int curl_code);
 
+    void clearFinishedTask();
+
 private:
     HttpSessionThread *thread_;
     std::vector<HttpSessionReadTask *> pending_tasks_;
     std::vector<HttpSessionReadTask *> running_tasks_;
-    std::vector<HttpSessionReadTask *> undelete_finish_tasks_;
+    std::vector<HttpSessionReadTask *> finished_tasks_;
 
     pthread_mutex_t tasks_mutex_;
     pthread_cond_t task_cond_;
