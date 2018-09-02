@@ -13,6 +13,8 @@
 #undef private
 #undef protected
 
+#include "session_mock_listener.cpp"
+
 using ::testing::_;
 using ::testing::Invoke;
 using ::testing::AtLeast;
@@ -99,14 +101,11 @@ TEST(SessionReadTaskTest, ResultCode) {
     delete(read_session_task);
 }
 
-class MockConnectionListener : public HttpSessionTaskListener {
+class Helper {
 public:
-    MockConnectionListener():received_size_(0){
+    Helper():received_size_(0){
 
     }
-    MOCK_METHOD1(OnReady, void(HttpSessionTask *session_task));
-    MOCK_METHOD2(OnData, void(HttpSessionTask *session_task, HttpSessionTaskData *data));
-    MOCK_METHOD2(OnDataFinish, void(HttpSessionTask *session_task, int err_code));
 
     void UpdateReceiveSize(HttpSessionTask *session_task, HttpSessionTaskData *data) {
         if (data->type == kReadDataTypeBody) {
@@ -121,7 +120,8 @@ public:
 
 TEST(SessionReadTaskTest, Listener) {
 
-    auto *mock_listener = new MockConnectionListener();
+    auto *mock_listener = new MockSessionTaskListener();
+    auto *helper = new Helper();
 
     HttpSessionReadTask *read_session_task1 = new HttpSessionReadTask("https://www.baidu.com", 0, 0);
     read_session_task1->setListener(mock_listener);
@@ -134,8 +134,8 @@ TEST(SessionReadTaskTest, Listener) {
 
     //call OnData when receive data
     ON_CALL(*mock_listener, OnData(_, _))
-            .WillByDefault(Invoke(mock_listener, &MockConnectionListener::UpdateReceiveSize));
-    ASSERT_EQ(mock_listener->received_size_, read_session_task1->received_size());
+            .WillByDefault(Invoke(helper, &Helper::UpdateReceiveSize));
+    ASSERT_EQ(helper->received_size_, read_session_task1->received_size());
 
     read_session_task1->SyncRead();
 
