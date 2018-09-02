@@ -46,16 +46,16 @@ task_auto_delete_(true)
 
 HttpSession::~HttpSession() {
 
-    if (!task_auto_delete_) {
-        clearFinishedTask();
-    }
-
     pthread_mutex_destroy(&tasks_mutex_);
     pthread_cond_destroy(&task_cond_);
 
     if (thread_) {
         delete thread_;
         thread_ = nullptr;
+    }
+
+    if (!task_auto_delete_) {
+        clearFinishedTask();
     }
 }
 
@@ -115,8 +115,6 @@ void HttpSession::CancelTask(HttpSessionTask *task) {
         }
 
         read_task->Cancel();
-
-        handleTaskFinish(read_task, CURLE_ABORTED_BY_CALLBACK);
     }
 }
 
@@ -172,6 +170,12 @@ size_t HttpSession::requestPendingTasks() {
         request_count ++;
     }
 
+    for (auto read_task : running_tasks_) {
+        if (read_task->isStopped()) {
+            handleTaskFinish(read_task, CURLE_ABORTED_BY_CALLBACK);
+        }
+    }
+
     pthread_mutex_unlock(&tasks_mutex_);
 
     return request_count;
@@ -201,7 +205,7 @@ void HttpSession::handleCurlMessage() {
 }
 
 void HttpSession::handleTaskFinish(HttpSessionReadTask *task, int curl_code) {
-    pthread_mutex_lock(&tasks_mutex_);
+//    pthread_mutex_lock(&tasks_mutex_);
 
     task->ReadConnectionFinished(curl_code);
     curl_multi_remove_handle(curl_multi_handle_, task->handle());
@@ -213,7 +217,7 @@ void HttpSession::handleTaskFinish(HttpSessionReadTask *task, int curl_code) {
         finished_tasks_.push_back(task);
     }
 
-    pthread_mutex_unlock(&tasks_mutex_);
+//    pthread_mutex_unlock(&tasks_mutex_);
 }
 
 #pragma mark- HttpSessionTaskListener

@@ -4,6 +4,7 @@
 
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
+
 #include <pthread.h>
 #include "http_session_read_task.hpp"
 
@@ -14,6 +15,8 @@
 
 #undef private
 #undef protected
+
+#include "session_mock_listener.cpp"
 
 using ::testing::_;
 using ::testing::Invoke;
@@ -28,13 +31,17 @@ static const char *TEST_VALID_URLS[] = {
 #define TEST_VALID_URLS_COUNT 4
 
 
-class HttpSessionTestFixture : public ::testing::Test, public HttpSessionTaskListener{
+class HttpSessionTestFixture : public ::testing::Test {
 
 public:
     HttpSessionTestFixture() {
+        mock_listener_ = new MockSessionTaskListener();
         test_session_ = new HttpSession();
-        test_session_->setListener(this);
+        test_session_->setListener(mock_listener_);
         test_session_->setTaskAutoDelete(false);
+
+        ON_CALL(*mock_listener_, OnDataFinish(_, _)).
+                WillByDefault(Invoke(this, &HttpSessionTestFixture::OnDataFinish));
 
         pthread_mutex_init(&mutex_, nullptr);
         pthread_cond_init(&cond_, nullptr);
@@ -59,7 +66,7 @@ public:
         pthread_mutex_unlock(&mutex_);
     }
 
-    void OnDataFinish(HttpSessionTask *session_task, int err_code) override {
+    void OnDataFinish(HttpSessionTask *session_task, int err_code) {
         pthread_mutex_lock(&mutex_);
         if (++ request_done_ == request_count_) {
             pthread_cond_signal(&cond_);
@@ -68,9 +75,12 @@ public:
         pthread_mutex_unlock(&mutex_);
     }
 
-    void OnReady(HttpSessionTask *session_task) override {}
-    void OnData(HttpSessionTask *session_task, HttpSessionTaskData *data) override {}
-
+    void CancelOnceReceiveData(HttpSessionTask *session_task, HttpSessionTaskData *read_data) {
+        HttpSessionReadTask *read_task = dynamic_cast<HttpSessionReadTask *>(session_task);
+        if (read_task && kReadDataTypeBody == read_data->type) {
+            test_session_->CancelTask(read_task);
+        }
+    }
 
 protected:
     void TearDown() override {
@@ -81,6 +91,7 @@ protected:
 
 protected:
     HttpSession *test_session_;
+    MockSessionTaskListener *mock_listener_;
 
     pthread_cond_t cond_{};
     pthread_mutex_t mutex_{};
@@ -119,17 +130,16 @@ TEST_F(HttpSessionTestFixture, ReadTaskWithRange) {
 }
 
 TEST_F(HttpSessionTestFixture, CancelTask) {
-    HttpSessionReadTask *task = test_session_->ReadTask("https://gensho.ftp.acc.umu.se/pub/gimp/gimp/v2.10/osx/gimp-2.10.4-x86_64.dmg");
+
+    ON_CALL(*mock_listener_, OnData(_, _)).WillByDefault(Invoke(this, &HttpSessionTestFixture::CancelOnceReceiveData));
+    EXPECT_CALL(*mock_listener_, OnDataFinish(_, CONN_USER_CANCEL)).Times(1);
+
+    HttpSessionReadTask *task = test_session_->ReadTask("http://www.baidu.com");
     test_session_->Start();
 
-    usleep(10000);
-    size_t received_size1 = task->received_size();
-    test_session_->CancelTask(task);
-
     waitUntilAllFinish(1);
-    size_t received_size2 = task->received_size();
+    size_t received_size1 = task->received_size();
 
-    ASSERT_EQ(received_size1, received_size2);
     ASSERT_GT(received_size1, 0);
 }
 

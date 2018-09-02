@@ -70,6 +70,7 @@ request_count_(0)
 }
 
 HttpSessionReadTask::~HttpSessionReadTask() {
+    printf("\n~HttpSessionReadTask:%p\n",this);
     cleanupHandle();
 
     if (head_data_) {
@@ -345,4 +346,8 @@ uint8_t HttpSessionReadTask::retry_count() {
 
 void HttpSessionReadTask::set_retry_count(uint8_t retry_count) {
     retry_count_ = retry_count;
+}
+
+bool HttpSessionReadTask::isStopped() {
+    return stopped_;
 }

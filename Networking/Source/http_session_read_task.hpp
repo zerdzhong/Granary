@@ -50,8 +50,10 @@ public:
 
     //Read
     HttpConnectionCode SyncRead();
-    void Cancel();
     void ReadConnectionFinished(int code);
+
+    void Cancel();
+    bool isStopped();
 
     std::string url();
     CURL* handle();
