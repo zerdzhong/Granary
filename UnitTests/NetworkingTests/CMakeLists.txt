@@ -8,9 +8,18 @@ else()
             "${gtest_SOURCE_DIR}/include" "${gmock_SOURCE_DIR}/include")
 endif()
 
+if(TARGET Networking)
+    add_library(libNetworking::Networking ALIAS Networking)
+    list(APPEND test_path "$<TARGET_FILE_DIR:Foo::bar>")
+else()
+    find_package(Networking CONFIG REQUIRED)
+    message("MultiThread_DIR: ${libNetworking_DIR}")
+
+    list(APPEND test_path "${libNetworking_DIR}/../../../${CMAKE_INSTALL_BINDIR}")
+
+endif()
+
 add_executable(NetworkingTests session_read_task_test.cpp session_test.cpp session_mock_listener.cpp)
 
-include_directories(../../Networking/Source)
-
-target_link_libraries(NetworkingTests  gmock_main)
-target_link_libraries(NetworkingTests libNetworking)
+target_link_libraries(NetworkingTests gmock_main)
+target_link_libraries(NetworkingTests libNetworking::Networking)
