@@ -8,6 +8,10 @@ install_manifest.txt
 compile_commands.json
 CTestTestfile.cmake
 
+_builds/
+_logs/
+_install/
+
 # User-specific stuff
 .idea/**/workspace.xml
 .idea/**/tasks.xml
