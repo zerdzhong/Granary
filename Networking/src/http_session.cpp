@@ -66,11 +66,9 @@ void HttpSession::clearFinishedTask() {
 
     pthread_mutex_lock(&tasks_mutex_);
 
-    for (auto task : finished_tasks_)
-    {
+    for (auto task : finished_tasks_) {
         delete task;
     }
-
     finished_tasks_.clear();
 
     pthread_mutex_unlock(&tasks_mutex_);
@@ -104,14 +102,13 @@ HttpSessionReadTask* HttpSession::ReadTaskWithInfo(std::string url, size_t offse
 }
 
 void HttpSession::CancelTask(HttpSessionTask *task) {
-    HttpSessionReadTask *read_task;
     if (nullptr != dynamic_cast<HttpSessionReadTask *>(task)) {
-        read_task = dynamic_cast<HttpSessionReadTask *>(task);
+        auto read_task = dynamic_cast<HttpSessionReadTask *>(task);
 
-        if(!finished_tasks_.empty() && std::find(finished_tasks_.begin(),
-                finished_tasks_.end(),
-                read_task) != finished_tasks_.end()) {
-            return;;
+        if(!finished_tasks_.empty() && std::find(finished_tasks_.begin(), finished_tasks_.end(),
+                read_task) != finished_tasks_.end())
+        {
+            return;
         }
 
         read_task->Cancel();
@@ -124,6 +121,10 @@ void HttpSession::setListener(HttpSessionTaskListener *listener) {
 
 HttpSessionTaskListener* HttpSession::listener() {
     return listener_;
+}
+
+void HttpSession::setTaskAutoDelete(bool auto_delete) {
+    task_auto_delete_ = auto_delete;
 }
 
 #pragma mark- private
@@ -189,7 +190,6 @@ void HttpSession::handleCurlMessage() {
     while ((msg = curl_multi_info_read(curl_multi_handle_, &msgs_left))) {
         if (msg->msg == CURLMSG_DONE) {
             CURL *easy_handle = msg->easy_handle;
-
             //get task
             HttpSessionReadTask *read_task = nullptr;
             curl_easy_getinfo(easy_handle, CURLINFO_PRIVATE, &read_task);
@@ -197,7 +197,6 @@ void HttpSession::handleCurlMessage() {
             //handle finish
             int curl_code = msg->data.result;
             handleTaskFinish(read_task, curl_code);
-
         } else {
             fprintf(stderr, "error: after curl_multi_info_read(), CURLMsg=%d\n", msg->msg);
         }
@@ -238,9 +237,5 @@ void HttpSession::OnDataFinish(HttpSessionTask *session_task, int err_code) {
     if (nullptr != listener_) {
         listener_->OnDataFinish(session_task, err_code);
     }
-}
-
-void HttpSession::setTaskAutoDelete(bool auto_delete) {
-    task_auto_delete_ = auto_delete;
 }
 
