@@ -58,7 +58,7 @@ do_call([
         'CMAKE_CONFIGURATION_TYPES=Release',
         'CMAKE_INSTALL_PREFIX={}'.format(install_dir)
     ],
-    working_dir='../MultiThread'
+    working_dir='../thread'
 )
 
 export_file = 'NO'
@@ -85,5 +85,5 @@ do_call([
         'EXPORT_FILE={}'.format(export_file),
         'CMAKE_INSTALL_PREFIX={}'.format(install_dir)
     ],
-    working_dir='../Networking'
+    working_dir='../networking'
 )

@@ -50,10 +50,10 @@ endif()
 # The rest of the build
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/../include)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/..)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../include)
+include_directories(..)
+include_directories(../include)
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/..)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(.)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 if(USE_ARES)
   include_directories(${CARES_INCLUDE_DIR})

@@ -253,7 +253,7 @@ include (CMakeDependentOption)
 # On windows preload settings
 if(WIN32)
   set(CMAKE_REQUIRED_DEFINITIONS "${CMAKE_REQUIRED_DEFINITIONS} -D_WINSOCKAPI_=")
-  include(${CMAKE_CURRENT_SOURCE_DIR}/CMake/Platforms/WindowsCache.cmake)
+  include(CMake/Platforms/WindowsCache.cmake)
 endif()
 
 if(ENABLE_THREADED_RESOLVER)
@@ -1300,7 +1300,7 @@ if(NOT CURL_CONFIG_HAS_BEEN_RUN_BEFORE)
 endif()
 
 # install headers
-install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include/curl"
+install(DIRECTORY "include/curl"
     DESTINATION include
     FILES_MATCHING PATTERN "*.h")
 
@@ -1334,7 +1334,7 @@ endif()
 
 if(NOT TARGET uninstall)
   configure_file(
-      ${CMAKE_CURRENT_SOURCE_DIR}/CMake/cmake_uninstall.cmake.in
+          CMake/cmake_uninstall.cmake.in
       ${CMAKE_CURRENT_BINARY_DIR}/CMake/cmake_uninstall.cmake
       IMMEDIATE @ONLY)
 

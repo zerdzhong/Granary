@@ -9,20 +9,20 @@ if(USE_MANUAL)
     COMMAND ${CMAKE_COMMAND} -E echo "#ifndef HAVE_LIBZ" >> tool_hugehelp.c
     COMMAND env LC_ALL=C "${NROFF}" ${NROFF_MANOPT}
             "${CURL_BINARY_DIR}/docs/curl.1" |
-            "${PERL_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/mkhelp.pl"
+            "${PERL_EXECUTABLE}" "mkhelp.pl"
             "${CURL_SOURCE_DIR}/docs/MANUAL" >> tool_hugehelp.c
     COMMAND ${CMAKE_COMMAND} -E echo "#else" >> tool_hugehelp.c
     COMMAND env LC_ALL=C "${NROFF}" ${NROFF_MANOPT}
             "${CURL_BINARY_DIR}/docs/curl.1" |
-            "${PERL_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/mkhelp.pl" -c
+            "${PERL_EXECUTABLE}" "mkhelp.pl" -c
             "${CURL_SOURCE_DIR}/docs/MANUAL" >> tool_hugehelp.c
     COMMAND ${CMAKE_COMMAND} -E echo "#endif /* HAVE_LIBZ */" >> tool_hugehelp.c
     DEPENDS
       "${CURL_SOURCE_DIR}/docs/MANUAL"
       generate-curl.1
       "${CURL_BINARY_DIR}/docs/curl.1"
-      "${CMAKE_CURRENT_SOURCE_DIR}/mkhelp.pl"
-      "${CMAKE_CURRENT_SOURCE_DIR}/tool_hugehelp.h"
+      "mkhelp.pl"
+      "tool_hugehelp.h"
     VERBATIM)
 else()
   add_custom_command(
@@ -31,7 +31,7 @@ else()
     COMMAND ${CMAKE_COMMAND} -E echo "#include \"tool_hugehelp.h\"" >> tool_hugehelp.c
     COMMAND ${CMAKE_COMMAND} -E echo "void hugehelp(void) {}" >> tool_hugehelp.c
     DEPENDS
-      "${CMAKE_CURRENT_SOURCE_DIR}/tool_hugehelp.h"
+      "tool_hugehelp.h"
     VERBATIM)
 
 endif()

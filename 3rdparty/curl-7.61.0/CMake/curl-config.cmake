@@ -1,5 +1,5 @@
 
-get_filename_component(_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+get_filename_component(_DIR "curl-config.cmake" PATH)
 
 if(NOT CURL_FIND_COMPONENTS)
     set(CURL_FIND_COMPONENTS curl libcurl)

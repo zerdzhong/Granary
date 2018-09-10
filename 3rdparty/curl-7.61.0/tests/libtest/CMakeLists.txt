@@ -50,9 +50,9 @@ endif()
 
 add_custom_command(
   OUTPUT lib1521.c
-  COMMAND ${PERL_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/mk-lib1521.pl < ${CMAKE_SOURCE_DIR}/include/curl/curl.h > lib1521.c
+  COMMAND ${PERL_EXECUTABLE} mk-lib1521.pl < ${CMAKE_SOURCE_DIR}/include/curl/curl.h > lib1521.c
   DEPENDS
-    "${CMAKE_CURRENT_SOURCE_DIR}/mk-lib1521.pl"
+    "mk-lib1521.pl"
     "${CMAKE_SOURCE_DIR}/include/curl/curl.h"
   VERBATIM)
 
