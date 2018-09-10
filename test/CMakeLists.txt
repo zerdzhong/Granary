@@ -1,5 +1,6 @@
 project(UnitTests)
 
-add_subdirectory(Vendor/googletest)
+include(incorporate_google_test.cmake)
+
 add_subdirectory(MultiThreadTests)
 add_subdirectory(NetworkingTests)
