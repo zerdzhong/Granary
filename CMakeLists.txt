@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.12)
 project(Granary)
 
-set(as_subproject Thread)
+set(as_subproject Thread Networking)
 
 macro(find_package)
     message("find_package ${ARGV}")
