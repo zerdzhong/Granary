@@ -49,7 +49,6 @@ task_auto_delete_(true)
 
     thread_ = new HttpSessionThread(this);
 
-
 }
 
 HttpSession::~HttpSession() {
@@ -179,9 +178,15 @@ size_t HttpSession::requestPendingTasks() {
         request_count ++;
     }
 
-    for (auto read_task : running_tasks_) {
+    for (auto iterator = running_tasks_.begin();
+         iterator != running_tasks_.end();) {
+
+        auto read_task = *iterator;
+
         if (read_task->isStopped()) {
             handleTaskFinish(read_task, CURLE_ABORTED_BY_CALLBACK);
+        } else {
+            iterator++;
         }
     }
 

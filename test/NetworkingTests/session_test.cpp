@@ -116,9 +116,9 @@ TEST_F(HttpSessionTestFixture, ReadTask) {
 }
 
 TEST_F(HttpSessionTestFixture, ReadTaskWithRange) {
-    HttpSessionReadTask *task1 = test_session_->ReadTaskWithInfo("http://www.baidu.com", 0, 8);
+    HttpSessionReadTask *task1 = test_session_->ReadTaskWithInfo("https://www.baidu.com", 0, 8);
     ASSERT_EQ(test_session_->pending_tasks_.size(), 1);
-    HttpSessionReadTask *task2 = test_session_->ReadTaskWithInfo("http://www.baidu.com",0, 10);
+    HttpSessionReadTask *task2 = test_session_->ReadTaskWithInfo("https://www.baidu.com",0, 10);
     ASSERT_EQ(test_session_->pending_tasks_.size(), 2);
 
     test_session_->Start();
@@ -134,7 +134,7 @@ TEST_F(HttpSessionTestFixture, CancelTask) {
     ON_CALL(*mock_listener_, OnData(_, _)).WillByDefault(Invoke(this, &HttpSessionTestFixture::CancelOnceReceiveData));
     EXPECT_CALL(*mock_listener_, OnDataFinish(_, CONN_USER_CANCEL)).Times(1);
 
-    HttpSessionReadTask *task = test_session_->ReadTask("http://www.baidu.com");
+    HttpSessionReadTask *task = test_session_->ReadTaskWithInfo(TEST_VALID_URLS[0], 0, 0);
     test_session_->Start();
 
     waitUntilAllFinish(1);

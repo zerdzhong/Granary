@@ -64,15 +64,13 @@ TEST(SessionReadTaskTest, initWithInvalidURLs) {
 }
 
 TEST(SessionReadTaskTest, SyncRead) {
-    HttpSessionReadTask *read_session_task1 = new HttpSessionReadTask("https://www.baidu.com", 0, 0);
+    HttpSessionReadTask *read_session_task1 = new HttpSessionReadTask("https://gensho.ftp.acc.umu.se/pub/gimp/gimp/v2.10/osx/gimp-2.10.4-x86_64.dmg", 0, 1024);
     read_session_task1->SyncRead();
-    ASSERT_GT(read_session_task1->received_size(), 0);
+    ASSERT_EQ(read_session_task1->received_size(), 1024);
 
     HttpSessionReadTask *read_session_task2 = new HttpSessionReadTask("https://www.baidu.com", 0, 0);
     read_session_task2->SyncRead();
     ASSERT_GT(read_session_task2->received_size(), 0);
-
-    ASSERT_EQ(read_session_task1->received_size(), read_session_task2->received_size());
 
     delete(read_session_task1);
     delete(read_session_task2);
