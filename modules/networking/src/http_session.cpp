@@ -38,10 +38,18 @@ is_handle_running_(0),
 listener_(nullptr),
 task_auto_delete_(true)
 {
-    pthread_mutex_init(&tasks_mutex_, nullptr);
+
+    pthread_mutexattr_t mutex_attr;
+    pthread_mutexattr_init(&mutex_attr);
+    pthread_mutexattr_settype(&mutex_attr, PTHREAD_MUTEX_RECURSIVE);
+    pthread_mutex_init(&tasks_mutex_, &mutex_attr);
+    pthread_mutexattr_destroy(&mutex_attr);
+
     pthread_cond_init(&task_cond_, nullptr);
 
     thread_ = new HttpSessionThread(this);
+
+
 }
 
 HttpSession::~HttpSession() {
@@ -204,7 +212,7 @@ void HttpSession::handleCurlMessage() {
 }
 
 void HttpSession::handleTaskFinish(HttpSessionReadTask *task, int curl_code) {
-//    pthread_mutex_lock(&tasks_mutex_);
+    pthread_mutex_lock(&tasks_mutex_);
 
     task->ReadConnectionFinished(curl_code);
     curl_multi_remove_handle(curl_multi_handle_, task->handle());
@@ -216,7 +224,7 @@ void HttpSession::handleTaskFinish(HttpSessionReadTask *task, int curl_code) {
         finished_tasks_.push_back(task);
     }
 
-//    pthread_mutex_unlock(&tasks_mutex_);
+    pthread_mutex_unlock(&tasks_mutex_);
 }
 
 #pragma mark- HttpSessionTaskListener
