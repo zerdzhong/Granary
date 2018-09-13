@@ -8,7 +8,10 @@ add_library(Networking
         src/http_session_task.cpp
         src/http_session_task.hpp
         src/http_session_read_task.cpp
-        src/http_session_read_task.hpp)
+        src/http_session_read_task.hpp
+        src/http_session_config.hpp
+        src/http_session_config.cpp
+        )
 
 add_library(Networking::Networking ALIAS Networking)
 target_link_libraries(Networking PRIVATE Thread::Thread)
