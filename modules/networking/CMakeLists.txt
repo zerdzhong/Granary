@@ -9,7 +9,6 @@ add_library(Networking
         src/http_session_task.hpp
         src/http_session_read_task.cpp
         src/http_session_read_task.hpp
-        src/http_session_config.hpp
         src/http_session_config.cpp
         )
 
@@ -44,4 +43,6 @@ include(../../cmake/target_install.cmake)
 target_install(Networking
         include/http_session_task.hpp
         include/http_session_read_task.hpp
-        include/http_session.hpp)
+        include/http_session.hpp
+        include/http_session_config.hpp
+        )
