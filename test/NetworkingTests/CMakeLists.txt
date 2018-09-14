@@ -5,7 +5,9 @@ find_package(Networking CONFIG REQUIRED)
 add_executable(NetworkingTests
         session_read_task_test.cpp
         session_test.cpp
-        session_mock_listener.cpp)
+        session_mock_listener.cpp
+        session_config_test.cpp
+        )
 
 target_compile_features(NetworkingTests PRIVATE cxx_std_11)
 
