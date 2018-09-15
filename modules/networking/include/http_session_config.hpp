@@ -15,7 +15,7 @@ public:
     static http_session_config& DefaultSessionConfig();
 
     void SetRequestTimeout(time_interval request_timeout);
-    time_interval RequestTimeout(time_interval request_timeout);
+    time_interval RequestTimeout();
 
 private:
     http_session_config();

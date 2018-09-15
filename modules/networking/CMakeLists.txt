@@ -6,9 +6,7 @@ find_package(Thread CONFIG REQUIRED)
 add_library(Networking
         src/http_session.cpp
         src/http_session_task.cpp
-        src/http_session_task.hpp
         src/http_session_read_task.cpp
-        src/http_session_read_task.hpp
         src/http_session_config.cpp
         )
 

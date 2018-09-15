@@ -19,3 +19,10 @@ TEST(SessionConfigTest, Default)
     http_session_config config = http_session_config::DefaultSessionConfig();
     ASSERT_NE(nullptr, &config);
 }
+
+TEST(SessionConfigTest, RequestTimeout)
+{
+    http_session_config config = http_session_config::DefaultSessionConfig();
+    config.SetRequestTimeout(1);
+    ASSERT_EQ(config.RequestTimeout(), 1);
+}
