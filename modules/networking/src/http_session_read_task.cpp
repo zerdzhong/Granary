@@ -70,7 +70,6 @@ request_count_(0)
 }
 
 HttpSessionReadTask::~HttpSessionReadTask() {
-    printf("\n~HttpSessionReadTask:%p\n",this);
     cleanupHandle();
 
     if (head_data_) {

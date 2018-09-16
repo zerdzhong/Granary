@@ -52,13 +52,18 @@ public:
     HttpConnectionCode SyncRead();
     void ReadConnectionFinished(int code);
 
+    //Cancel
     void Cancel();
     bool isStopped();
 
-    std::string url();
-    CURL* handle();
+    //retry
     uint8_t retry_count();
     void set_retry_count(uint8_t retry_count);
+
+    //get info
+    std::string url();
+    CURL* handle();
+
 
 private:
     void setupHandle();

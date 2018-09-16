@@ -7,23 +7,32 @@
 
 #include <map>
 #include <string>
+#include <vector>
+#include <set>
 
 typedef double time_interval;
 
 class http_session_config {
 public:
-    static http_session_config& DefaultSessionConfig();
+    static http_session_config* DefaultSessionConfig();
 
     void SetRequestTimeout(time_interval request_timeout);
     time_interval RequestTimeout();
+
+    void SetAdditionalHeaders(std::vector<std::string> additional_headers);
+    std::vector<std::string> AdditionalHeaders();
+
+    void SetUrlResolve(std::map<std::string, std::set<std::string>> url_resolves);
+    void AddResolve(std::string url, std::set<std::string> ip_addrs);
+    std::map<std::string, std::set<std::string>> UrlResolves();
 
 private:
     http_session_config();
     ~http_session_config();
 
-private:
     time_interval request_timeout_;
-    std::map<std::string, std::string> http_additional_headers_;
+    std::vector<std::string> additional_headers_;
+    std::map<std::string, std::set<std::string>> url_resolves_;
 };
 
 
