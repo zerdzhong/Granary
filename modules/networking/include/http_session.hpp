@@ -34,6 +34,8 @@ public:
 
     void setTaskAutoDelete(bool auto_delete);
 
+    static std::string CurlInfo();
+
 private:
     //callback
     void OnReady(HttpSessionTask *session_task) override;

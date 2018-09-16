@@ -5,6 +5,7 @@
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
 
+#include <iostream>
 #include <pthread.h>
 #include "http_session_read_task.hpp"
 
@@ -87,6 +88,7 @@ protected:
     }
 
     void SetUp() override {
+        std::cout<< "session curl info: " << test_session_->CurlInfo() << std::endl;
     }
 
 protected:

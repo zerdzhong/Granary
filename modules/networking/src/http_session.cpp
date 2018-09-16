@@ -8,6 +8,7 @@
 #include "http_session_read_task.hpp"
 #include "thread_base.hpp"
 #include <curl.h>
+#include <sstream>
 
 #pragma mark- HttpSessionThread
 
@@ -250,5 +251,17 @@ void HttpSession::OnDataFinish(HttpSessionTask *session_task, int err_code) {
     if (nullptr != listener_) {
         listener_->OnDataFinish(session_task, err_code);
     }
+}
+
+std::string HttpSession::CurlInfo() {
+
+    curl_version_info_data *info_data = curl_version_info(CURLVERSION_NOW);
+
+    std::ostringstream stringStream;
+    stringStream<< "libcurl version: " << info_data->version
+                << "\tSSL version: " << info_data->ssl_version
+                << "\tlibz version: " << info_data->libz_version;
+
+    return stringStream.str();
 }
 
