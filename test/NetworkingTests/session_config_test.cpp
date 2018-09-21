@@ -18,14 +18,14 @@ using namespace std;
 
 TEST(SessionConfigTest, Default)
 {
-    http_session_config *config = http_session_config::DefaultSessionConfig();
+    HttpSessionConfig *config = HttpSessionConfig::DefaultSessionConfig();
     ASSERT_NE(nullptr, config);
     delete config;
 }
 
 TEST(SessionConfigTest, RequestTimeout)
 {
-    http_session_config *config = http_session_config::DefaultSessionConfig();
+    HttpSessionConfig *config = HttpSessionConfig::DefaultSessionConfig();
     config->SetRequestTimeout(1);
     ASSERT_EQ(config->RequestTimeout(), 1);
     delete config;
@@ -33,7 +33,7 @@ TEST(SessionConfigTest, RequestTimeout)
 
 TEST(SessionConfigTest, Configs)
 {
-    http_session_config *config = http_session_config::DefaultSessionConfig();
+    HttpSessionConfig *config = HttpSessionConfig::DefaultSessionConfig();
     config->SetRequestTimeout(1);
     ASSERT_EQ(config->RequestTimeout(), 1);
 

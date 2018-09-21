@@ -12,9 +12,9 @@
 
 typedef double time_interval;
 
-class http_session_config {
+class HttpSessionConfig {
 public:
-    static http_session_config* DefaultSessionConfig();
+    static HttpSessionConfig* DefaultSessionConfig();
 
     void SetRequestTimeout(time_interval request_timeout);
     time_interval RequestTimeout();
@@ -23,12 +23,12 @@ public:
     std::vector<std::string> AdditionalHeaders();
 
     void SetUrlResolve(std::map<std::string, std::set<std::string>> url_resolves);
-    void AddResolve(std::string url, std::set<std::string> ip_addrs);
+    void AddResolve(std::string url, std::set<std::string> ips);
     std::map<std::string, std::set<std::string>> UrlResolves();
 
 private:
-    http_session_config();
-    ~http_session_config();
+    HttpSessionConfig();
+    ~HttpSessionConfig();
 
     time_interval request_timeout_;
     std::vector<std::string> additional_headers_;
