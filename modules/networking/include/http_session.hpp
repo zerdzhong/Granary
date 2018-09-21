@@ -12,6 +12,7 @@
 
 class HttpSessionThread;
 class HttpSessionReadTask;
+class HttpSessionConfig;
 
 typedef void CURLM;
 
@@ -33,6 +34,8 @@ public:
     HttpSessionTaskListener* listener();
 
     void setTaskAutoDelete(bool auto_delete);
+    void setSessionConfig(HttpSessionConfig *session_config);
+    HttpSessionConfig* sessionConfig();
 
     static std::string CurlInfo();
 
@@ -62,6 +65,7 @@ private:
     bool task_auto_delete_;
 
     HttpSessionTaskListener* listener_;
+    HttpSessionConfig *session_config_;
 };
 
 

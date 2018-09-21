@@ -9,6 +9,8 @@
 #include "thread_base.hpp"
 #include <curl.h>
 #include <sstream>
+#include <http_session.hpp>
+
 
 #pragma mark- HttpSessionThread
 
@@ -37,7 +39,8 @@ void HttpSessionThread::run() {
 HttpSession::HttpSession():
 is_handle_running_(0),
 listener_(nullptr),
-task_auto_delete_(true)
+task_auto_delete_(true),
+session_config_(nullptr)
 {
 
     pthread_mutexattr_t mutex_attr;
@@ -133,6 +136,14 @@ HttpSessionTaskListener* HttpSession::listener() {
 
 void HttpSession::setTaskAutoDelete(bool auto_delete) {
     task_auto_delete_ = auto_delete;
+}
+
+void HttpSession::setSessionConfig(HttpSessionConfig *session_config) {
+    session_config_ = session_config;
+}
+
+HttpSessionConfig* HttpSession::sessionConfig() {
+    return session_config_;
 }
 
 #pragma mark- private

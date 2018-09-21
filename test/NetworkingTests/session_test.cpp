@@ -8,6 +8,7 @@
 #include <iostream>
 #include <pthread.h>
 #include "http_session_read_task.hpp"
+#include "http_session_config.hpp"
 
 #define private public
 #define protected public
@@ -169,5 +170,15 @@ TEST_F(HttpSessionTestFixture, Tasks) {
     waitUntilAllFinish(20);
 
     ASSERT_EQ(request_done_, 20);
+}
+
+TEST_F(HttpSessionTestFixture, SetConfig) {
+    HttpSessionConfig *config = HttpSessionConfig::DefaultSessionConfig();
+
+    test_session_->setSessionConfig(config);
+
+    ASSERT_EQ(test_session_->sessionConfig(), config);
+
+    delete config;
 }
 

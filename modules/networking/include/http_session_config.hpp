@@ -15,6 +15,8 @@ typedef double time_interval;
 class HttpSessionConfig {
 public:
     static HttpSessionConfig* DefaultSessionConfig();
+    HttpSessionConfig();
+    ~HttpSessionConfig();
 
     void SetRequestTimeout(time_interval request_timeout);
     time_interval RequestTimeout();
@@ -27,9 +29,6 @@ public:
     std::map<std::string, std::set<std::string>> UrlResolves();
 
 private:
-    HttpSessionConfig();
-    ~HttpSessionConfig();
-
     time_interval request_timeout_;
     std::vector<std::string> additional_headers_;
     std::map<std::string, std::set<std::string>> url_resolves_;
