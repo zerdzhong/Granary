@@ -8,12 +8,13 @@
 #include <string>
 #include "http_session_task.hpp"
 
+class HttpSessionConfig;
 typedef void CURL;
 
 typedef enum {
     CONN_DEFAULT  = 0,
-    CONN_OK                 ,        //download success
-    CONN_RT_ERR = 1000      ,         //invalid parameter
+    CONN_OK                 ,           //download success
+    CONN_RT_ERR = 1000      ,           //invalid parameter
     CONN_INVALID_PARAM      ,           //runtime error
     CONN_OUT_OF_MEMORY      ,           //out of memory
     CONN_FAILED_INIT        ,           //initialization failed
@@ -64,6 +65,8 @@ public:
     std::string url();
     CURL* handle();
 
+    void setSessionConfig(HttpSessionConfig *session_config);
+    HttpSessionConfig * sessionConfig();
 
 private:
     void setupHandle();
@@ -86,6 +89,7 @@ private:
     uint8_t request_count_;
     uint8_t retry_count_;
     bool stopped_;
+    HttpSessionConfig *session_config_;
 };
 
 

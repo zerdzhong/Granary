@@ -104,6 +104,7 @@ HttpSessionReadTask* HttpSession::ReadTaskWithInfo(std::string url, size_t offse
 
     HttpSessionReadTask *read_task = new HttpSessionReadTask(std::move(url), offset, length);
     read_task->setListener(this);
+    read_task->setSessionConfig(session_config_);
     pending_tasks_.push_back(read_task);
 
     pthread_cond_signal(&task_cond_);

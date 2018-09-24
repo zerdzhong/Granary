@@ -29,7 +29,7 @@ void HttpSessionConfig::SetRequestTimeout(time_interval request_timeout) {
 }
 
 void HttpSessionConfig::SetUrlResolve(std::map<std::string, std::set<std::string>> url_resolves) {
-    url_resolves_ = url_resolves;
+    url_resolves_ = std::move(url_resolves);
 }
 
 #pragma mark- Getter

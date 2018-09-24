@@ -8,6 +8,7 @@
 #include "http_session_task.hpp"
 #include "curl.h"
 #include <sstream>
+#include "http_session_config.hpp"
 
 #pragma mark- CURL callback
 
@@ -49,7 +50,8 @@ url_(std::move(url)),
 handle_(nullptr),
 retry_count_(kDefaultRetryCount),
 stopped_(false),
-request_count_(0)
+request_count_(0),
+session_config_(nullptr)
 {
     request_start_ = offset;
     request_size_ = length;
@@ -349,4 +351,12 @@ void HttpSessionReadTask::set_retry_count(uint8_t retry_count) {
 
 bool HttpSessionReadTask::isStopped() {
     return stopped_;
+}
+
+void HttpSessionReadTask::setSessionConfig(HttpSessionConfig *session_config) {
+    session_config_ = session_config;
+}
+
+HttpSessionConfig* HttpSessionReadTask::sessionConfig() {
+    return session_config_;
 }
