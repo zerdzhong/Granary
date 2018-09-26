@@ -1,9 +1,6 @@
 # Granary
 
-The project is using cpp11 to implement networking working.
+The project is a cross platform download framework.Use cmake generate build system.
 
-## Usage
-
-## Building System
 
 
