@@ -13,3 +13,5 @@ target_compile_features(NetworkingTests PRIVATE cxx_std_11)
 
 target_link_libraries(NetworkingTests gmock_main)
 target_link_libraries(NetworkingTests Networking::Networking)
+
+add_test(NAME RunNetworkingTests COMMAND NetworkingTests)
