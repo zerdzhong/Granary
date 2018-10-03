@@ -31,7 +31,7 @@ void HttpSessionThread::run() {
 #if defined(__APPLE__)
     pthread_setname_np("HttpSessionThread");
 #else
-    pthread_setname_np(gettid(), "HttpSessionThread");
+    pthread_setname_np(pthread_self(), "HttpSessionThread");
 #endif
 
     while (isAlive() && session_) {
