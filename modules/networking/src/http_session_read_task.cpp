@@ -8,6 +8,7 @@
 #include "http_session_task.hpp"
 #include "curl.h"
 #include <sstream>
+#include <assert.h>
 #include "http_session_config.hpp"
 
 #pragma mark- CURL callback
