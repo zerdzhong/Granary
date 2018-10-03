@@ -10,6 +10,7 @@
 #include <curl.h>
 #include <sstream>
 #include <http_session.hpp>
+#include <algorithm>
 
 
 #pragma mark- HttpSessionThread
@@ -27,10 +28,10 @@ private:
 
 void HttpSessionThread::run() {
 
-#ifdef POSIX
-    pthread_setname_np(gettid(), "HttpSessionThread");
-#else
+#if defined(__APPLE__)
     pthread_setname_np("HttpSessionThread");
+#else
+    pthread_setname_np(gettid(), "HttpSessionThread");
 #endif
 
     while (isAlive() && session_) {
