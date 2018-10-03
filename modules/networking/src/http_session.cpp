@@ -26,7 +26,13 @@ private:
 };
 
 void HttpSessionThread::run() {
+
+#ifdef POSIX
+    pthread_setname_np(gettid(), "HttpSessionThread");
+#else
     pthread_setname_np("HttpSessionThread");
+#endif
+
     while (isAlive() && session_) {
         session_->runInternal();
     }
