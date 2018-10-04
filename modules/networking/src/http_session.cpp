@@ -291,3 +291,9 @@ std::string HttpSession::CurlInfo() {
     return stringStream.str();
 }
 
+bool HttpSession::SupportSSL() {
+    curl_version_info_data *info_data = curl_version_info(CURLVERSION_NOW);
+
+    return (info_data->ssl_version != nullptr);
+}
+

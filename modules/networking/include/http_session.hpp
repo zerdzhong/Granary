@@ -38,6 +38,7 @@ public:
     HttpSessionConfig* sessionConfig();
 
     static std::string CurlInfo();
+    static bool SupportSSL();
 
 private:
     //callback

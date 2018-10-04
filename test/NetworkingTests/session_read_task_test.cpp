@@ -14,6 +14,7 @@
 #undef protected
 
 #include "session_mock_listener.cpp"
+#include <curl/curl.h>
 
 using ::testing::_;
 using ::testing::Invoke;
@@ -35,6 +36,12 @@ static const char *TEST_INVALID_URLS[] = {
 };
 
 static auto UNAVAILABLE_URL = "http://unavailable.zdzhong.com/a";
+
+bool SupportSSL() {
+    curl_version_info_data *info_data = curl_version_info(CURLVERSION_NOW);
+
+    return (info_data->ssl_version != nullptr);
+}
 
 TEST(SessionReadTaskTest, initWithValidURLs) {
 
@@ -64,15 +71,18 @@ TEST(SessionReadTaskTest, initWithInvalidURLs) {
 }
 
 TEST(SessionReadTaskTest, SyncRead) {
-    HttpSessionReadTask *read_session_task1 = new HttpSessionReadTask("https://gensho.ftp.acc.umu.se/pub/gimp/gimp/v2.10/osx/gimp-2.10.4-x86_64.dmg", 0, 1024);
-    read_session_task1->SyncRead();
-    ASSERT_EQ(read_session_task1->received_size(), 1024);
+
+    if (SupportSSL()) {
+        HttpSessionReadTask *read_session_task1 = new HttpSessionReadTask("https://gensho.ftp.acc.umu.se/pub/gimp/gimp/v2.10/osx/gimp-2.10.4-x86_64.dmg", 0, 1024);
+        read_session_task1->SyncRead();
+        ASSERT_EQ(read_session_task1->received_size(), 1024);
+
+        delete(read_session_task1);
+    }
 
     HttpSessionReadTask *read_session_task2 = new HttpSessionReadTask("https://www.baidu.com", 0, 0);
     read_session_task2->SyncRead();
     ASSERT_GT(read_session_task2->received_size(), 0);
-
-    delete(read_session_task1);
     delete(read_session_task2);
 }
 
@@ -85,7 +95,7 @@ TEST(SessionReadTaskTest, ReadRange) {
 }
 
 TEST(SessionReadTaskTest, ResultCode) {
-    HttpSessionReadTask *read_session_task = new HttpSessionReadTask("https://www.baidu.com", 0, 0);
+    HttpSessionReadTask *read_session_task = new HttpSessionReadTask("http://www.baidu.com", 0, 0);
     HttpConnectionCode result = read_session_task->SyncRead();
 
     ASSERT_EQ(result, read_session_task->result_code_);
