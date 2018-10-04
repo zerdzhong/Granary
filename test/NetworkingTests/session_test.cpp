@@ -110,6 +110,7 @@ protected:
 TEST_F(HttpSessionTestFixture, ReadTask) {
 
     EXPECT_CALL(*mock_listener_, OnData(_,_)).Times(AtLeast(1));
+    EXPECT_CALL(*mock_listener_, OnDataFinish(_,_)).Times(2);
 
     test_session_->ReadTask("http://www.baidu.com");
     ASSERT_EQ(test_session_->pending_tasks_.size(), 1);
@@ -123,6 +124,8 @@ TEST_F(HttpSessionTestFixture, ReadTask) {
 }
 
 TEST_F(HttpSessionTestFixture, Retry) {
+    EXPECT_CALL(*mock_listener_, OnDataFinish(_,_)).Times(1);
+    EXPECT_CALL(*mock_listener_, OnData(_,_)).Times(AtLeast(1));
     auto task = test_session_->ReadTask(UNAVAILABLE_URL);
     test_session_->Start();
 
@@ -132,6 +135,7 @@ TEST_F(HttpSessionTestFixture, Retry) {
 }
 
 TEST_F(HttpSessionTestFixture, ReadTaskWithRange) {
+    EXPECT_CALL(*mock_listener_, OnDataFinish(_,_)).Times(2);
     EXPECT_CALL(*mock_listener_, OnData(_,_)).Times(AtLeast(1));
 
     HttpSessionReadTask *task1 = test_session_->ReadTaskWithInfo("https://www.baidu.com", 0, 8);
@@ -150,6 +154,7 @@ TEST_F(HttpSessionTestFixture, ReadTaskWithRange) {
 TEST_F(HttpSessionTestFixture, CancelTask) {
 
     ON_CALL(*mock_listener_, OnData(_, _)).WillByDefault(Invoke(this, &HttpSessionTestFixture::CancelOnceReceiveData));
+    EXPECT_CALL(*mock_listener_, OnData(_,_)).Times(AtLeast(1));
     EXPECT_CALL(*mock_listener_, OnDataFinish(_, CONN_USER_CANCEL)).Times(1);
 
     HttpSessionReadTask *task = test_session_->ReadTaskWithInfo(TEST_VALID_URLS[0], 0, 0);
@@ -174,6 +179,7 @@ void* add_task(void * pVoid) {
 }
 
 TEST_F(HttpSessionTestFixture, Tasks) {
+    EXPECT_CALL(*mock_listener_, OnDataFinish(_,_)).Times(20);
     EXPECT_CALL(*mock_listener_, OnData(_,_)).Times(AtLeast(1));
 
     test_session_->Start();
