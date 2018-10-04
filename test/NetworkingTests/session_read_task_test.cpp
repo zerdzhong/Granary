@@ -72,6 +72,7 @@ TEST(SessionReadTaskTest, initWithInvalidURLs) {
 
 TEST(SessionReadTaskTest, SyncRead) {
 
+#if defined(__APPLE__)
     if (SupportSSL()) {
         HttpSessionReadTask *read_session_task1 = new HttpSessionReadTask("https://gensho.ftp.acc.umu.se/pub/gimp/gimp/v2.10/osx/gimp-2.10.4-x86_64.dmg", 0, 1024);
         read_session_task1->SyncRead();
@@ -79,12 +80,15 @@ TEST(SessionReadTaskTest, SyncRead) {
 
         delete(read_session_task1);
     }
+#endif
 
     HttpSessionReadTask *read_session_task2 = new HttpSessionReadTask("https://www.baidu.com", 0, 0);
     read_session_task2->SyncRead();
     ASSERT_GT(read_session_task2->received_size(), 0);
     delete(read_session_task2);
 }
+
+#if defined(__APPLE__)
 
 TEST(SessionReadTaskTest, ReadRange) {
     HttpSessionReadTask *read_session_task = new HttpSessionReadTask("http://www.baidu.com", 0, 8);
@@ -94,12 +98,16 @@ TEST(SessionReadTaskTest, ReadRange) {
     delete(read_session_task);
 }
 
+#endif
+
 TEST(SessionReadTaskTest, ResultCode) {
     HttpSessionReadTask *read_session_task = new HttpSessionReadTask("http://www.baidu.com", 0, 0);
     HttpConnectionCode result = read_session_task->SyncRead();
 
     ASSERT_EQ(result, read_session_task->result_code_);
+#if defined(__APPLE__)
     ASSERT_EQ(CONN_OK, read_session_task->result_code_);
+#endif
 
     HttpSessionReadTask *read_session_task1 = new HttpSessionReadTask(UNAVAILABLE_URL, 0, 0);
     read_session_task1->SyncRead();
