@@ -54,7 +54,7 @@ void ThreadTest::run()
     {
         usleep(50);
         pthread_mutex_lock(&mutex_);
-        cout<< this << ", count: " << test_->count_ <<endl;
+        auto test_count =  test_->count_ ;
         pthread_mutex_unlock(&mutex_);
 
         test_->AddCount();
