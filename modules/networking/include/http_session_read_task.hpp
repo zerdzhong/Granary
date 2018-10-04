@@ -23,6 +23,7 @@ typedef enum {
     CONN_TCP_CONN_FAILED    ,           //network connection failed
     CONN_INVALID_URL        ,           //invalid url format
     CONN_UNSUPPORT_PROTOCOL ,
+    CONN_UNKNOW_ERROR       ,
 
     /* http/https protocol */
     HTTP_OVER_REDIRECT = 2000   ,         //too many redirects
@@ -51,6 +52,8 @@ public:
 
     //Read
     HttpConnectionCode SyncRead();
+    bool ShouldRetry(int curl_code);
+    void RetryTask();
     void ReadConnectionFinished(int code);
 
     //Cancel
@@ -62,6 +65,7 @@ public:
     void set_retry_count(uint8_t retry_count);
 
     //get info
+    uint8_t request_count();
     std::string url();
     CURL* handle();
 

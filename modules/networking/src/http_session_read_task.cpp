@@ -9,6 +9,8 @@
 #include "curl.h"
 #include <sstream>
 #include <assert.h>
+#include <http_session_read_task.hpp>
+
 #include "http_session_config.hpp"
 
 #pragma mark- CURL callback
@@ -65,7 +67,6 @@ session_config_(nullptr)
         range_str_ = "0-";
     }
 
-
     head_data_ = NewSessionTaskData(nullptr, 0, 0, kReadDataTypeHeader);
     body_data_ = NewSessionTaskData(nullptr, 0, 0, kReadDataTypeBody);
 
@@ -104,6 +105,17 @@ HttpConnectionCode HttpSessionReadTask::SyncRead() {
 
 void HttpSessionReadTask::Cancel() {
     stopped_ = true;
+}
+
+bool HttpSessionReadTask::ShouldRetry(int curl_code) {
+    return  CONN_OK != curl_code &&
+            CURLE_ABORTED_BY_CALLBACK != curl_code &&
+            request_count_ < retry_count_;
+}
+
+void HttpSessionReadTask::RetryTask() {
+    request_count_ ++;
+    received_size_ = 0;
 }
 
 void HttpSessionReadTask::ReadConnectionFinished(int finish_code) {
@@ -201,7 +213,7 @@ HttpConnectionCode HttpSessionReadTask::parseErrorReason(int code) {
                 result = CONN_USER_CANCEL;
                 break;
             default:
-                result = CONN_OK;
+                result = CONN_UNKNOW_ERROR;
                 break;
         }
 
@@ -308,7 +320,7 @@ void HttpSessionReadTask::setupHandle() {
     curl_easy_setopt(easy_handle, CURLOPT_LOW_SPEED_LIMIT, 1);
     curl_easy_setopt(easy_handle, CURLOPT_LOW_SPEED_TIME, 10);
 
-    curl_easy_setopt(easy_handle, CURLOPT_TIMEOUT, 20L);
+    curl_easy_setopt(easy_handle, CURLOPT_TIMEOUT, 3L);
 
     curl_easy_setopt(easy_handle, CURLOPT_RANGE, range_str_.c_str());
 
@@ -360,4 +372,8 @@ void HttpSessionReadTask::setSessionConfig(HttpSessionConfig *session_config) {
 
 HttpSessionConfig* HttpSessionReadTask::sessionConfig() {
     return session_config_;
+}
+
+uint8_t HttpSessionReadTask::request_count() {
+    return request_count_;
 }

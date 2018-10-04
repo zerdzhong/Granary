@@ -239,14 +239,21 @@ void HttpSession::handleCurlMessage() {
 void HttpSession::handleTaskFinish(HttpSessionReadTask *task, int curl_code) {
     pthread_mutex_lock(&tasks_mutex_);
 
-    task->ReadConnectionFinished(curl_code);
+    //remove from runing tasks
     curl_multi_remove_handle(curl_multi_handle_, task->handle());
     running_tasks_.erase(std::remove(running_tasks_.begin(), running_tasks_.end(), task), running_tasks_.end());
 
-    if (task_auto_delete_) {
-        delete task;
+    if (task->ShouldRetry(curl_code)) {
+        //retry
+        task->RetryTask();
+        pending_tasks_.push_back(task);
     } else {
-        finished_tasks_.push_back(task);
+        task->ReadConnectionFinished(curl_code);
+        if (task_auto_delete_) {
+            delete task;
+        } else {
+            finished_tasks_.push_back(task);
+        }
     }
 
     pthread_mutex_unlock(&tasks_mutex_);
@@ -277,9 +284,9 @@ std::string HttpSession::CurlInfo() {
     curl_version_info_data *info_data = curl_version_info(CURLVERSION_NOW);
 
     std::ostringstream stringStream;
-    stringStream<< "libcurl version: "  << info_data->version
-                << "\tSSL version: "    << info_data->ssl_version
-                << "\tlibz version: "   << info_data->libz_version;
+//    stringStream<< "libcurl version: "  << info_data->version
+//                << "\tSSL version: "    << info_data->ssl_version
+//                << "\tlibz version: "   << info_data->libz_version;
 
     return stringStream.str();
 }
