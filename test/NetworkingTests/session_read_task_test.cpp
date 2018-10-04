@@ -77,7 +77,7 @@ TEST(SessionReadTaskTest, SyncRead) {
 }
 
 TEST(SessionReadTaskTest, ReadRange) {
-    HttpSessionReadTask *read_session_task = new HttpSessionReadTask("http://www.zdzhong.com/", 0, 8);
+    HttpSessionReadTask *read_session_task = new HttpSessionReadTask("http://www.baidu.com", 0, 8);
     read_session_task->SyncRead();
     ASSERT_EQ(read_session_task->received_size(), 8);
 

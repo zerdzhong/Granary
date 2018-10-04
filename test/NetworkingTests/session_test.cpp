@@ -32,6 +32,8 @@ static const char *TEST_VALID_URLS[] = {
 };
 #define TEST_VALID_URLS_COUNT 4
 
+static auto UNAVAILABLE_URL = "http://unavailable.zdzhong.com/a";
+
 
 class HttpSessionTestFixture : public ::testing::Test {
 
@@ -51,6 +53,7 @@ public:
 
     ~HttpSessionTestFixture() override {
         delete test_session_;
+        delete mock_listener_;
 
         pthread_mutex_destroy(&mutex_);
         pthread_cond_destroy(&cond_);
@@ -106,6 +109,8 @@ protected:
 
 TEST_F(HttpSessionTestFixture, ReadTask) {
 
+    EXPECT_CALL(*mock_listener_, OnData(_,_)).Times(AtLeast(1));
+
     test_session_->ReadTask("http://www.baidu.com");
     ASSERT_EQ(test_session_->pending_tasks_.size(), 1);
     test_session_->ReadTask("http://www.baidu.com");
@@ -115,10 +120,20 @@ TEST_F(HttpSessionTestFixture, ReadTask) {
     waitUntilAllFinish(2);
 
     ASSERT_EQ(request_done_, 2);
+}
 
+TEST_F(HttpSessionTestFixture, Retry) {
+    auto task = test_session_->ReadTask(UNAVAILABLE_URL);
+    test_session_->Start();
+
+    waitUntilAllFinish(1);
+
+    ASSERT_EQ(task->request_count(), task->retry_count());
 }
 
 TEST_F(HttpSessionTestFixture, ReadTaskWithRange) {
+    EXPECT_CALL(*mock_listener_, OnData(_,_)).Times(AtLeast(1));
+
     HttpSessionReadTask *task1 = test_session_->ReadTaskWithInfo("https://www.baidu.com", 0, 8);
     ASSERT_EQ(test_session_->pending_tasks_.size(), 1);
     HttpSessionReadTask *task2 = test_session_->ReadTaskWithInfo("https://www.baidu.com",0, 10);
@@ -159,6 +174,7 @@ void* add_task(void * pVoid) {
 }
 
 TEST_F(HttpSessionTestFixture, Tasks) {
+    EXPECT_CALL(*mock_listener_, OnData(_,_)).Times(AtLeast(1));
 
     test_session_->Start();
 
@@ -181,4 +197,3 @@ TEST_F(HttpSessionTestFixture, SetConfig) {
 
     delete config;
 }
-
