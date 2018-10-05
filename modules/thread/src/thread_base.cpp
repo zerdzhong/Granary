@@ -64,7 +64,6 @@ void ThreadBase::setThreadName(std::string name) {
 
 
 ThreadBase::~ThreadBase() {
-    printf("Release ThreadBase, %p\n", this);
 
     if (isAlive()) {
         setIsAlive(false);
