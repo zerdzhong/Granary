@@ -9,7 +9,7 @@ matrix:
   - os: linux
     compiler: gcc
     env:
-    - MATRIX_EVAL="CC=clang-4.0 && CXX=clang++-4.0"
+    - MATRIX_EVAL="CC=gcc-4.9 && CXX=g++-4.9"
 
   - os: linux
     compiler: clang
@@ -17,9 +17,6 @@ matrix:
     - MATRIX_EVAL="CC=clang-3.9 && CXX=clang++-3.9"
 
   - os: osx
-    compiler: clang
-    env:
-    - MATRIX_EVAL="CC=clang-3.9 && CXX=clang++-3.9"
 
 
 before_install:
