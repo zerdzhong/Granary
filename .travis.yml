@@ -6,43 +6,40 @@ language:
 
 matrix:
   include:
-  # works on Trusty
   - os: linux
-    addons:
-      apt:
-        sources:
-        - llvm-toolchain-trusty-4.0
-        packages:
-        - clang-4.0
+    compiler: gcc
     env:
     - MATRIX_EVAL="CC=clang-4.0 && CXX=clang++-4.0"
 
-  # works on Trusty
   - os: linux
-    addons:
-      apt:
-        sources:
-        - llvm-toolchain-trusty-5.0
-        packages:
-        - clang-5.0
+    compiler: clang
     env:
-    - MATRIX_EVAL="CC=clang-5.0 && CXX=clang++-5.0"
+    - MATRIX_EVAL="CC=clang-3.9 && CXX=clang++-3.9"
 
   - os: osx
     compiler: clang
     env:
-    - MATRIX_EVAL="CC=clang-5.0 && CXX=clang++-5.0"
+    - MATRIX_EVAL="CC=clang-3.9 && CXX=clang++-3.9"
 
 
 before_install:
 - eval "${MATRIX_EVAL}"
 - pip install --user cpp-coveralls
 
-script:
-- cmake -H. -Bbuild
-- cd build/test
-- cmake --build .
-- ctest --verbose
+script: ./ci/travis.sh
+
+addons:
+  apt:
+    # List of whitelisted in travis packages for ubuntu-precise can be found here:
+    #   https://github.com/travis-ci/apt-package-whitelist/blob/master/ubuntu-precise
+    # List of whitelisted in travis apt-sources:
+    #   https://github.com/travis-ci/apt-source-whitelist/blob/master/ubuntu.json
+    sources:
+    - ubuntu-toolchain-r-test
+    - llvm-toolchain-precise-3.9
+    packages:
+    - g++-4.9
+    - clang-3.9
 
 after_success:
 - coveralls --root .. -E ".*external.*" -E ".*CMakeFiles.*" -E ".*test/.*.cpp.*"

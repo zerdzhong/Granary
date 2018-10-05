@@ -50,7 +50,7 @@ public:
     void run() {
         while (isAlive()) {
             int count = buffer_->Reduce();
-            printf("reduce count:%d\n", count);
+//            printf("reduce count:%d\n", count);
         }
     }
 
@@ -65,7 +65,7 @@ private:
 
 TEST(ProducerConsumer,test) {
     printf("\n");
-    TestThread *testThread = new TestThread();
+    auto *testThread = new TestThread();
     testThread->Start();
 
     size_t count  = 0;
@@ -77,6 +77,4 @@ TEST(ProducerConsumer,test) {
 
     testThread->Quit();
     delete testThread;
-
-    ASSERT_EQ(1, 1);
 }

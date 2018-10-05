@@ -68,7 +68,6 @@ ThreadTest::~ThreadTest() {
         pthread_join(getTid(), NULL);
     }
 
-    cout << "Release ThreadTest, " << this << endl;
     delete test_;
     test_ = nullptr;
 }
