@@ -6,6 +6,8 @@
 #include <iostream>
 #include "thread_base.hpp"
 #include <mutex>
+#include <thread>
+#include <chrono>
 
 using namespace std;
 
@@ -51,11 +53,7 @@ void ThreadTest::run()
 {
     while (isAlive()) {
 
-    #ifdef _WIN32
-        Sleep(100);
-    #else
-        usleep(50);
-    #endif
+        std::this_thread::sleep_for (std::chrono::milliseconds(10));
 
         std::lock_guard<std::mutex> lock(mutex_);
         auto test_count =  test_->count_ ;
@@ -85,21 +83,13 @@ TEST(ThreadBaseTest, start) {
     test2->Start();
     test3->Start();
 
-#ifdef _WIN32
-    Sleep(1000);
-#else
-    sleep(1);
-#endif
+    std::this_thread::sleep_for (std::chrono::seconds(1));
 
     delete test1;
     delete test2;
     delete test3;
 
-#ifdef _WIN32
-    Sleep(1000);
-#else
-    sleep(2);
-#endif
+    std::this_thread::sleep_for (std::chrono::seconds(2));
 
 }
 

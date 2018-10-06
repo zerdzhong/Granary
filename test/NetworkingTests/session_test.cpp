@@ -4,6 +4,8 @@
 
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
+#include <thread>
+#include <chrono>
 
 #include <iostream>
 #include "http_session_read_task.hpp"
@@ -171,7 +173,7 @@ void* add_task(void * pVoid) {
     while (count > 0) {
         session->ReadTask("http://www.baidu.com");
         count--;
-        usleep(1000);
+        std::this_thread::sleep_for (std::chrono::milliseconds(100));
     }
 
     return nullptr;

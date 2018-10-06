@@ -14,7 +14,7 @@
 #include <chrono>
 #if defined(__APPLE__)
 #include <pthread.h>
-#elseif defined(__linux__)
+#elif defined(__linux__)
 #include <pthread.h>
 #endif
 
@@ -40,7 +40,7 @@ void HttpSessionThread::run() {
 
 #if defined(__APPLE__)
     pthread_setname_np("HttpSessionThread");
-#else defined(__linux__)
+#elif defined(__linux__)
     pthread_setname_np(pthread_self(), "HttpSessionThread");
 #endif
 
