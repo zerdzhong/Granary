@@ -20,7 +20,7 @@ if(MSVC)
 endif()
 
 if (use_libcurl_source)
-    add_subdirectory(../../3rdparty/curl-7.61.0)
+    add_subdirectory(../../3rdparty/curl-7.61.0 curl.out)
     target_include_directories(Networking PRIVATE ../../3rdparty/curl-7.61.0/include/curl ${curl_SOURCE_DIR}/include ${curl_SOURCE_DIR})
     target_link_libraries(Networking PRIVATE libcurl)
 else ()
