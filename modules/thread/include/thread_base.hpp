@@ -12,7 +12,7 @@
 class ThreadBase {
 public:
     int Start();
-    int Join();
+    void Join();
     int Quit();
 
     bool isAlive();

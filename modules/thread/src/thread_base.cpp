@@ -17,7 +17,7 @@ int ThreadBase::Start() {
     return 0;
 }
 
-int ThreadBase::Join() {
+void ThreadBase::Join() {
     thread_.join();
 }
 
