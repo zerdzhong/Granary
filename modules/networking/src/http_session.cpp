@@ -28,7 +28,10 @@ class HttpSessionThread: public ThreadBase {
 public:
     explicit HttpSessionThread(HttpSession *session):session_(session) {}
     ~HttpSessionThread() {
-        Quit();
+        if (isAlive()) {
+            setIsAlive(false);
+            Join();
+        }
     }
     void run() override;
 
