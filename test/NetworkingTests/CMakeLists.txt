@@ -9,7 +9,7 @@ add_executable(NetworkingTests
         session_config_test.cpp
         )
 
-target_compile_features(NetworkingTests PRIVATE cxx_std_11)
+target_compile_features(NetworkingTests PRIVATE cxx_std_14)
 
 target_link_libraries(NetworkingTests gmock_main)
 target_link_libraries(NetworkingTests Networking::Networking)
