@@ -49,9 +49,14 @@ ThreadTest::ThreadTest() {
 
 void ThreadTest::run()
 {
-    while (isAlive())
-    {
+    while (isAlive()) {
+
+    #ifdef _WIN32
+        Sleep(100);
+    #else
         usleep(50);
+    #endif
+
         std::lock_guard<std::mutex> lock(mutex_);
         auto test_count =  test_->count_ ;
         test_->AddCount();
@@ -80,12 +85,21 @@ TEST(ThreadBaseTest, start) {
     test2->Start();
     test3->Start();
 
+#ifdef _WIN32
+    Sleep(1000);
+#else
     sleep(1);
+#endif
 
     delete test1;
     delete test2;
     delete test3;
 
+#ifdef _WIN32
+    Sleep(1000);
+#else
     sleep(2);
+#endif
+
 }
 

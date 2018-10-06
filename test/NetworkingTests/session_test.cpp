@@ -6,7 +6,6 @@
 #include "gmock/gmock.h"
 
 #include <iostream>
-#include <pthread.h>
 #include "http_session_read_task.hpp"
 #include "http_session_config.hpp"
 
