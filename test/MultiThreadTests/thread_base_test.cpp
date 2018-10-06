@@ -5,7 +5,7 @@
 #include "gtest/gtest.h"
 #include <iostream>
 #include "thread_base.hpp"
-#include <pthread.h>
+#include <mutex>
 
 using namespace std;
 
@@ -40,11 +40,10 @@ public:
 
 private:
     TestModel *test_;
-    pthread_mutex_t mutex_;
+    std::mutex mutex_;
 };
 
 ThreadTest::ThreadTest() {
-    mutex_ = PTHREAD_MUTEX_INITIALIZER;
     test_ = new TestModel();
 }
 
@@ -53,10 +52,8 @@ void ThreadTest::run()
     while (isAlive())
     {
         usleep(50);
-        pthread_mutex_lock(&mutex_);
+        std::lock_guard<std::mutex> lock(mutex_);
         auto test_count =  test_->count_ ;
-        pthread_mutex_unlock(&mutex_);
-
         test_->AddCount();
     }
 }
@@ -65,7 +62,7 @@ ThreadTest::~ThreadTest() {
 
     if (isAlive()) {
         setIsAlive(false);
-        pthread_join(getTid(), NULL);
+        Join();
     }
 
     delete test_;

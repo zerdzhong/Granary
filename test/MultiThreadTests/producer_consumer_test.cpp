@@ -47,6 +47,13 @@ public:
     TestThread() {
         buffer_ = new TestBuffer();
     }
+    ~TestThread() {
+        if (isAlive()) {
+            setIsAlive(false);
+            Join();
+        }
+        delete buffer_;
+    }
     void run() {
         while (isAlive()) {
             int count = buffer_->Reduce();

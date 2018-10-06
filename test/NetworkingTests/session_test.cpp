@@ -92,7 +92,7 @@ protected:
     }
 
     void SetUp() override {
-        std::cout<< "session curl info: " << test_session_->CurlInfo() << std::endl;
+//        std::cout<< "session curl info: " << test_session_->CurlInfo() << std::endl;
     }
 
 protected:
