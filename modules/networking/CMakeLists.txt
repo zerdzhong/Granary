@@ -15,7 +15,7 @@ target_link_libraries(Networking PRIVATE Thread::Thread)
 target_compile_features(Networking PRIVATE cxx_std_14)
 
 set(use_libcurl_source false)
-if(IOS)
+if(MSVC)
     set(use_libcurl_source true)
 endif()
 

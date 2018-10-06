@@ -7,37 +7,35 @@
 
 #include <stdlib.h>
 #include <vector>
-#include <pthread.h>
+#include <thread>
+#include <mutex>
 
 class TestBuffer {
 public:
     void Add();     //生产
     int Reduce();  //消费
     TestBuffer():count_(0){
-        pthread_mutex_init(&mutex_, NULL);
     };
 
 private:
     int count_;
     std::vector<int> data_;
-    pthread_mutex_t mutex_;
+    std::mutex mutex_;
 };
 
 void TestBuffer::Add() {
-    pthread_mutex_lock(&mutex_);
+    std::unique_lock<std::mutex> lock(mutex_);
     count_++;
     data_.push_back(count_);
-    pthread_mutex_unlock(&mutex_);
 }
 
 int TestBuffer::Reduce() {
-    pthread_mutex_lock(&mutex_);
+    std::unique_lock<std::mutex> lock(mutex_);
     if (data_.empty()) {
         return -1;
     }
     int element = data_.back();
     data_.pop_back();
-    pthread_mutex_unlock(&mutex_);
     return element;
 }
 
