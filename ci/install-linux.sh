@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-if [ "$TRAVIS_OS_NAME" == "osx" ]; then
+if [ "$TRAVIS_OS_NAME" != "linux" ]; then
     echo "Not a Linux build; skipping installation"
     exit 0;
 fi
