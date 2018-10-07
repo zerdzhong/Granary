@@ -48,6 +48,7 @@ build_script:
     # if ((Test-Path env:APPVEYOR_PULL_REQUEST_NUMBER) -And (-not (Test-Path env:enabled_on_pr) -or $env:enabled_on_pr -ne "yes")) {
     #      return
     #    }
+    cmake --version
     md _build -Force | Out-Null
     cd _build
     $conf = if ($env:generator -eq "MinGW Makefiles") {"-DCMAKE_BUILD_TYPE=$env:configuration"} else {"-DCMAKE_CONFIGURATION_TYPES=Debug;Release"}
