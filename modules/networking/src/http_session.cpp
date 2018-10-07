@@ -7,7 +7,7 @@
 #include "http_session.hpp"
 #include "http_session_read_task.hpp"
 #include "thread_base.hpp"
-#include <curl.h>
+#include <curl/curl.h>
 #include <sstream>
 #include <http_session.hpp>
 #include <algorithm>
