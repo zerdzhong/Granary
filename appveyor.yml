@@ -41,7 +41,8 @@ install:
             $env:path += ";$env:cxx_path"
         }
     }
-    choco install curl
+    choco install curl --install-directory 'C:\libcurl'
+    set CURL_ROOT='C:\libcurl'
 
 build_script:
 - ps: |

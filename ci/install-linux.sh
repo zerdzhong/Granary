@@ -13,4 +13,5 @@ wget --no-check-certificate https://cmake.org/files/v3.12/cmake-3.12.3-Linux-x86
 tar -xvf cmake-3.12.3-Linux-x86_64.tar.gz > /dev/null
 mv cmake-3.12.3-Linux-x86_64 cmake-install
 PATH=${DEPS_DIR}/cmake-install:${DEPS_DIR}/cmake-install/bin:$PATH
+echo $PATH
 cd ${TRAVIS_BUILD_DIR}
