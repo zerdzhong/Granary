@@ -7,11 +7,18 @@
 #include "http_session.hpp"
 #include "http_session_read_task.hpp"
 #include "thread_base.hpp"
-#include <curl.h>
+#include <curl/curl.h>
 #include <sstream>
 #include <http_session.hpp>
 #include <algorithm>
+#include <chrono>
+#if defined(__APPLE__)
+#include <pthread.h>
+#elif defined(__linux__)
+#include <pthread.h>
+#endif
 
+using namespace std::chrono_literals;
 
 #pragma mark- HttpSessionThread
 
@@ -20,6 +27,12 @@ class HttpSession;
 class HttpSessionThread: public ThreadBase {
 public:
     explicit HttpSessionThread(HttpSession *session):session_(session) {}
+    ~HttpSessionThread() {
+        if (isAlive()) {
+            setIsAlive(false);
+            Join();
+        }
+    }
     void run() override;
 
 private:
@@ -30,7 +43,7 @@ void HttpSessionThread::run() {
 
 #if defined(__APPLE__)
     pthread_setname_np("HttpSessionThread");
-#else
+#elif defined(__linux__)
     pthread_setname_np(pthread_self(), "HttpSessionThread");
 #endif
 
@@ -50,22 +63,11 @@ task_auto_delete_(true),
 session_config_(nullptr)
 {
 
-    pthread_mutexattr_t mutex_attr;
-    pthread_mutexattr_init(&mutex_attr);
-    pthread_mutexattr_settype(&mutex_attr, PTHREAD_MUTEX_RECURSIVE);
-    pthread_mutex_init(&tasks_mutex_, &mutex_attr);
-    pthread_mutexattr_destroy(&mutex_attr);
-
-    pthread_cond_init(&task_cond_, nullptr);
-
     thread_ = new HttpSessionThread(this);
 
 }
 
 HttpSession::~HttpSession() {
-
-    pthread_mutex_destroy(&tasks_mutex_);
-    pthread_cond_destroy(&task_cond_);
 
     if (thread_) {
         delete thread_;
@@ -82,14 +84,13 @@ void HttpSession::clearFinishedTask() {
         return;
     }
 
-    pthread_mutex_lock(&tasks_mutex_);
+    std::lock_guard<std::recursive_mutex> lock_guard(tasks_mutex_);
 
     for (auto task : finished_tasks_) {
         delete task;
     }
     finished_tasks_.clear();
 
-    pthread_mutex_unlock(&tasks_mutex_);
 }
 
 #pragma mark- Public
@@ -107,15 +108,14 @@ HttpSessionReadTask* HttpSession::ReadTask(std::string url) {
 }
 
 HttpSessionReadTask* HttpSession::ReadTaskWithInfo(std::string url, size_t offset, size_t length){
-    pthread_mutex_lock(&tasks_mutex_);
+    std::lock_guard<std::recursive_mutex> lock_guard(tasks_mutex_);
 
     HttpSessionReadTask *read_task = new HttpSessionReadTask(std::move(url), offset, length);
     read_task->setListener(this);
     read_task->setSessionConfig(session_config_);
     pending_tasks_.push_back(read_task);
 
-    pthread_cond_signal(&task_cond_);
-    pthread_mutex_unlock(&tasks_mutex_);
+    task_cond_.notify_one();
 
     return read_task;
 }
@@ -172,20 +172,14 @@ void HttpSession::runInternal() {
 }
 
 size_t HttpSession::requestPendingTasks() {
-    pthread_mutex_lock(&tasks_mutex_);
+    std::lock_guard<std::recursive_mutex> lock_guard(tasks_mutex_);
+    std::unique_lock<std::mutex> lock(task_cond_mutex_);
 
     size_t  request_count = 0;
 
     if (pending_tasks_.empty() && running_tasks_.empty()) {
-        struct timespec   wait_time{};
-        struct timeval    now{};
-
-        gettimeofday(&now, nullptr);
-        wait_time.tv_sec  = now.tv_sec;
-        wait_time.tv_nsec = now.tv_usec * 1000;
-        wait_time.tv_sec += 1;
-
-        pthread_cond_timedwait(&task_cond_, &tasks_mutex_, &wait_time);
+        auto now = std::chrono::system_clock::now();
+        task_cond_.wait_until(lock, now + 500ms);
     }
 
     while (!pending_tasks_.empty()) {
@@ -209,8 +203,6 @@ size_t HttpSession::requestPendingTasks() {
             iterator++;
         }
     }
-
-    pthread_mutex_unlock(&tasks_mutex_);
 
     return request_count;
 }
@@ -237,7 +229,7 @@ void HttpSession::handleCurlMessage() {
 }
 
 void HttpSession::handleTaskFinish(HttpSessionReadTask *task, int curl_code) {
-    pthread_mutex_lock(&tasks_mutex_);
+    std::lock_guard<std::recursive_mutex> lock_guard(tasks_mutex_);
 
     //remove from runing tasks
     curl_multi_remove_handle(curl_multi_handle_, task->handle());
@@ -255,8 +247,6 @@ void HttpSession::handleTaskFinish(HttpSessionReadTask *task, int curl_code) {
             finished_tasks_.push_back(task);
         }
     }
-
-    pthread_mutex_unlock(&tasks_mutex_);
 }
 
 #pragma mark- HttpSessionTaskListener

@@ -2,7 +2,7 @@ dist: trusty
 sudo: false
 
 language:
-- cpp
+  - cpp
 
 matrix:
   include:
@@ -18,10 +18,12 @@ matrix:
 
   - os: osx
 
+install:
+  - ./ci/install-${TRAVIS_OS_NAME}.sh
 
 before_install:
-- eval "${MATRIX_EVAL}"
-- pip install --user cpp-coveralls
+  - eval "${MATRIX_EVAL}"
+  - pip install --user cpp-coveralls
 
 script: ./ci/travis.sh
 
@@ -39,7 +41,7 @@ addons:
     - clang-3.9
 
 after_success:
-- coveralls --root .. -E ".*external.*" -E ".*CMakeFiles.*" -E ".*test/.*.cpp.*"
+  - coveralls --root .. -E ".*external.*" -E ".*CMakeFiles.*" -E ".*test/.*.cpp.*"
 
 notifications:
   email: false

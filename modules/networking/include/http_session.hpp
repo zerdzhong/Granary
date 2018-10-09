@@ -7,7 +7,8 @@
 
 #include <string>
 #include <vector>
-#include <pthread.h>
+#include <mutex>
+#include <condition_variable>
 #include "http_session_task.hpp"
 
 class HttpSessionThread;
@@ -58,8 +59,9 @@ private:
     std::vector<HttpSessionReadTask *> running_tasks_;
     std::vector<HttpSessionReadTask *> finished_tasks_;
 
-    pthread_mutex_t tasks_mutex_;
-    pthread_cond_t task_cond_;
+    std::recursive_mutex tasks_mutex_;
+    std::mutex task_cond_mutex_;
+    std::condition_variable task_cond_;
 
     CURLM *curl_multi_handle_;
     int  is_handle_running_;

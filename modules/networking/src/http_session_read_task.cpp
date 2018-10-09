@@ -6,7 +6,7 @@
 
 #include "http_session_read_task.hpp"
 #include "http_session_task.hpp"
-#include "curl.h"
+#include <curl/curl.h>
 #include <sstream>
 #include <assert.h>
 #include <http_session_read_task.hpp>

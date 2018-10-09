@@ -5,16 +5,16 @@
 #ifndef GRANARY_THREAD_BASE_HPP
 #define GRANARY_THREAD_BASE_HPP
 
-#include <pthread.h>
+#include <thread>
+#include <mutex>
 #include <string>
 
 class ThreadBase {
 public:
     int Start();
-    int Join();
+    void Join();
     int Quit();
 
-    pthread_t getTid();
     bool isAlive();
 
     virtual void run() = 0;
@@ -28,8 +28,8 @@ protected:
     void setIsAlive(bool is_alive);
 
 private:
-    pthread_rwlock_t rwlock_;
-    pthread_t tid_;
+    std::mutex mutex_;
+    std::thread thread_;
     bool is_alive_;
     std::string thread_name_;
 };

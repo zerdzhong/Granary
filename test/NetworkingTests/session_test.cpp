@@ -4,9 +4,10 @@
 
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
+#include <thread>
+#include <chrono>
 
 #include <iostream>
-#include <pthread.h>
 #include "http_session_read_task.hpp"
 #include "http_session_config.hpp"
 
@@ -46,38 +47,30 @@ public:
 
         ON_CALL(*mock_listener_, OnDataFinish(_, _)).
                 WillByDefault(Invoke(this, &HttpSessionTestFixture::OnDataFinish));
-
-        pthread_mutex_init(&mutex_, nullptr);
-        pthread_cond_init(&cond_, nullptr);
     }
 
     ~HttpSessionTestFixture() override {
         delete test_session_;
         delete mock_listener_;
-
-        pthread_mutex_destroy(&mutex_);
-        pthread_cond_destroy(&cond_);
     }
 
     void waitUntilAllFinish(uint8_t request_count) {
-        pthread_mutex_lock(&mutex_);
+        std::unique_lock<std::mutex> lock(mutex_);
 
         request_count_ = request_count;
 
         while(!request_done_) {
-            pthread_cond_wait(&cond_, &mutex_);
+            cond_.wait(lock);
         }
-
-        pthread_mutex_unlock(&mutex_);
     }
 
     void OnDataFinish(HttpSessionTask *session_task, int err_code) {
-        pthread_mutex_lock(&mutex_);
+        std::unique_lock<std::mutex> lock(mutex_);
+
         if (++ request_done_ == request_count_) {
-            pthread_cond_signal(&cond_);
+            cond_.notify_one();
         }
 
-        pthread_mutex_unlock(&mutex_);
     }
 
     void CancelOnceReceiveData(HttpSessionTask *session_task, HttpSessionTaskData *read_data) {
@@ -92,15 +85,15 @@ protected:
     }
 
     void SetUp() override {
-        std::cout<< "session curl info: " << test_session_->CurlInfo() << std::endl;
+//        std::cout<< "session curl info: " << test_session_->CurlInfo() << std::endl;
     }
 
 protected:
     HttpSession *test_session_;
     MockSessionTaskListener *mock_listener_;
 
-    pthread_cond_t cond_{};
-    pthread_mutex_t mutex_{};
+    std::condition_variable cond_;
+    std::mutex mutex_;
 
     uint8_t request_done_ = 0;
     uint8_t request_count_ = 0;
@@ -172,7 +165,7 @@ void* add_task(void * pVoid) {
     while (count > 0) {
         session->ReadTask("http://www.baidu.com");
         count--;
-        usleep(1000);
+        std::this_thread::sleep_for (std::chrono::milliseconds(100));
     }
 
     return nullptr;
@@ -184,14 +177,15 @@ TEST_F(HttpSessionTestFixture, Tasks) {
 
     test_session_->Start();
 
-    pthread_t add_task_thread_1, add_task_thread_2;
-
-    pthread_create(&add_task_thread_1, nullptr, add_task, test_session_);
-    pthread_create(&add_task_thread_2, nullptr, add_task, test_session_);
+    auto thread1 = std::thread(add_task, test_session_);
+    auto thread2 = std::thread(add_task, test_session_);
 
     waitUntilAllFinish(20);
 
     ASSERT_EQ(request_done_, 20);
+
+    thread1.join();
+    thread2.join();
 }
 
 TEST_F(HttpSessionTestFixture, SetConfig) {

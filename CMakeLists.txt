@@ -10,6 +10,10 @@ macro(find_package)
     endif()
 endmacro()
 
+if (MSVC)
+    add_compile_options(/W2)
+endif()
+
 add_subdirectory(modules/thread)
 add_subdirectory(modules/networking)
 add_subdirectory(test)
