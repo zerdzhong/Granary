@@ -12,11 +12,6 @@
 #include <http_session.hpp>
 #include <algorithm>
 #include <chrono>
-#if defined(__APPLE__)
-#include <pthread.h>
-#elif defined(__linux__)
-#include <pthread.h>
-#endif
 
 using namespace std::chrono_literals;
 
@@ -27,7 +22,7 @@ class HttpSession;
 class HttpSessionThread: public ThreadBase {
 public:
     explicit HttpSessionThread(HttpSession *session):session_(session) {}
-    ~HttpSessionThread() {
+    ~HttpSessionThread() override {
         if (isAlive()) {
             setIsAlive(false);
             Join();
@@ -41,11 +36,7 @@ private:
 
 void HttpSessionThread::run() {
 
-#if defined(__APPLE__)
-    pthread_setname_np("HttpSessionThread");
-#elif defined(__linux__)
-    pthread_setname_np(pthread_self(), "HttpSessionThread");
-#endif
+    setThreadName("HttpSessionThread");
 
     while (isAlive() && session_) {
         session_->runInternal();

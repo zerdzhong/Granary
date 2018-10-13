@@ -1,8 +1,15 @@
+#include <utility>
+
 //
 // Created by zhongzhendong on 2018/8/2.
 //
 
 #include "thread_base.hpp"
+#if defined(__APPLE__)
+#include <pthread.h>
+#elif defined(__linux__)
+#include <pthread.h>
+#endif
 #include <stdio.h>
 
 void* ThreadBase::start_func(void *arg) {
@@ -41,7 +48,14 @@ void ThreadBase::setIsAlive(bool is_alive) {
 }
 
 void ThreadBase::setThreadName(std::string name) {
-    thread_name_ = name;
+    thread_name_ = std::move(name);
+
+#if defined(__APPLE__)
+    pthread_setname_np(thread_name_.c_str());
+#elif defined(__linux__)
+    pthread_setname_np(pthread_self(), thread_name_);
+#endif
+
 }
 
 
