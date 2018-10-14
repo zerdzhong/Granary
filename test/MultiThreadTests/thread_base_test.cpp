@@ -4,7 +4,13 @@
 
 #include "gtest/gtest.h"
 #include <iostream>
+
+#define private public
+
 #include "thread_base.hpp"
+
+#undef private
+
 #include <mutex>
 #include <thread>
 #include <chrono>
@@ -91,5 +97,12 @@ TEST(ThreadBaseTest, start) {
 
     std::this_thread::sleep_for (std::chrono::seconds(2));
 
+}
+
+TEST(ThreadBaseTest, setName) {
+    ThreadBase *test1 = new ThreadTest();
+    test1->setThreadName("test_1");
+
+    ASSERT_EQ(test1->thread_name_, "test_1");
 }
 

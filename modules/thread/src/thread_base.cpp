@@ -50,7 +50,6 @@ void ThreadBase::setThreadName(std::string name) {
 
 }
 
-
 ThreadBase::~ThreadBase() {
     if (isAlive()) {
         setIsAlive(false);
