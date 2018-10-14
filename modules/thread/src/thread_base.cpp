@@ -28,14 +28,6 @@ void ThreadBase::Join() {
     thread_.join();
 }
 
-int ThreadBase::Quit() {
-    if (isAlive()) {
-        setIsAlive(false);
-        Join();
-    }
-    return 0;
-}
-
 bool ThreadBase::isAlive() {
     std::lock_guard<std::mutex> lock(mutex_);
     bool is_alive = is_alive_;

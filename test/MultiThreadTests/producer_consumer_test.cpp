@@ -80,6 +80,5 @@ TEST(ProducerConsumer,test) {
         count++;
     }
 
-    testThread->Quit();
     delete testThread;
 }
