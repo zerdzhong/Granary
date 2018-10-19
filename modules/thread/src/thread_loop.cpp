@@ -4,7 +4,7 @@
 // Created by zhongzhendong on 2018/8/2.
 //
 
-#include "thread_base.hpp"
+#include "thread_loop.hpp"
 #if defined(__APPLE__)
 #include <pthread.h>
 #elif defined(__linux__)
@@ -12,34 +12,34 @@
 #endif
 #include <stdio.h>
 
-void* ThreadBase::start_func(void *arg) {
-    auto *ptr = (ThreadBase *)arg;
+void* ThreadLoop::start_func(void *arg) {
+    auto *ptr = (ThreadLoop *)arg;
     ptr->run();
     return nullptr;
 }
 
-int ThreadBase::Start() {
+int ThreadLoop::Start() {
     thread_ = std::thread(start_func, this);
     is_alive_ = true;
     return 0;
 }
 
-void ThreadBase::Join() {
+void ThreadLoop::Join() {
     thread_.join();
 }
 
-bool ThreadBase::isAlive() {
+bool ThreadLoop::isAlive() {
     std::lock_guard<std::mutex> lock(mutex_);
     bool is_alive = is_alive_;
     return is_alive;
 }
 
-void ThreadBase::setIsAlive(bool is_alive) {
+void ThreadLoop::setIsAlive(bool is_alive) {
     std::lock_guard<std::mutex> lock(mutex_);
     is_alive_ = is_alive;
 }
 
-void ThreadBase::setThreadName(std::string name) {
+void ThreadLoop::setThreadName(std::string name) {
     thread_name_ = std::move(name);
 
 #if defined(__APPLE__)
@@ -50,13 +50,13 @@ void ThreadBase::setThreadName(std::string name) {
 
 }
 
-ThreadBase::~ThreadBase() {
+ThreadLoop::~ThreadLoop() {
     if (isAlive()) {
         setIsAlive(false);
         Join();
     }
 }
 
-ThreadBase::ThreadBase() {
+ThreadLoop::ThreadLoop() {
 
 }

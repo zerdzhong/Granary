@@ -3,7 +3,7 @@
 //
 
 #include "gtest/gtest.h"
-#include "thread_base.hpp"
+#include "thread_loop.hpp"
 
 #include <stdlib.h>
 #include <vector>
@@ -40,7 +40,7 @@ int TestBuffer::Reduce() {
 }
 
 
-class TestThread: public ThreadBase {
+class TestThread: public ThreadLoop {
 public:
     TestThread() {
         buffer_ = new TestBuffer();

@@ -9,7 +9,7 @@
 #include <mutex>
 #include <string>
 
-class ThreadBase {
+class ThreadLoop {
 public:
     int Start();
     void Join();
@@ -17,8 +17,8 @@ public:
     bool isAlive();
 
     virtual void run() = 0;
-    virtual ~ThreadBase();
-    ThreadBase();
+    virtual ~ThreadLoop();
+    ThreadLoop();
 
     void setThreadName(std::string name);
 

@@ -6,7 +6,7 @@
 
 #include "http_session.hpp"
 #include "http_session_read_task.hpp"
-#include "thread_base.hpp"
+#include "thread_loop.hpp"
 #include <curl/curl.h>
 #include <sstream>
 #include <http_session.hpp>
@@ -19,10 +19,10 @@ using namespace std::chrono_literals;
 
 class HttpSession;
 
-class HttpSessionThread: public ThreadBase {
+class HttpSessionThreadLoop: public ThreadLoop {
 public:
-    explicit HttpSessionThread(HttpSession *session):session_(session) {}
-    ~HttpSessionThread() override {
+    explicit HttpSessionThreadLoop(HttpSession *session):session_(session) {}
+    ~HttpSessionThreadLoop() override {
         if (isAlive()) {
             setIsAlive(false);
             Join();
@@ -34,9 +34,9 @@ private:
     HttpSession *session_;
 };
 
-void HttpSessionThread::run() {
+void HttpSessionThreadLoop::run() {
 
-    setThreadName("HttpSessionThread");
+    setThreadName("HttpSessionThreadLoop");
 
     while (isAlive() && session_) {
         session_->runInternal();
@@ -54,15 +54,15 @@ task_auto_delete_(true),
 session_config_(nullptr)
 {
 
-    thread_ = new HttpSessionThread(this);
+    thread_loop_ = new HttpSessionThreadLoop(this);
 
 }
 
 HttpSession::~HttpSession() {
 
-    if (thread_) {
-        delete thread_;
-        thread_ = nullptr;
+    if (thread_loop_) {
+        delete thread_loop_;
+        thread_loop_ = nullptr;
     }
 
     if (!task_auto_delete_) {
@@ -91,7 +91,7 @@ void HttpSession::Start() {
     curl_global_init(CURL_GLOBAL_ALL);
     curl_multi_handle_ = curl_multi_init();
 
-    thread_->Start();
+    thread_loop_->Start();
 }
 
 HttpSessionReadTask* HttpSession::ReadTask(std::string url) {
