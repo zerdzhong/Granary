@@ -10,17 +10,23 @@
 class Timer;
 
 typedef double TimeInterval;
+typedef TimeInterval AbsoluteTime;
 typedef void (*TimerCallBack)(Timer *timer, void *info);
+
+AbsoluteTime GetGurrentTime();
 
 class Timer {
 public:
-    Timer();
+    Timer(TimeInterval interval, bool is_repeat, TimerCallBack callback);
     ~Timer();
+
+    void Fire();
 
 private:
     std::mutex mutex_;
     TimeInterval  interval_;
-    TimerCallBack callout_;
+    TimerCallBack callback_;
+    bool is_repeat_;
 };
 
 
