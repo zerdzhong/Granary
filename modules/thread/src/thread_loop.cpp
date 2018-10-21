@@ -11,9 +11,14 @@
 #include <pthread.h>
 #endif
 #include <stdio.h>
+#include <thread_loop.hpp>
+
+#include "timer.hpp"
+
 
 void* ThreadLoop::start_func(void *arg) {
     auto *ptr = (ThreadLoop *)arg;
+    ptr->RunTimers();
     ptr->run();
     return nullptr;
 }
@@ -59,4 +64,19 @@ ThreadLoop::~ThreadLoop() {
 
 ThreadLoop::ThreadLoop() {
 
+}
+
+void ThreadLoop::AddTimer(Timer* timer) {
+    std::lock_guard<std::mutex> lock_guard(mutex_);
+
+    timer->SetThreadLoop(this);
+    timers_.insert(timer);
+}
+
+void ThreadLoop::RunTimers() {
+    for (auto timer : timers_) {
+        if (timer->isValid()) {
+            timer->handleTimer();
+        }
+    }
 }

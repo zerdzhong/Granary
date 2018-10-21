@@ -1,6 +1,10 @@
 project(MultiThreadTests)
 
-add_executable(MultiThreadTests thread_base_test.cpp producer_consumer_test.cpp)
+add_executable(MultiThreadTests
+        thread_base_test.cpp
+        producer_consumer_test.cpp
+        timer_test.cpp
+        )
 
 if (NOT MSVC)
     find_package(Thread CONFIG REQUIRED)

@@ -8,6 +8,9 @@
 #include <thread>
 #include <mutex>
 #include <string>
+#include <set>
+
+class Timer;
 
 class ThreadLoop {
 public:
@@ -22,15 +25,22 @@ public:
 
     void setThreadName(std::string name);
 
+    void AddTimer(Timer *timer);
+
 protected:
     static void* start_func(void* arg);
     void setIsAlive(bool is_alive);
+
+private:
+    void RunTimers();
 
 private:
     std::mutex mutex_;
     std::thread thread_;
     bool is_alive_;
     std::string thread_name_;
+
+    std::set<Timer *> timers_;
 };
 
 
