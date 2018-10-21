@@ -40,7 +40,7 @@ private:
     bool is_alive_;
     std::string thread_name_;
 
-    std::set<Timer *> timer_;
+    std::set<Timer *> timers_;
 };
 
 
