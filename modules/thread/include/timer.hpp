@@ -35,7 +35,6 @@ private:
     bool is_valid_;
     ThreadLoop *thread_loop_;
     AbsoluteTime fire_time_;
-
 };
 
 

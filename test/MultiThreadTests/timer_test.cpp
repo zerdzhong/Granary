@@ -35,3 +35,9 @@ TEST(TimerTest, Fire) {
     ASSERT_EQ(timer->fire_time_, fire_time + 0.3);
 }
 
+TEST(TimerTest, Handle) {
+    auto timer = make_unique<Timer>(0.3, false, nullptr);
+    bool is_handled = timer->handleTimer();
+    ASSERT_EQ(is_handled, false);
+}
+

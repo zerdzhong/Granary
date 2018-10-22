@@ -56,6 +56,14 @@ bool Timer::isValid() {
 bool Timer::handleTimer() {
     bool timer_handled = false;
 
+    if (nullptr == thread_loop_) {
+        return timer_handled;
+    }
+
+    if (thread_loop_->getThreadId() != std::this_thread::get_id()) {
+        return  timer_handled;
+    }
+
     if (is_valid_ && fire_time_ < CurrentTime()) {
         callback_(this, nullptr);
         timer_handled = true;
