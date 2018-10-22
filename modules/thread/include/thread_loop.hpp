@@ -24,8 +24,9 @@ public:
     ThreadLoop();
 
     void setThreadName(std::string name);
-
     void AddTimer(Timer *timer);
+
+    std::thread::id getThreadId();
 
 protected:
     static void* start_func(void* arg);

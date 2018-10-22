@@ -80,3 +80,7 @@ void ThreadLoop::RunTimers() {
         }
     }
 }
+
+std::thread::id ThreadLoop::getThreadId() {
+    return thread_.get_id();
+}
