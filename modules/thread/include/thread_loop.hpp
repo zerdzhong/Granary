@@ -14,33 +14,23 @@ class Timer;
 
 class ThreadLoop {
 public:
-    int Start();
-    void Join();
+    ThreadLoop();
+    ~ThreadLoop();
+
+    void AddTimer(Timer *timer);
+    void Run();
 
     bool isAlive();
-
-    virtual void run() = 0;
-    virtual ~ThreadLoop();
-    ThreadLoop();
-
-    void setThreadName(std::string name);
-    void AddTimer(Timer *timer);
-
     std::thread::id getThreadId();
 
-protected:
-    static void* start_func(void* arg);
-    void setIsAlive(bool is_alive);
-
 private:
+    void setIsAlive(bool is_alive);
     void RunTimers();
 
 private:
     std::mutex mutex_;
     std::thread thread_;
     bool is_alive_;
-    std::string thread_name_;
-
     std::set<Timer *> timers_;
 };
 
