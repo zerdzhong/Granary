@@ -41,3 +41,21 @@ TEST(TimerTest, Handle) {
     ASSERT_EQ(is_handled, false);
 }
 
+TEST(TimerTest, TimerWithInternal) {
+
+    auto loop = make_unique<ThreadLoop>();
+
+    AbsoluteTime call_time = 0;
+    auto timer = make_unique<Timer>(0.3, false, [&](Timer *timer, void *info){
+        call_time = CurrentTime();
+    });
+
+    auto fire_time = CurrentTime();
+    loop->AddTimer(timer.get());
+    timer->Fire();
+
+    loop->Run();
+
+//    ASSERT_EQ(call_time, fire_time + 0.3);
+}
+

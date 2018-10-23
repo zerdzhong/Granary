@@ -7,7 +7,7 @@
 
 #define private public
 
-#include "thread_loop.hpp"
+#include "thread.hpp"
 
 #undef private
 
@@ -39,7 +39,7 @@ private:
 };
 
 
-class ThreadTest : public ThreadLoop
+class ThreadTest : public Thread
 {
 public:
     ThreadTest();
@@ -81,9 +81,9 @@ ThreadTest::~ThreadTest() {
 TEST(ThreadBaseTest, start) {
 
     printf("\n");
-    ThreadLoop *test1 = new ThreadTest();
-    ThreadLoop *test2 = new ThreadTest();
-    ThreadLoop *test3 = new ThreadTest();
+    auto test1 = new ThreadTest();
+    auto test2 = new ThreadTest();
+    auto test3 = new ThreadTest();
 
     test1->Start();
     test2->Start();
@@ -100,7 +100,7 @@ TEST(ThreadBaseTest, start) {
 }
 
 TEST(ThreadBaseTest, setName) {
-    ThreadLoop *test1 = new ThreadTest();
+    auto test1 = new ThreadTest();
     test1->setThreadName("test_1");
 
     ASSERT_EQ(test1->thread_name_, "test_1");

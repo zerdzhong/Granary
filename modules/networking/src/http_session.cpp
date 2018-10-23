@@ -6,7 +6,7 @@
 
 #include "http_session.hpp"
 #include "http_session_read_task.hpp"
-#include "thread_loop.hpp"
+#include "thread.hpp"
 #include <curl/curl.h>
 #include <sstream>
 #include <http_session.hpp>
@@ -19,10 +19,10 @@ using namespace std::chrono_literals;
 
 class HttpSession;
 
-class HttpSessionThreadLoop: public ThreadLoop {
+class HttpSessionThread: public Thread {
 public:
-    explicit HttpSessionThreadLoop(HttpSession *session):session_(session) {}
-    ~HttpSessionThreadLoop() override {
+    explicit HttpSessionThread(HttpSession *session):session_(session) {}
+    ~HttpSessionThread() override {
         if (isAlive()) {
             setIsAlive(false);
             Join();
@@ -34,9 +34,9 @@ private:
     HttpSession *session_;
 };
 
-void HttpSessionThreadLoop::run() {
+void HttpSessionThread::run() {
 
-    setThreadName("HttpSessionThreadLoop");
+    setThreadName("HttpSessionThread");
 
     while (isAlive() && session_) {
         session_->runInternal();
@@ -54,7 +54,7 @@ task_auto_delete_(true),
 session_config_(nullptr)
 {
 
-    thread_loop_ = new HttpSessionThreadLoop(this);
+    thread_loop_ = new HttpSessionThread(this);
 
 }
 

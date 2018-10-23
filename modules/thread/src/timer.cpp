@@ -71,3 +71,11 @@ bool Timer::handleTimer() {
 
     return timer_handled;
 }
+
+Timer::Timer(TimeInterval interval, bool is_repeat, std::function<void(Timer *, void *)> lambda_callback)
+:interval_{interval},
+is_repeat_{is_repeat},
+lambda_callback_{lambda_callback}
+{
+
+}
