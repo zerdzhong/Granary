@@ -19,6 +19,7 @@ AbsoluteTime CurrentTime();
 class Timer {
 public:
     Timer(TimeInterval interval, bool is_repeat, TimerCallBack callback);
+    Timer(TimeInterval interval, bool is_repeat, std::function<void(Timer*, void*)> lambda_callback);
     ~Timer();
 
     void SetThreadLoop(ThreadLoop *threadLoop);
@@ -36,6 +37,7 @@ private:
     ThreadLoop *thread_loop_;
     AbsoluteTime fire_time_;
 
+    std::function<void(Timer*, void*)> lambda_callback_;
 };
 
 

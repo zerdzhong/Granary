@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.7)
 
 project(Thread VERSION 1.0.0)
 
-add_library(Thread src/thread_loop.cpp src/timer.cpp)
+add_library(Thread src/thread_loop.cpp src/timer.cpp src/thread.cpp include/thread.hpp)
 add_library(Thread::Thread ALIAS Thread)
 
 target_compile_features(Thread PRIVATE cxx_std_14)

@@ -11,7 +11,7 @@
 #include <condition_variable>
 #include "http_session_task.hpp"
 
-class HttpSessionThreadLoop;
+class HttpSessionThread;
 class HttpSessionReadTask;
 class HttpSessionConfig;
 
@@ -54,7 +54,7 @@ private:
     void clearFinishedTask();
 
 private:
-    HttpSessionThreadLoop *thread_loop_;
+    HttpSessionThread *thread_loop_;
     std::vector<HttpSessionReadTask *> pending_tasks_;
     std::vector<HttpSessionReadTask *> running_tasks_;
     std::vector<HttpSessionReadTask *> finished_tasks_;
