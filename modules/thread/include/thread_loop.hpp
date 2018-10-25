@@ -11,6 +11,7 @@
 #include <set>
 
 class Timer;
+class Thread;
 
 class ThreadLoop {
 public:
@@ -21,7 +22,7 @@ public:
     void Run();
 
     bool isAlive();
-    std::thread::id getThreadId();
+    Thread* currentThread();
 
 private:
     void setIsAlive(bool is_alive);
@@ -29,7 +30,7 @@ private:
 
 private:
     std::mutex mutex_;
-    std::thread thread_;
+    Thread* thread_;
     bool is_alive_;
     std::set<Timer *> timers_;
 };

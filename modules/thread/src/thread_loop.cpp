@@ -1,13 +1,11 @@
-#include <utility>
-#include <thread_loop.hpp>
-
-
 //
 // Created by zhongzhendong on 2018/8/2.
 //
 
-#include "thread_loop.hpp"
+#include <utility>
+#include <thread_loop.hpp>
 #include "timer.hpp"
+#include "thread.hpp"
 
 
 ThreadLoop::~ThreadLoop() {
@@ -39,10 +37,10 @@ bool ThreadLoop::isAlive() {
     return is_alive;
 }
 
-std::thread::id ThreadLoop::getThreadId() {
-    return thread_.get_id();
+void ThreadLoop::Run() {
+    while ()
 }
 
-void ThreadLoop::Run() {
-
+Thread *ThreadLoop::currentThread() {
+    return thread_;
 }
