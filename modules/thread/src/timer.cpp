@@ -4,8 +4,7 @@
 
 #include <sys/time.h>
 #include <timer.hpp>
-
-#include "timer.hpp"
+#include "thread.hpp"
 
 const TimeInterval kAbsoluteTimeIntervalSince1970 = 978307200.0L;
 const TimeInterval kAbsoluteTimeIntervalSince1904 = 3061152000.0L;
@@ -60,7 +59,7 @@ bool Timer::handleTimer() {
         return timer_handled;
     }
 
-    if (thread_loop_->getThreadId() != std::this_thread::get_id()) {
+    if (thread_loop_->currentThread()->getThreadId() != std::this_thread::get_id()) {
         return  timer_handled;
     }
 
