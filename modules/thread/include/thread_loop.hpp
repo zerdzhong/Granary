@@ -13,6 +13,13 @@
 class Timer;
 class Thread;
 
+typedef enum {
+    kThreadLoopRunResultFinished = 1,
+    kThreadLoopRunResultStopped = 2,
+    kThreadLoopRunResultTimedOut = 3,
+    kThreadLoopRunResultHandledSource = 4
+}ThreadLoopRunResult;
+
 class ThreadLoop {
 public:
     ThreadLoop();
@@ -26,8 +33,9 @@ public:
 
 private:
     void setIsAlive(bool is_alive);
-    void RunTimers();
+    ThreadLoopRunResult RunSpecific();
 
+    bool RunTimers();
 private:
     std::mutex mutex_;
     Thread* thread_;

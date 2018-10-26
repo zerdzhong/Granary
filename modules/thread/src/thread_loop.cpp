@@ -23,14 +23,6 @@ void ThreadLoop::AddTimer(Timer* timer) {
     timers_.insert(timer);
 }
 
-void ThreadLoop::RunTimers() {
-    for (auto timer : timers_) {
-        if (timer->isValid()) {
-            timer->handleTimer();
-        }
-    }
-}
-
 bool ThreadLoop::isAlive() {
     std::lock_guard<std::mutex> lock(mutex_);
     bool is_alive = is_alive_;
@@ -38,9 +30,37 @@ bool ThreadLoop::isAlive() {
 }
 
 void ThreadLoop::Run() {
-    while ()
+    ThreadLoopRunResult result;
+    do {
+        result = RunSpecific();
+    } while (kThreadLoopRunResultStopped != result && kThreadLoopRunResultFinished != result);
 }
 
 Thread *ThreadLoop::currentThread() {
     return thread_;
+}
+
+#pragma mark- Private function
+
+ThreadLoopRunResult ThreadLoop::RunSpecific() {
+
+    ThreadLoopRunResult result = kThreadLoopRunResultFinished;
+
+    if (RunTimers()) {
+        result = kThreadLoopRunResultHandledSource;
+    }
+
+    return result;
+}
+
+
+bool ThreadLoop::RunTimers() {
+    bool res = false;
+    for (auto timer : timers_) {
+        if (timer->isValid()) {
+            res = res || timer->handleTimer();
+        }
+    }
+
+    return res;
 }
