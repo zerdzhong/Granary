@@ -41,12 +41,19 @@ TEST(TimerTest, Handle) {
     ASSERT_EQ(is_handled, false);
 }
 
+TEST(TimerTest, Epoch) {
+    AbsoluteTime a_time = CurrentTime();
+    auto b_time = chrono::system_clock::now().time_since_epoch().count();
+
+    ASSERT_EQ(a_time, b_time);
+}
+
 TEST(TimerTest, TimerWithInternal) {
 
     auto loop = make_unique<ThreadLoop>();
 
     AbsoluteTime call_time = 0;
-    auto timer = make_unique<Timer>(0.3, false, [&](Timer *timer, void *info){
+    auto timer = make_unique<Timer>(2, false, [&](Timer *timer, void *info){
         call_time = CurrentTime();
     });
 
@@ -54,8 +61,8 @@ TEST(TimerTest, TimerWithInternal) {
     loop->AddTimer(timer.get());
     timer->Fire();
 
-    loop->Run();
+    loop->RunUntil(chrono::system_clock::now() + chrono::seconds{3});
 
-//    ASSERT_EQ(call_time, fire_time + 0.3);
+    ASSERT_EQ(call_time, fire_time + 0.3);
 }
 
