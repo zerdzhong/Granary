@@ -6,13 +6,16 @@
 #include <thread_loop.hpp>
 #include "timer.hpp"
 #include "thread.hpp"
+#include <chrono>
 
+using namespace std::chrono;
 
 ThreadLoop::~ThreadLoop() {
 
 }
 
-ThreadLoop::ThreadLoop() {
+ThreadLoop::ThreadLoop()
+{
 
 }
 
@@ -23,32 +26,42 @@ void ThreadLoop::AddTimer(Timer* timer) {
     timers_.insert(timer);
 }
 
-bool ThreadLoop::isAlive() {
-    std::lock_guard<std::mutex> lock(mutex_);
-    bool is_alive = is_alive_;
-    return is_alive;
-}
-
 void ThreadLoop::Run() {
-    ThreadLoopRunResult result;
-    do {
-        result = RunSpecific();
-    } while (kThreadLoopRunResultStopped != result && kThreadLoopRunResultFinished != result);
+    auto distant_future = system_clock::now() + seconds::max();
+    RunUntil(distant_future);
 }
 
-Thread *ThreadLoop::currentThread() {
-    return thread_;
+template <class _Clock, class _Duration>
+void ThreadLoop::RunUntil(const time_point<_Clock, _Duration>& limited_time) {
+    thread_id_ = std::this_thread::get_id();
+    while (system_clock::now() < limited_time) {
+        RunSpecific(limited_time);
+    }
+}
+
+std::thread::id ThreadLoop::CurrentThreadID() {
+    return thread_id_;
 }
 
 #pragma mark- Private function
 
-ThreadLoopRunResult ThreadLoop::RunSpecific() {
+template <class _Clock, class _Duration>
+ThreadLoopRunResult ThreadLoop::RunSpecific(const std::chrono::time_point<_Clock, _Duration>& limited_time)
+{
 
     ThreadLoopRunResult result = kThreadLoopRunResultFinished;
 
-    if (RunTimers()) {
-        result = kThreadLoopRunResultHandledSource;
-    }
+    do {
+        if (RunTimers()) {
+            result = kThreadLoopRunResultHandledSource;
+        }
+
+        if (system_clock::now() > limited_time) {
+            result = kThreadLoopRunResultFinished;
+        }
+        
+
+    } while (kThreadLoopRunResultStopped != result && kThreadLoopRunResultFinished != result);
 
     return result;
 }
@@ -58,9 +71,11 @@ bool ThreadLoop::RunTimers() {
     bool res = false;
     for (auto timer : timers_) {
         if (timer->isValid()) {
-            res = res || timer->handleTimer();
+            res = timer->handleTimer() || res;
         }
     }
 
     return res;
 }
+
+

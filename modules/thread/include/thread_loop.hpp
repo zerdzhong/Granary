@@ -9,6 +9,7 @@
 #include <mutex>
 #include <string>
 #include <set>
+#include <chrono>
 
 class Timer;
 class Thread;
@@ -28,18 +29,18 @@ public:
     void AddTimer(Timer *timer);
     void Run();
 
-    bool isAlive();
-    Thread* currentThread();
+    template <class _Clock, class _Duration>
+    void RunUntil(const std::chrono::time_point<_Clock, _Duration>& limited_time);
+
+    std::thread::id CurrentThreadID();
 
 private:
-    void setIsAlive(bool is_alive);
-    ThreadLoopRunResult RunSpecific();
-
+    template <class _Clock, class _Duration> ThreadLoopRunResult RunSpecific(const std::chrono::time_point<_Clock, _Duration>& limited_time);
     bool RunTimers();
+
 private:
     std::mutex mutex_;
-    Thread* thread_;
-    bool is_alive_;
+    std::thread::id thread_id_;
     std::set<Timer *> timers_;
 };
 
