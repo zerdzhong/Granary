@@ -1,3 +1,5 @@
+#include <utility>
+
 //
 // Created by zhongzhendong on 2018/10/15.
 //
@@ -23,10 +25,11 @@ AbsoluteTime CurrentTime() {
 Timer::Timer(TimeInterval interval, bool is_repeat, std::function<void(Timer *, void *)> lambda_callback) :
 interval_{interval},
 is_repeat_{is_repeat},
-callback_{lambda_callback},
+callback_{std::move(lambda_callback)},
 thread_loop_{nullptr},
 is_valid_{false},
-fire_time_{0}
+start_fire_time_{0},
+next_fire_time_{0}
 {
 
 }
@@ -38,7 +41,8 @@ Timer::~Timer() = default;
 
 void Timer::Fire() {
     is_valid_ = true;
-    fire_time_ = CurrentTime() + interval_;
+    start_fire_time_ = CurrentTime();
+    next_fire_time_ = start_fire_time_ + interval_;
 }
 
 void Timer::SetThreadLoop(ThreadLoop *threadLoop) {
@@ -64,9 +68,15 @@ bool Timer::handleTimer() {
         return  timer_handled;
     }
 
-    if (is_valid_ && fire_time_ < CurrentTime()) {
+    if (is_valid_ && next_fire_time_ < CurrentTime()) {
         callback_(this, nullptr);
         timer_handled = true;
+
+        if (is_repeat_) {
+            next_fire_time_ += interval_;
+        } else {
+            is_valid_ = false;
+        }
     }
 
     return timer_handled;

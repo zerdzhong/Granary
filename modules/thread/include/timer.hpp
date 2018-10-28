@@ -33,7 +33,8 @@ private:
     bool is_repeat_;
     bool is_valid_;
     ThreadLoop *thread_loop_;
-    AbsoluteTime fire_time_;
+    AbsoluteTime  start_fire_time_;
+    AbsoluteTime next_fire_time_;
 
     std::function<void(Timer*, void*)> callback_;
 };
