@@ -32,7 +32,7 @@ TEST(TimerTest, Fire) {
     timer->Fire();
 
     ASSERT_EQ(timer->isValid(), true);
-    ASSERT_EQ(timer->fire_time_, fire_time + 0.3);
+    ASSERT_EQ(timer->next_fire_time_, timer->start_fire_time_ + 0.3);
 }
 
 TEST(TimerTest, Handle) {
@@ -41,20 +41,20 @@ TEST(TimerTest, Handle) {
     ASSERT_EQ(is_handled, false);
 }
 
-TEST(TimerTest, Epoch) {
-    AbsoluteTime a_time = CurrentTime();
-    auto b_time = chrono::system_clock::now().time_since_epoch().count();
-
-    ASSERT_EQ(a_time, b_time);
-}
+//TEST(TimerTest, Epoch) {
+//    AbsoluteTime a_time = CurrentTime();
+//    auto b_time = chrono::system_clock::now().time_since_epoch().count();
+//
+//    ASSERT_EQ(a_time, b_time);
+//}
 
 TEST(TimerTest, TimerWithInternal) {
-
+    auto flag = false;
     auto loop = make_unique<ThreadLoop>();
 
-    AbsoluteTime call_time = 0;
     auto timer = make_unique<Timer>(2, false, [&](Timer *timer, void *info){
-        call_time = CurrentTime();
+        ASSERT_EQ(flag, false);
+        flag = true;
     });
 
     auto fire_time = CurrentTime();
@@ -63,6 +63,7 @@ TEST(TimerTest, TimerWithInternal) {
 
     loop->RunUntil(chrono::system_clock::now() + chrono::seconds{3});
 
-    ASSERT_EQ(call_time, fire_time + 0.3);
+    ASSERT_EQ(timer->next_fire_time_, timer->start_fire_time_ + 2);
+    ASSERT_EQ(flag, true);
 }
 
