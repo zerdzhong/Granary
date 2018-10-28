@@ -9,8 +9,17 @@
 #include <mutex>
 #include <string>
 #include <set>
+#include <chrono>
 
 class Timer;
+class Thread;
+
+typedef enum {
+    kThreadLoopRunResultFinished = 1,
+    kThreadLoopRunResultStopped = 2,
+    kThreadLoopRunResultTimedOut = 3,
+    kThreadLoopRunResultHandledSource = 4
+}ThreadLoopRunResult;
 
 class ThreadLoop {
 public:
@@ -20,17 +29,18 @@ public:
     void AddTimer(Timer *timer);
     void Run();
 
-    bool isAlive();
-    std::thread::id getThreadId();
+    template <class _Clock, class _Duration>
+    void RunUntil(const std::chrono::time_point<_Clock, _Duration>& limited_time);
+
+    std::thread::id CurrentThreadID();
 
 private:
-    void setIsAlive(bool is_alive);
-    void RunTimers();
+    template <class _Clock, class _Duration> ThreadLoopRunResult RunSpecific(const std::chrono::time_point<_Clock, _Duration>& limited_time);
+    bool RunTimers();
 
 private:
     std::mutex mutex_;
-    std::thread thread_;
-    bool is_alive_;
+    std::thread::id thread_id_;
     std::set<Timer *> timers_;
 };
 

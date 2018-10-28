@@ -18,7 +18,6 @@ AbsoluteTime CurrentTime();
 
 class Timer {
 public:
-    Timer(TimeInterval interval, bool is_repeat, TimerCallBack callback);
     Timer(TimeInterval interval, bool is_repeat, std::function<void(Timer*, void*)> lambda_callback);
     ~Timer();
 
@@ -31,13 +30,13 @@ public:
 private:
     std::mutex mutex_;
     TimeInterval  interval_;
-    TimerCallBack callback_;
     bool is_repeat_;
     bool is_valid_;
     ThreadLoop *thread_loop_;
-    AbsoluteTime fire_time_;
+    AbsoluteTime  start_fire_time_;
+    AbsoluteTime next_fire_time_;
 
-    std::function<void(Timer*, void*)> lambda_callback_;
+    std::function<void(Timer*, void*)> callback_;
 };
 
 
