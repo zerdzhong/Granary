@@ -91,11 +91,19 @@ TEST(SessionReadTaskTest, SyncRead) {
 #if defined(__APPLE__)
 
 TEST(SessionReadTaskTest, ReadRange) {
-    HttpSessionReadTask *read_session_task = new HttpSessionReadTask("http://www.baidu.com", 0, 8);
+    auto read_session_task = std::make_unique<HttpSessionReadTask>("http://www.baidu.com", 0, 8);
     read_session_task->SyncRead();
     ASSERT_EQ(read_session_task->received_size(), 8);
 
-    delete(read_session_task);
+    auto read_session_task1 = std::make_unique<HttpSessionReadTask>("http://www.baidu.com", 0, 0);
+    read_session_task1->SyncRead();
+    auto full_range_received = read_session_task1->received_size();
+    ASSERT_GT(full_range_received, 0);
+
+    auto read_session_task2 = std::make_unique<HttpSessionReadTask>("http://www.baidu.com", 8, 0);
+    read_session_task2->SyncRead();
+    auto eight_range_received = read_session_task2->received_size();
+    ASSERT_EQ(eight_range_received+8, full_range_received);
 }
 
 #endif

@@ -59,13 +59,13 @@ session_config_(nullptr)
     request_start_ = offset;
     request_size_ = length;
 
+    std::ostringstream stringStream;
     if (0 != request_size_) {
-        std::ostringstream stringStream;
         stringStream << request_start_ << "-" <<request_start_ + request_size_ - 1;
-        range_str_ = stringStream.str();
     } else {
-        range_str_ = "0-";
+        stringStream << request_start_ << "-";
     }
+    range_str_ = stringStream.str();
 
     head_data_ = NewSessionTaskData(nullptr, 0, 0, kReadDataTypeHeader);
     body_data_ = NewSessionTaskData(nullptr, 0, 0, kReadDataTypeBody);
