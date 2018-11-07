@@ -7,7 +7,7 @@ add_library(Networking
         src/http_session_task.cpp
         src/http_session_read_task.cpp
         src/http_session_config.cpp
-        )
+        src/http_curl_wrapper.cpp src/http_curl_wrapper.hpp)
 
 add_library(Networking::Networking ALIAS Networking)
 target_link_libraries(Networking PRIVATE Thread::Thread)
