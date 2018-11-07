@@ -50,6 +50,10 @@ public:
     virtual size_t received_size();
 
 protected:
+    virtual void OnData(char *data, size_t size, ReadDataType type) = 0;
+    virtual void OnProgress(double progress) = 0;
+
+protected:
     HttpSessionTaskListener* listener_;
     size_t request_start_;
     size_t request_size_;
