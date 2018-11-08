@@ -8,8 +8,9 @@
 #include <string>
 #include "http_session_task.hpp"
 
-class HttpSessionConfig;
 typedef void CURL;
+
+class HttpSessionConfig;
 
 typedef enum {
     CONN_DEFAULT  = 0,
@@ -40,15 +41,12 @@ typedef enum {
     HTTP_SERVER_ERROR           ,        //HTTP 5xx
 } HttpConnectionCode;
 
+class HttpCurlAdapter;
+
 class HttpSessionReadTask : public HttpSessionTask {
 public:
     explicit HttpSessionReadTask(std::string url, size_t offset, size_t length);
     ~HttpSessionReadTask();
-
-    //curl callback
-    size_t ReceiveData(char *data, size_t size, size_t nmemb);
-    size_t ReceiveHeader(char *data, size_t size, size_t nmemb);
-    int ReceiveProgress(long long dltotal, long long dlnow);
 
     //Read
     HttpConnectionCode SyncRead();
@@ -72,9 +70,11 @@ public:
     void setSessionConfig(HttpSessionConfig *session_config);
     HttpSessionConfig * sessionConfig();
 
+    void OnData(char *data, size_t size, ReadDataType type) override;
+    void OnProgress(double progress) override;
+
 private:
     void setupHandle();
-    void cleanupHandle();
     HttpConnectionCode SyncRead(uint8_t retry_count);
     size_t receiveData(char *data, size_t size, int type);
     HttpConnectionCode parseErrorReason(int code);
@@ -83,7 +83,7 @@ private:
 private:
     std::string url_;
     std::string range_str_;
-    CURL *handle_;
+    std::unique_ptr<HttpCurlAdapter> curl_adapter;
     HttpSessionTaskData *head_data_;
     HttpSessionTaskData *body_data_;
 

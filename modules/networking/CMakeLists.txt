@@ -1,13 +1,12 @@
 cmake_minimum_required(VERSION 3.7)
 project(Networking VERSION 1.0.0)
 
-
 add_library(Networking
         src/http_session.cpp
         src/http_session_task.cpp
         src/http_session_read_task.cpp
         src/http_session_config.cpp
-        )
+        src/http_curl_wrapper.cpp)
 
 add_library(Networking::Networking ALIAS Networking)
 target_link_libraries(Networking PRIVATE Thread::Thread)

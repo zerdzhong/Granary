@@ -12,45 +12,50 @@
 #include <http_session_read_task.hpp>
 
 #include "http_session_config.hpp"
-
-#pragma mark- CURL callback
-
-static size_t header_callback(char *buffer, size_t size,
-                              size_t nitems, void *userdata)
-{
-    auto * readTask = (HttpSessionReadTask *) userdata;
-    return readTask->ReceiveHeader(buffer, size, nitems);
-}
-
-int xfer_callback(void *clientp, curl_off_t dltotal, curl_off_t dlnow,
-                  curl_off_t , curl_off_t )
-{
-    auto * readTask = (HttpSessionReadTask *) clientp;
-    return readTask->ReceiveProgress(dltotal, dlnow);
-}
-
-int progress_callback(void *clientp,   double dltotal,   double dlnow,   double ultotal,   double ulnow)
-{
-    return xfer_callback(clientp,
-                         (curl_off_t)dltotal,
-                         (curl_off_t)dlnow,
-                         (curl_off_t)ultotal,
-                         (curl_off_t)ulnow);
-}
-
-size_t write_callback(char *data, size_t size, size_t nmemb, void *userdata)
-{
-    auto * readTask = (HttpSessionReadTask *) userdata;
-    return readTask->ReceiveData(data, size, nmemb);
-}
+#include "http_curl_wrapper.hpp"
 
 #define kDefaultRetryCount 3
+
+class HttpCurlAdapter : public HttpCurlCallback {
+public:
+    explicit HttpCurlAdapter(HttpSessionReadTask *read_task) :
+    read_task_{read_task}
+    {
+        curl_wrapper_ = std::make_unique<HttpCurlWrapper>(this);
+    }
+
+    size_t OnCurlWrite(char *data, size_t size) override {
+        read_task_->OnData(data, size, kReadDataTypeBody);
+        return size;
+    }
+    size_t OnCurlHeader(char *data, size_t size) override {
+        read_task_->OnData(data, size, kReadDataTypeHeader);
+        return size;
+    }
+    int OnCurlProgress(long long dltotal, long long dlnow) override {
+        double progress = 0;
+
+        if (dltotal > 0) {
+            progress = dlnow / dltotal;
+        }
+        read_task_->OnProgress(progress);
+
+        return 0;
+    }
+
+    CURL * handle() {
+        return curl_wrapper_->curl_handle();
+    }
+
+private:
+    HttpSessionReadTask *read_task_;
+    std::unique_ptr<HttpCurlWrapper> curl_wrapper_;
+};
 
 #pragma mark- Life cycle
 
 HttpSessionReadTask::HttpSessionReadTask(std::string url, size_t offset, size_t length) :
 url_(std::move(url)),
-handle_(nullptr),
 retry_count_(kDefaultRetryCount),
 stopped_(false),
 request_count_(0),
@@ -70,11 +75,11 @@ session_config_(nullptr)
     head_data_ = NewSessionTaskData(nullptr, 0, 0, kReadDataTypeHeader);
     body_data_ = NewSessionTaskData(nullptr, 0, 0, kReadDataTypeBody);
 
+    curl_adapter = std::make_unique<HttpCurlAdapter>(this);
     setupHandle();
 }
 
 HttpSessionReadTask::~HttpSessionReadTask() {
-    cleanupHandle();
 
     if (head_data_) {
         delete head_data_;
@@ -90,11 +95,6 @@ HttpSessionReadTask::~HttpSessionReadTask() {
 #pragma mark- Public
 
 HttpConnectionCode HttpSessionReadTask::SyncRead() {
-    if (nullptr == handle_) {
-        setupHandle();
-    }
-
-    assert(handle_);
 
     result_code_ = SyncRead(retry_count_);
 
@@ -127,22 +127,6 @@ void HttpSessionReadTask::ReadConnectionFinished(int finish_code) {
     }
 }
 
-#pragma mark- Internal CURL Callback
-
-size_t HttpSessionReadTask::ReceiveData(char *data, size_t size, size_t nmemb) {
-    size_t real_size = size * nmemb;
-    return receiveData(data, real_size, kReadDataTypeBody);
-}
-
-size_t HttpSessionReadTask::ReceiveHeader(char *data, size_t size, size_t nmemb) {
-    size_t real_size = size * nmemb;
-    return receiveData(data, real_size, kReadDataTypeHeader);
-}
-
-int HttpSessionReadTask::ReceiveProgress(long long dltotal, long long dlnow) {
-    return 0;
-}
-
 #pragma mark- Private
 
 HttpConnectionCode HttpSessionReadTask::SyncRead(uint8_t retry_count) {
@@ -150,7 +134,9 @@ HttpConnectionCode HttpSessionReadTask::SyncRead(uint8_t retry_count) {
         return CONN_DEFAULT;
     }
 
-    int curl_code = curl_easy_perform(handle_);
+    CURL *easy_handle = curl_adapter->handle();
+
+    int curl_code = curl_easy_perform(easy_handle);
     request_count_ ++;
 
     effective_url_ = parseEffectiveUrl();
@@ -221,14 +207,14 @@ HttpConnectionCode HttpSessionReadTask::parseErrorReason(int code) {
     }
 
     long protocol;
-    curl_easy_getinfo(handle_, CURLINFO_PROTOCOL, &protocol);
+    curl_easy_getinfo(curl_adapter->handle(), CURLINFO_PROTOCOL, &protocol);
 
     if (CURLPROTO_HTTP != protocol &&  CURLPROTO_HTTPS != protocol) {
         result = CONN_UNSUPPORT_PROTOCOL;
     }
 
     long response_code = 0;
-    curl_easy_getinfo(handle_, CURLINFO_RESPONSE_CODE, &response_code);
+    curl_easy_getinfo(curl_adapter->handle(), CURLINFO_RESPONSE_CODE, &response_code);
 
     switch(response_code) {
         case 400:
@@ -275,46 +261,17 @@ HttpConnectionCode HttpSessionReadTask::parseErrorReason(int code) {
 }
 
 void HttpSessionReadTask::setupHandle() {
-    if (nullptr != handle_) {
-        return;
-    }
-
-    CURL *easy_handle = curl_easy_init();
+    CURL *easy_handle = curl_adapter->handle();
 
     //basic setting
     curl_easy_setopt(easy_handle, CURLOPT_URL, url_.c_str());
     curl_easy_setopt(easy_handle, CURLOPT_VERBOSE, 0L);
     curl_easy_setopt(easy_handle, CURLOPT_PRIVATE, this);
 
-    //header setting
-    curl_easy_setopt(easy_handle, CURLOPT_HEADER, 0L);
-    curl_easy_setopt(easy_handle, CURLOPT_HEADERFUNCTION, header_callback);
-    curl_easy_setopt(easy_handle, CURLOPT_HEADERDATA, this);
-
-    //body data setting
-    curl_easy_setopt(easy_handle, CURLOPT_WRITEFUNCTION, write_callback);
-    curl_easy_setopt(easy_handle, CURLOPT_WRITEDATA, this);
-
     //Allow redirect
     curl_easy_setopt(easy_handle, CURLOPT_FOLLOWLOCATION, 1L);
     curl_easy_setopt(easy_handle, CURLOPT_AUTOREFERER, 1L);
     curl_easy_setopt(easy_handle, CURLOPT_MAXREDIRS, 30L);
-
-    //SSL setting
-#ifdef WITHOUT_SSL
-    curl_easy_setopt(easy_handle, CURLOPT_SSL_VERIFYHOST, 0L);
-    curl_easy_setopt(easy_handle, CURLOPT_SSL_VERIFYPEER, 0L);
-#endif
-
-    //progress setting
-    curl_easy_setopt(easy_handle, CURLOPT_NOPROGRESS, 0L);
-#if LIBCURL_VERSION_NUM >= 0x072000
-    curl_easy_setopt(easy_handle, CURLOPT_XFERINFOFUNCTION, xfer_callback);
-    curl_easy_setopt(easy_handle, CURLOPT_XFERINFODATA, this);
-#else
-    curl_easy_setopt(easy_handle, CURLOPT_PROGRESSFUNCTION, progress_callback);
-    curl_easy_setopt(easy_handle, CURLOPT_PROGRESSDATA, this);
-#endif
 
     //time out 1 byte/s 10s
     curl_easy_setopt(easy_handle, CURLOPT_LOW_SPEED_LIMIT, 1);
@@ -323,24 +280,13 @@ void HttpSessionReadTask::setupHandle() {
     curl_easy_setopt(easy_handle, CURLOPT_TIMEOUT, 3L);
 
     curl_easy_setopt(easy_handle, CURLOPT_RANGE, range_str_.c_str());
-
-    handle_ = easy_handle;
-}
-
-void HttpSessionReadTask::cleanupHandle() {
-    if (nullptr == handle_) {
-        return;
-    }
-
-    curl_easy_cleanup(handle_);
-    handle_ = nullptr;
 }
 
 std::string HttpSessionReadTask::parseEffectiveUrl() {
-    assert(handle_);
+    assert(curl_adapter);
 
     char *p = nullptr;
-    curl_easy_getinfo(handle_, CURLINFO_EFFECTIVE_URL, &p);
+    curl_easy_getinfo(curl_adapter->handle(), CURLINFO_EFFECTIVE_URL, &p);
     return p;
 }
 
@@ -348,10 +294,6 @@ std::string HttpSessionReadTask::parseEffectiveUrl() {
 
 std::string HttpSessionReadTask::url() {
     return url_;
-}
-
-CURL* HttpSessionReadTask::handle() {
-    return handle_;
 }
 
 uint8_t HttpSessionReadTask::retry_count() {
@@ -376,4 +318,19 @@ HttpSessionConfig* HttpSessionReadTask::sessionConfig() {
 
 uint8_t HttpSessionReadTask::request_count() {
     return request_count_;
+}
+
+CURL *HttpSessionReadTask::handle() {
+    if (curl_adapter) {
+        return curl_adapter->handle();
+    }
+    return nullptr;
+}
+
+void HttpSessionReadTask::OnData(char *data, size_t size, ReadDataType type) {
+    receiveData(data, size, type);
+}
+
+void HttpSessionReadTask::OnProgress(double progress) {
+
 }
