@@ -82,7 +82,7 @@ TEST(SessionReadTaskTest, SyncRead) {
     }
 #endif
 
-    HttpSessionReadTask *read_session_task2 = new HttpSessionReadTask("https://www.baidu.com", 0, 0);
+    HttpSessionReadTask *read_session_task2 = new HttpSessionReadTask("http://www.baidu.com", 0, 0);
     read_session_task2->SyncRead();
     ASSERT_GT(read_session_task2->received_size(), 0);
     delete(read_session_task2);
