@@ -150,33 +150,6 @@ HttpConnectionCode HttpSessionReadTask::SyncRead(uint8_t retry_count) {
     return response_code;
 }
 
-size_t HttpSessionReadTask::receiveData(char *data, size_t size, int type) {
-
-    HttpSessionTaskData *read_data = nullptr;
-
-    if (kReadDataTypeHeader == type) {
-        read_data = head_data_;
-        read_data->offset += read_data->size;
-    } else if (kReadDataTypeBody == type) {
-        read_data = body_data_;
-        read_data->offset = request_start_ + received_size_;
-        received_size_ += size;
-    }
-
-    assert(read_data);
-
-    read_data->data = data;
-    read_data->size = size;
-
-    if (nullptr != listener_ && !stopped_) {
-        listener_->OnData(this, read_data);
-    } else {
-        //add a default implement write to file/console?
-    }
-
-    return size;
-}
-
 HttpConnectionCode HttpSessionReadTask::parseErrorReason(int code) {
 
     HttpConnectionCode result = CONN_OK;
@@ -328,7 +301,27 @@ CURL *HttpSessionReadTask::handle() {
 }
 
 void HttpSessionReadTask::OnData(char *data, size_t size, ReadDataType type) {
-    receiveData(data, size, type);
+    HttpSessionTaskData *read_data = nullptr;
+
+    if (kReadDataTypeHeader == type) {
+        read_data = head_data_;
+        read_data->offset += read_data->size;
+    } else if (kReadDataTypeBody == type) {
+        read_data = body_data_;
+        read_data->offset = request_start_ + received_size_;
+        received_size_ += size;
+    }
+
+    assert(read_data);
+
+    read_data->data = data;
+    read_data->size = size;
+
+    if (nullptr != listener_ && !stopped_) {
+        listener_->OnData(this, read_data);
+    } else {
+        //add a default implement write to file/console?
+    }
 }
 
 void HttpSessionReadTask::OnProgress(double progress) {

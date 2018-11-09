@@ -76,7 +76,6 @@ public:
 private:
     void setupHandle();
     HttpConnectionCode SyncRead(uint8_t retry_count);
-    size_t receiveData(char *data, size_t size, int type);
     HttpConnectionCode parseErrorReason(int code);
     std::string parseEffectiveUrl();
 
