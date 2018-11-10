@@ -30,7 +30,15 @@ public:
 
     CURL* curl_handle();
 
-    template <class T, class P> void setCurlOpt(T type, P parameter);
+    template <class T, class P> void setCurlOpt(T type, P parameter) {
+        if (!handle_) { return; }
+        curl_easy_setopt(handle_, type, parameter);
+    }
+
+    template <class T, class P> void getCurlInfo(T type, P parameter) {
+        if (!handle_) { return; }
+        curl_easy_getinfo(handle_, type, parameter);
+    }
 
 private:
     void DoInit();

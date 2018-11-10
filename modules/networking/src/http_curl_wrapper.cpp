@@ -106,12 +106,3 @@ CURL *HttpCurlWrapper::curl_handle() {
     return handle_;
 }
 
-template<class T, class P>
-void HttpCurlWrapper::setCurlOpt(T type, P parameter) {
-    if (!handle_) {
-        return;
-    }
-
-    curl_easy_setopt(handle_, type, parameter);
-}
-
