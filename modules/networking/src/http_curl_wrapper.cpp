@@ -79,20 +79,22 @@ void HttpCurlWrapper::DoInit() {
 
     handle_ = curl_easy_init();
 
+    setCurlOpt(CURLOPT_HEADER, 0L);
+
     //header setting
-    curl_easy_setopt(handle_, CURLOPT_HEADER, 0L);
-    curl_easy_setopt(handle_, CURLOPT_HEADERFUNCTION, header_callback);
-    curl_easy_setopt(handle_, CURLOPT_HEADERDATA, this);
+    setCurlOpt(CURLOPT_HEADER, 0L);
+    setCurlOpt(CURLOPT_HEADERFUNCTION, header_callback);
+    setCurlOpt(CURLOPT_HEADERDATA, this);
 
     //body data setting
-    curl_easy_setopt(handle_, CURLOPT_WRITEFUNCTION, write_callback);
-    curl_easy_setopt(handle_, CURLOPT_WRITEDATA, this);
+    setCurlOpt(CURLOPT_WRITEFUNCTION, write_callback);
+    setCurlOpt(CURLOPT_WRITEDATA, this);
 
     //progress setting
-    curl_easy_setopt(handle_, CURLOPT_NOPROGRESS, 0L);
+    setCurlOpt(CURLOPT_NOPROGRESS, 0L);
 #if LIBCURL_VERSION_NUM >= 0x072000
-    curl_easy_setopt(handle_, CURLOPT_XFERINFOFUNCTION, xfer_callback);
-    curl_easy_setopt(handle_, CURLOPT_XFERINFODATA, this);
+    setCurlOpt(CURLOPT_XFERINFOFUNCTION, xfer_callback);
+    setCurlOpt(CURLOPT_XFERINFODATA, this);
 #else
     curl_easy_setopt(easy_handle, CURLOPT_PROGRESSFUNCTION, progress_callback);
     curl_easy_setopt(easy_handle, CURLOPT_PROGRESSDATA, this);

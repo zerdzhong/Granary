@@ -16,12 +16,12 @@
 
 #define kDefaultRetryCount 3
 
-class HttpCurlAdapter : public HttpCurlCallback {
+class HttpCurlAdapter : public HttpCurlWrapper, public HttpCurlCallback {
 public:
     explicit HttpCurlAdapter(HttpSessionReadTask *read_task) :
-    read_task_{read_task}
+            HttpCurlWrapper(this), read_task_{read_task}
     {
-        curl_wrapper_ = std::make_unique<HttpCurlWrapper>(this);
+
     }
 
     size_t OnCurlWrite(char *data, size_t size) override {
@@ -43,13 +43,8 @@ public:
         return 0;
     }
 
-    CURL * handle() {
-        return curl_wrapper_->curl_handle();
-    }
-
 private:
     HttpSessionReadTask *read_task_;
-    std::unique_ptr<HttpCurlWrapper> curl_wrapper_;
 };
 
 #pragma mark- Life cycle
@@ -80,7 +75,6 @@ session_config_(nullptr)
 }
 
 HttpSessionReadTask::~HttpSessionReadTask() {
-
     if (head_data_) {
         delete head_data_;
         head_data_ = nullptr;
@@ -134,7 +128,7 @@ HttpConnectionCode HttpSessionReadTask::SyncRead(uint8_t retry_count) {
         return CONN_DEFAULT;
     }
 
-    CURL *easy_handle = curl_adapter->handle();
+    CURL *easy_handle = curl_adapter->curl_handle();
 
     int curl_code = curl_easy_perform(easy_handle);
     request_count_ ++;
@@ -148,33 +142,6 @@ HttpConnectionCode HttpSessionReadTask::SyncRead(uint8_t retry_count) {
     }
 
     return response_code;
-}
-
-size_t HttpSessionReadTask::receiveData(char *data, size_t size, int type) {
-
-    HttpSessionTaskData *read_data = nullptr;
-
-    if (kReadDataTypeHeader == type) {
-        read_data = head_data_;
-        read_data->offset += read_data->size;
-    } else if (kReadDataTypeBody == type) {
-        read_data = body_data_;
-        read_data->offset = request_start_ + received_size_;
-        received_size_ += size;
-    }
-
-    assert(read_data);
-
-    read_data->data = data;
-    read_data->size = size;
-
-    if (nullptr != listener_ && !stopped_) {
-        listener_->OnData(this, read_data);
-    } else {
-        //add a default implement write to file/console?
-    }
-
-    return size;
 }
 
 HttpConnectionCode HttpSessionReadTask::parseErrorReason(int code) {
@@ -207,14 +174,14 @@ HttpConnectionCode HttpSessionReadTask::parseErrorReason(int code) {
     }
 
     long protocol;
-    curl_easy_getinfo(curl_adapter->handle(), CURLINFO_PROTOCOL, &protocol);
+    curl_adapter->getCurlInfo(CURLINFO_PROTOCOL, &protocol);
 
     if (CURLPROTO_HTTP != protocol &&  CURLPROTO_HTTPS != protocol) {
         result = CONN_UNSUPPORT_PROTOCOL;
     }
 
     long response_code = 0;
-    curl_easy_getinfo(curl_adapter->handle(), CURLINFO_RESPONSE_CODE, &response_code);
+    curl_adapter->getCurlInfo(CURLINFO_RESPONSE_CODE, &response_code);
 
     switch(response_code) {
         case 400:
@@ -261,32 +228,30 @@ HttpConnectionCode HttpSessionReadTask::parseErrorReason(int code) {
 }
 
 void HttpSessionReadTask::setupHandle() {
-    CURL *easy_handle = curl_adapter->handle();
-
     //basic setting
-    curl_easy_setopt(easy_handle, CURLOPT_URL, url_.c_str());
-    curl_easy_setopt(easy_handle, CURLOPT_VERBOSE, 0L);
-    curl_easy_setopt(easy_handle, CURLOPT_PRIVATE, this);
+    curl_adapter->setCurlOpt(CURLOPT_URL, url_.c_str());
+    curl_adapter->setCurlOpt(CURLOPT_VERBOSE, 0L);
+    curl_adapter->setCurlOpt(CURLOPT_PRIVATE, this);
 
     //Allow redirect
-    curl_easy_setopt(easy_handle, CURLOPT_FOLLOWLOCATION, 1L);
-    curl_easy_setopt(easy_handle, CURLOPT_AUTOREFERER, 1L);
-    curl_easy_setopt(easy_handle, CURLOPT_MAXREDIRS, 30L);
+    curl_adapter->setCurlOpt(CURLOPT_FOLLOWLOCATION, 1L);
+    curl_adapter->setCurlOpt(CURLOPT_AUTOREFERER, 1L);
+    curl_adapter->setCurlOpt(CURLOPT_MAXREDIRS, 30L);
 
     //time out 1 byte/s 10s
-    curl_easy_setopt(easy_handle, CURLOPT_LOW_SPEED_LIMIT, 1);
-    curl_easy_setopt(easy_handle, CURLOPT_LOW_SPEED_TIME, 10);
+    curl_adapter->setCurlOpt(CURLOPT_LOW_SPEED_LIMIT, 1);
+    curl_adapter->setCurlOpt(CURLOPT_LOW_SPEED_TIME, 10);
 
-    curl_easy_setopt(easy_handle, CURLOPT_TIMEOUT, 3L);
+    curl_adapter->setCurlOpt(CURLOPT_TIMEOUT, 3L);
 
-    curl_easy_setopt(easy_handle, CURLOPT_RANGE, range_str_.c_str());
+    curl_adapter->setCurlOpt(CURLOPT_RANGE, range_str_.c_str());
 }
 
 std::string HttpSessionReadTask::parseEffectiveUrl() {
     assert(curl_adapter);
 
     char *p = nullptr;
-    curl_easy_getinfo(curl_adapter->handle(), CURLINFO_EFFECTIVE_URL, &p);
+    curl_adapter->getCurlInfo(CURLINFO_EFFECTIVE_URL, &p);
     return p;
 }
 
@@ -322,13 +287,33 @@ uint8_t HttpSessionReadTask::request_count() {
 
 CURL *HttpSessionReadTask::handle() {
     if (curl_adapter) {
-        return curl_adapter->handle();
+        return curl_adapter->curl_handle();
     }
     return nullptr;
 }
 
 void HttpSessionReadTask::OnData(char *data, size_t size, ReadDataType type) {
-    receiveData(data, size, type);
+    HttpSessionTaskData *read_data = nullptr;
+
+    if (kReadDataTypeHeader == type) {
+        read_data = head_data_;
+        read_data->offset += read_data->size;
+    } else if (kReadDataTypeBody == type) {
+        read_data = body_data_;
+        read_data->offset = request_start_ + received_size_;
+        received_size_ += size;
+    }
+
+    assert(read_data);
+
+    read_data->data = data;
+    read_data->size = size;
+
+    if (nullptr != listener_ && !stopped_) {
+        listener_->OnData(this, read_data);
+    } else {
+        //add a default implement write to file/console?
+    }
 }
 
 void HttpSessionReadTask::OnProgress(double progress) {
