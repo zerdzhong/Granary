@@ -24,6 +24,7 @@
 using ::testing::_;
 using ::testing::Invoke;
 using ::testing::AtLeast;
+using ::testing::NiceMock;
 
 static const char *TEST_VALID_URLS[] = {
         "https://gensho.ftp.acc.umu.se/pub/gimp/gimp/v2.10/osx/gimp-2.10.4-x86_64.dmg",
@@ -40,7 +41,7 @@ class HttpSessionTestFixture : public ::testing::Test {
 
 public:
     HttpSessionTestFixture() {
-        mock_listener_ = new MockSessionTaskListener();
+        mock_listener_ = new NiceMock<MockSessionTaskListener>();
         test_session_ = new HttpSession();
         test_session_->setListener(mock_listener_);
         test_session_->setTaskAutoDelete(false);
@@ -90,7 +91,7 @@ protected:
 
 protected:
     HttpSession *test_session_;
-    MockSessionTaskListener *mock_listener_;
+    NiceMock<MockSessionTaskListener> *mock_listener_;
 
     std::condition_variable cond_;
     std::mutex mutex_;
