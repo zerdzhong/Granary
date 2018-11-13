@@ -49,6 +49,15 @@ private:
 
 #pragma mark- Life cycle
 
+HttpSessionReadTask::HttpSessionReadTask() :
+        url_(""),
+        retry_count_(kDefaultRetryCount),
+        stopped_(false),
+        request_count_(0),
+        session_config_(nullptr) {
+
+}
+
 HttpSessionReadTask::HttpSessionReadTask(std::string url, size_t offset, size_t length) :
 url_(std::move(url)),
 retry_count_(kDefaultRetryCount),
