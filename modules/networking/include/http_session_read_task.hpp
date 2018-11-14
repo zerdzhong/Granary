@@ -45,6 +45,7 @@ class HttpCurlAdapter;
 
 class HttpSessionReadTask : public HttpSessionTask {
 public:
+    HttpSessionReadTask();
     explicit HttpSessionReadTask(std::string url, size_t offset, size_t length);
     ~HttpSessionReadTask();
 
