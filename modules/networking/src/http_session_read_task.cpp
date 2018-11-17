@@ -304,13 +304,24 @@ CURL *HttpSessionReadTask::handle() {
 void HttpSessionReadTask::OnData(char *data, size_t size, ReadDataType type) {
     HttpSessionTaskData *read_data = nullptr;
 
+    if(0 != request_size_ && received_size_ > request_size_) {
+        return;
+    }
+
     if (kReadDataTypeHeader == type) {
         read_data = head_data_;
         read_data->offset += read_data->size;
     } else if (kReadDataTypeBody == type) {
         read_data = body_data_;
         read_data->offset = request_start_ + received_size_;
-        received_size_ += size;
+
+        if (request_size_ > 0 && received_size_ + size > request_size_ ) {
+            //out of request size
+            size = request_size_ - received_size_;
+            received_size_ = request_size_;
+        } else {
+            received_size_ += size;
+        }
     }
 
     assert(read_data);
