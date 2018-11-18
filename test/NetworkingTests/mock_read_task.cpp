@@ -21,8 +21,10 @@ public:
     }
 
     virtual void OnData(char *data, size_t size, ReadDataType type) override {
-        std::cout<<"RandomDataHttpReadTask Mocked"<<std::endl;
-        HttpSessionReadTask::OnData(data, size, type);
+        size_t mock_size = 20;
+        char *mock_data = (char *)malloc(mock_size);
+        HttpSessionReadTask::OnData(mock_data, mock_size, type);
+        delete mock_data;
     }
 };
 

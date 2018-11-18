@@ -13,4 +13,6 @@ TEST(MockTest, OutOfRange) {
     mock_task->DelegateTo(out_range_task.get());
 
     out_range_task->SyncRead();
+
+    ASSERT_EQ(out_range_task->received_size(), 8);
 }
