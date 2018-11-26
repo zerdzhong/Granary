@@ -65,3 +65,11 @@ Thread::~Thread() {
 Thread::Thread() : is_alive_{false} {
 
 }
+
+void Thread::Quit() {
+    if (!isAlive()) {
+        return;
+    }
+    setIsAlive(false);
+    Join();
+}

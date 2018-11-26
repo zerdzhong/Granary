@@ -15,6 +15,7 @@ public:
     void Join();
 
     bool isAlive();
+    void Quit();
 
     virtual void run() {};
     virtual ~Thread();
