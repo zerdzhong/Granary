@@ -54,7 +54,7 @@ private:
     void clearFinishedTask();
 
 private:
-    HttpSessionThread *thread_loop_;
+    std::unique_ptr<HttpSessionThread> thread_loop_;
     std::vector<HttpSessionReadTask *> pending_tasks_;
     std::vector<HttpSessionReadTask *> running_tasks_;
     std::vector<HttpSessionReadTask *> finished_tasks_;
