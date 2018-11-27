@@ -53,17 +53,11 @@ listener_(nullptr),
 task_auto_delete_(true),
 session_config_(nullptr)
 {
-
-    thread_loop_ = new HttpSessionThread(this);
-
+    thread_loop_  = std::make_unique<HttpSessionThread>(this);
 }
 
 HttpSession::~HttpSession() {
-
-    if (thread_loop_) {
-        delete thread_loop_;
-        thread_loop_ = nullptr;
-    }
+    thread_loop_->Quit();
 
     if (!task_auto_delete_) {
         clearFinishedTask();
