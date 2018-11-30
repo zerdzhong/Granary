@@ -6,28 +6,33 @@
 #define GRANARY_BASE_CONNECTION_HPP
 
 #include <cstdio>
+#include <memory>
 
 typedef enum {
     kReadDataTypeBody = 0,
     kReadDataTypeHeader,
 } ReadDataType;
 
-typedef struct {
+typedef struct HttpSessionTaskData {
     char *data;
     size_t offset;
     size_t size;
     ReadDataType type;
+
+    HttpSessionTaskData(char *data_para, size_t offset_para, size_t size_para, ReadDataType type_para):
+    data(data_para),
+    offset(offset_para),
+    size(size_para),
+    type(type_para)
+    {
+
+    }
+
 } HttpSessionTaskData;
 
-static HttpSessionTaskData* NewSessionTaskData(char *data, size_t offset, size_t size, ReadDataType type)
+static std::unique_ptr<HttpSessionTaskData> SessionTaskData(char *data, size_t offset, size_t size, ReadDataType type)
 {
-    auto *read_data = new HttpSessionTaskData();
-    read_data->data = data;
-    read_data->offset = offset;
-    read_data->size = size;
-    read_data->type = type;
-
-    return read_data;
+    return std::make_unique<HttpSessionTaskData>(data, offset, size, type);
 }
 
 class HttpSessionTask;

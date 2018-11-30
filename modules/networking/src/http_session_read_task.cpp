@@ -76,23 +76,14 @@ session_config_(nullptr)
     }
     range_str_ = stringStream.str();
 
-    head_data_ = NewSessionTaskData(nullptr, 0, 0, kReadDataTypeHeader);
-    body_data_ = NewSessionTaskData(nullptr, 0, 0, kReadDataTypeBody);
+    head_data_ = SessionTaskData(nullptr, 0, 0, kReadDataTypeHeader);
+    body_data_ = SessionTaskData(nullptr, 0, 0, kReadDataTypeBody);
 
     curl_adapter = std::make_unique<HttpCurlAdapter>(this);
     setupHandle();
 }
 
 HttpSessionReadTask::~HttpSessionReadTask() {
-    if (head_data_) {
-        delete head_data_;
-        head_data_ = nullptr;
-    }
-
-    if (body_data_) {
-        delete body_data_;
-        body_data_ = nullptr;
-    }
 }
 
 #pragma mark- Public
@@ -309,10 +300,10 @@ void HttpSessionReadTask::OnData(char *data, size_t size, ReadDataType type) {
     }
 
     if (kReadDataTypeHeader == type) {
-        read_data = head_data_;
+        read_data = head_data_.get();
         read_data->offset += read_data->size;
     } else if (kReadDataTypeBody == type) {
-        read_data = body_data_;
+        read_data = body_data_.get();
         read_data->offset = request_start_ + received_size_;
 
         if (request_size_ > 0 && received_size_ + size > request_size_ ) {

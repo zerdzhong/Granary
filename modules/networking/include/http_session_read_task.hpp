@@ -84,8 +84,8 @@ private:
     std::string url_;
     std::string range_str_;
     std::unique_ptr<HttpCurlAdapter> curl_adapter;
-    HttpSessionTaskData *head_data_;
-    HttpSessionTaskData *body_data_;
+    std::unique_ptr<HttpSessionTaskData> head_data_;
+    std::unique_ptr<HttpSessionTaskData> body_data_;
 
     std::string effective_url_;
     HttpConnectionCode result_code_;
