@@ -3,11 +3,11 @@
 //
 
 #include <http_session_config.hpp>
-
 #include "http_session_config.hpp"
+#include <memory>
 
-HttpSessionConfig* HttpSessionConfig::DefaultSessionConfig() {
-    HttpSessionConfig *defaultConfig = new HttpSessionConfig();
+std::shared_ptr<HttpSessionConfig> HttpSessionConfig::DefaultSessionConfig() {
+    std::shared_ptr<HttpSessionConfig> defaultConfig = std::make_shared<HttpSessionConfig>();
     return defaultConfig;
 }
 

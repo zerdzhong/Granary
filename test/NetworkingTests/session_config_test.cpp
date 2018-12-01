@@ -18,22 +18,20 @@ using namespace std;
 
 TEST(SessionConfigTest, Default)
 {
-    HttpSessionConfig *config = HttpSessionConfig::DefaultSessionConfig();
+    std::shared_ptr<HttpSessionConfig> config = HttpSessionConfig::DefaultSessionConfig();
     ASSERT_NE(nullptr, config);
-    delete config;
 }
 
 TEST(SessionConfigTest, RequestTimeout)
 {
-    HttpSessionConfig *config = HttpSessionConfig::DefaultSessionConfig();
+    std::shared_ptr<HttpSessionConfig> config = HttpSessionConfig::DefaultSessionConfig();
     config->SetRequestTimeout(1);
     ASSERT_EQ(config->RequestTimeout(), 1);
-    delete config;
 }
 
 TEST(SessionConfigTest, Configs)
 {
-    HttpSessionConfig *config = HttpSessionConfig::DefaultSessionConfig();
+    std::shared_ptr<HttpSessionConfig> config = HttpSessionConfig::DefaultSessionConfig();
     config->SetRequestTimeout(1);
     ASSERT_EQ(config->RequestTimeout(), 1);
 

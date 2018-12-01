@@ -190,11 +190,9 @@ TEST_F(HttpSessionTestFixture, Tasks) {
 }
 
 TEST_F(HttpSessionTestFixture, SetConfig) {
-    HttpSessionConfig *config = HttpSessionConfig::DefaultSessionConfig();
+    std::shared_ptr<HttpSessionConfig>config = HttpSessionConfig::DefaultSessionConfig();
 
     test_session_->setSessionConfig(config);
 
     ASSERT_EQ(test_session_->sessionConfig(), config);
-
-    delete config;
 }
