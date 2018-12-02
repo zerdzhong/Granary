@@ -131,11 +131,11 @@ void HttpSession::setTaskAutoDelete(bool auto_delete) {
     task_auto_delete_ = auto_delete;
 }
 
-void HttpSession::setSessionConfig(HttpSessionConfig *session_config) {
+void HttpSession::setSessionConfig(std::shared_ptr<HttpSessionConfig> session_config) {
     session_config_ = session_config;
 }
 
-HttpSessionConfig* HttpSession::sessionConfig() {
+std::shared_ptr<HttpSessionConfig> HttpSession::sessionConfig() {
     return session_config_;
 }
 

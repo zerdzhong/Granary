@@ -14,7 +14,7 @@ typedef double time_interval;
 
 class HttpSessionConfig {
 public:
-    static HttpSessionConfig* DefaultSessionConfig();
+    static std::shared_ptr<HttpSessionConfig> DefaultSessionConfig();
     HttpSessionConfig();
     ~HttpSessionConfig();
 

@@ -35,8 +35,8 @@ public:
     HttpSessionTaskListener* listener();
 
     void setTaskAutoDelete(bool auto_delete);
-    void setSessionConfig(HttpSessionConfig *session_config);
-    HttpSessionConfig* sessionConfig();
+    void setSessionConfig(std::shared_ptr<HttpSessionConfig> session_config);
+    std::shared_ptr<HttpSessionConfig> sessionConfig();
 
     static std::string CurlInfo();
     static bool SupportSSL();
@@ -68,7 +68,7 @@ private:
     bool task_auto_delete_;
 
     HttpSessionTaskListener* listener_;
-    HttpSessionConfig *session_config_;
+    std::shared_ptr<HttpSessionConfig> session_config_;
 };
 
 

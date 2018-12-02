@@ -273,12 +273,8 @@ bool HttpSessionReadTask::isStopped() {
     return stopped_;
 }
 
-void HttpSessionReadTask::setSessionConfig(HttpSessionConfig *session_config) {
+void HttpSessionReadTask::setSessionConfig(std::shared_ptr<HttpSessionConfig> session_config) {
     session_config_ = session_config;
-}
-
-HttpSessionConfig* HttpSessionReadTask::sessionConfig() {
-    return session_config_;
 }
 
 uint8_t HttpSessionReadTask::request_count() {

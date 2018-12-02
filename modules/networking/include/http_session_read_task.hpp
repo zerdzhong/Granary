@@ -68,8 +68,7 @@ public:
     std::string url();
     CURL* handle();
 
-    void setSessionConfig(HttpSessionConfig *session_config);
-    HttpSessionConfig * sessionConfig();
+    void setSessionConfig(std::shared_ptr<HttpSessionConfig> session_config);
 
     void OnData(char *data, size_t size, ReadDataType type) override;
     void OnProgress(double progress) override;
@@ -93,7 +92,7 @@ private:
     uint8_t request_count_;
     uint8_t retry_count_;
     bool stopped_;
-    HttpSessionConfig *session_config_;
+    std::shared_ptr<HttpSessionConfig> session_config_;
 };
 
 
