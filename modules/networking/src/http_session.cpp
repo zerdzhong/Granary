@@ -96,7 +96,7 @@ HttpSessionReadTask* HttpSession::ReadTaskWithInfo(std::string url, size_t offse
     std::lock_guard<std::recursive_mutex> lock_guard(tasks_mutex_);
 
     HttpSessionReadTask *read_task = new HttpSessionReadTask(std::move(url), offset, length);
-    read_task->setListener(this);
+    read_task->setListener(*this);
     read_task->setSessionConfig(session_config_);
     pending_tasks_.push_back(read_task);
 
@@ -119,8 +119,8 @@ void HttpSession::CancelTask(HttpSessionTask *task) {
     }
 }
 
-void HttpSession::setListener(HttpSessionTaskListener *listener) {
-    listener_ = listener;
+void HttpSession::setListener(HttpSessionTaskListener& listener) {
+    listener_ = &listener;
 }
 
 HttpSessionTaskListener* HttpSession::listener() {

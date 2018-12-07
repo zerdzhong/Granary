@@ -31,7 +31,7 @@ public:
     void Start();
     void runInternal();
 
-    void setListener(HttpSessionTaskListener *listener);
+    void setListener(HttpSessionTaskListener& listener);
     HttpSessionTaskListener* listener();
 
     void setTaskAutoDelete(bool auto_delete);

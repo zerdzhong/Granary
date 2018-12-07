@@ -47,7 +47,7 @@ public:
 class HttpSessionTask {
 public:
     HttpSessionTask();
-    void setListener(HttpSessionTaskListener *listener);
+    void setListener(HttpSessionTaskListener& listener);
     HttpSessionTaskListener* listener();
 
     virtual size_t request_start();
