@@ -148,7 +148,7 @@ TEST(SessionReadTaskTest, Listener) {
     auto *helper = new Helper();
 
     HttpSessionReadTask *read_session_task1 = new HttpSessionReadTask("https://www.baidu.com", 0, 0);
-    read_session_task1->setListener(mock_listener);
+    read_session_task1->setListener(*mock_listener);
     ASSERT_EQ(read_session_task1->listener(), mock_listener);
 
     //call OnDataFinish 1 time

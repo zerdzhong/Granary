@@ -13,8 +13,8 @@ listener_(nullptr)
 
 }
 
-void HttpSessionTask::setListener(HttpSessionTaskListener *listener) {
-    listener_ = listener;
+void HttpSessionTask::setListener(HttpSessionTaskListener& listener) {
+    listener_ = &listener;
 }
 
 HttpSessionTaskListener* HttpSessionTask::listener() {

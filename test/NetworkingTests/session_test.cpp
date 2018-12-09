@@ -43,7 +43,7 @@ public:
     HttpSessionTestFixture() {
         mock_listener_ = new NiceMock<MockSessionTaskListener>();
         test_session_ = new HttpSession();
-        test_session_->setListener(mock_listener_);
+        test_session_->setListener(*mock_listener_);
         test_session_->setTaskAutoDelete(false);
 
         ON_CALL(*mock_listener_, OnDataFinish(_, _)).
