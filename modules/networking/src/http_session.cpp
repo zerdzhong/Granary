@@ -106,17 +106,15 @@ HttpSessionReadTask* HttpSession::ReadTaskWithInfo(std::string url, size_t offse
 }
 
 void HttpSession::CancelTask(HttpSessionTask *task) {
-    if (nullptr != dynamic_cast<HttpSessionReadTask *>(task)) {
-        auto read_task = dynamic_cast<HttpSessionReadTask *>(task);
 
-        if(!finished_tasks_.empty() && std::find(finished_tasks_.begin(), finished_tasks_.end(),
-                read_task) != finished_tasks_.end())
-        {
-            return;
-        }
-
-        read_task->Cancel();
+    if(!finished_tasks_.empty() && std::find(finished_tasks_.begin(), finished_tasks_.end(),
+                                             task) != finished_tasks_.end())
+    {
+        // task not found;
+        return;
     }
+
+    task->Cancel();
 }
 
 void HttpSession::setListener(HttpSessionTaskListener& listener) {
