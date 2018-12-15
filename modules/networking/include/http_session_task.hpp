@@ -54,6 +54,8 @@ public:
     virtual size_t request_size();
     virtual size_t received_size();
 
+    virtual void Cancel() = 0;
+
 protected:
     virtual void OnData(char *data, size_t size, ReadDataType type) = 0;
     virtual void OnProgress(double progress) = 0;

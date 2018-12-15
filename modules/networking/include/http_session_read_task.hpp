@@ -56,7 +56,7 @@ public:
     void ReadConnectionFinished(int code);
 
     //Cancel
-    void Cancel();
+    void Cancel() override;
     bool isStopped();
 
     //retry
