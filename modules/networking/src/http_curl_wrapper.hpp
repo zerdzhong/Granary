@@ -9,6 +9,7 @@
 #include <cstddef>
 
 typedef void CURL;
+typedef void CURLM;
 
 class HttpCurlCallback {
 public:
@@ -46,6 +47,18 @@ private:
 private:
     CURL *handle_;
     HttpCurlCallback *callback_;
+};
+
+
+class HttpMultiCurlWrapper {
+public:
+
+    explicit HttpMultiCurlWrapper();
+    ~HttpMultiCurlWrapper();
+
+private:
+    void DoInit();
+    CURLM *multi_handle_;
 };
 
 

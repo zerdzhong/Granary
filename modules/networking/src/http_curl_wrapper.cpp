@@ -106,3 +106,12 @@ CURL *HttpCurlWrapper::curl_handle() {
     return handle_;
 }
 
+#pragma mark- HttpMultiCurlWrapper
+
+HttpMultiCurlWrapper::HttpMultiCurlWrapper() {
+    DoInit();
+}
+
+void HttpMultiCurlWrapper::DoInit() {
+    multi_handle_= curl_multi_init();
+}
