@@ -5,8 +5,8 @@
 #ifndef GRANARY_HTTP_CURL_WRAPPER_HPP
 #define GRANARY_HTTP_CURL_WRAPPER_HPP
 
-
 #include <cstddef>
+#include <curl/multi.h>
 
 typedef void CURL;
 typedef void CURLM;
@@ -55,6 +55,8 @@ public:
 
     explicit HttpMultiCurlWrapper();
     ~HttpMultiCurlWrapper();
+
+    CURLMcode perform(int *running_handles);
 
 private:
     void DoInit();
