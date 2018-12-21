@@ -14,8 +14,7 @@
 class HttpSessionThread;
 class HttpSessionReadTask;
 class HttpSessionConfig;
-
-typedef void CURLM;
+class HttpMultiCurlWrapper;
 
 class HttpSession : private HttpSessionTaskListener {
 public:
@@ -63,7 +62,7 @@ private:
     std::mutex task_cond_mutex_;
     std::condition_variable task_cond_;
 
-    CURLM *curl_multi_handle_;
+    std::unique_ptr<HttpMultiCurlWrapper> multi_curl_;
     int  is_handle_running_;
     bool task_auto_delete_;
 
