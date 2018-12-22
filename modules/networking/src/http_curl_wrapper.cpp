@@ -123,3 +123,20 @@ HttpMultiCurlWrapper::~HttpMultiCurlWrapper() {
 CURLMcode HttpMultiCurlWrapper::perform(int *running_handles) {
     return curl_multi_perform(multi_handle_, running_handles);
 }
+
+CURLMcode HttpMultiCurlWrapper::wait(curl_waitfd *extra_fds, unsigned int extra_nfds,
+                                                int timeout_ms, int *ret) {
+    return curl_multi_wait(multi_handle_, extra_fds, extra_nfds, timeout_ms, ret);
+}
+
+CURLMcode HttpMultiCurlWrapper::add_handle(CURL *curl_handle) {
+    return curl_multi_add_handle(multi_handle_, curl_handle);
+}
+
+CURLMcode HttpMultiCurlWrapper::remove_handle(CURL *curl_handle) {
+    return curl_multi_remove_handle(multi_handle_, curl_handle);
+}
+
+CURLMsg *HttpMultiCurlWrapper::info_read(int *msgs_in_queue) {
+    return curl_multi_info_read(multi_handle_, msgs_in_queue);
+}

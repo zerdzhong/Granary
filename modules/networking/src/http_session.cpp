@@ -6,6 +6,7 @@
 
 #include "http_session.hpp"
 #include "http_session_read_task.hpp"
+#include "http_curl_wrapper.hpp"
 #include "thread.hpp"
 #include <curl/curl.h>
 #include <sstream>
@@ -54,6 +55,7 @@ task_auto_delete_(true),
 session_config_(nullptr)
 {
     thread_loop_  = std::make_unique<HttpSessionThread>(this);
+    multi_curl_ = std::make_unique<HttpMultiCurlWrapper>();
 }
 
 HttpSession::~HttpSession() {
@@ -81,10 +83,7 @@ void HttpSession::clearFinishedTask() {
 #pragma mark- Public
 
 void HttpSession::Start() {
-
     curl_global_init(CURL_GLOBAL_ALL);
-    curl_multi_handle_ = curl_multi_init();
-
     thread_loop_->Start();
 }
 
@@ -142,12 +141,12 @@ std::shared_ptr<HttpSessionConfig> HttpSession::sessionConfig() {
 void HttpSession::runInternal() {
     requestPendingTasks();
 
-    curl_multi_perform(curl_multi_handle_, &is_handle_running_);
+    multi_curl_->perform(&is_handle_running_);
 
     handleCurlMessage();
 
     int fd_num = 0;
-    int res = curl_multi_wait(curl_multi_handle_, nullptr, 0, 1000, &fd_num);
+    int res = multi_curl_->wait(nullptr, 0, 1000, &fd_num);
 
     if(res != CURLM_OK) {
         fprintf(stderr, "error: curl_multi_wait() returned %d\n", res);
@@ -168,7 +167,7 @@ size_t HttpSession::requestPendingTasks() {
     while (!pending_tasks_.empty()) {
         HttpSessionReadTask *read_task = pending_tasks_.back();
 
-        curl_multi_add_handle(curl_multi_handle_, read_task->handle());
+        multi_curl_->add_handle(read_task->handle());
 
         running_tasks_.push_back(read_task);
         pending_tasks_.pop_back();
@@ -195,7 +194,7 @@ void HttpSession::handleCurlMessage() {
     CURLMsg *msg= nullptr;
     int msgs_left=0;
 
-    while ((msg = curl_multi_info_read(curl_multi_handle_, &msgs_left))) {
+    while ((msg = multi_curl_->info_read(&msgs_left))) {
         if (msg->msg == CURLMSG_DONE) {
             CURL *easy_handle = msg->easy_handle;
             //get task
@@ -215,7 +214,7 @@ void HttpSession::handleTaskFinish(HttpSessionReadTask *task, int curl_code) {
     std::lock_guard<std::recursive_mutex> lock_guard(tasks_mutex_);
 
     //remove from runing tasks
-    curl_multi_remove_handle(curl_multi_handle_, task->handle());
+    multi_curl_->remove_handle(task->handle());
     running_tasks_.erase(std::remove(running_tasks_.begin(), running_tasks_.end(), task), running_tasks_.end());
 
     if (task->ShouldRetry(curl_code)) {

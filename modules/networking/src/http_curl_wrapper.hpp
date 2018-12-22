@@ -57,6 +57,15 @@ public:
     ~HttpMultiCurlWrapper();
 
     CURLMcode perform(int *running_handles);
+    CURLMcode wait(struct curl_waitfd extra_fds[],
+                   unsigned int extra_nfds,
+                   int timeout_ms,
+                   int *ret);
+
+    CURLMcode add_handle(CURL *curl_handle);
+    CURLMcode remove_handle(CURL *curl_handle);
+
+    CURLMsg *info_read(int *msgs_in_queue);
 
 private:
     void DoInit();
