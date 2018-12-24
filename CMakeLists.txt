@@ -16,4 +16,5 @@ endif()
 
 add_subdirectory(modules/thread)
 add_subdirectory(modules/networking)
+add_subdirectory(modules/base)
 add_subdirectory(test)
