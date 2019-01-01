@@ -6,7 +6,7 @@ add_library(Base::Base ALIAS Base)
 
 target_compile_features(Base PRIVATE cxx_std_14)
 
-target_include_directories(Thread
+target_include_directories(Base
         PUBLIC
         $<INSTALL_INTERFACE:include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -14,6 +14,14 @@ target_include_directories(Thread
         src
         )
 
-include(../../cmake/target_install.cmake)
-target_install(Thread include/thread_loop.hpp
-        include/timer.hpp)
+if(UNIX)
+    target_compile_definitions(Base PRIVATE POSIX=1)
+endif()
+
+if(UNIX)
+    target_compile_definitions(Base PRIVATE POSIX=1)
+endif()
+
+if(MSVC OR MSYS OR MINGW)
+    target_compile_definitions(Base PRIVATE WIN=1)
+endif()
