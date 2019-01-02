@@ -23,7 +23,8 @@ namespace granary {
             kLongDouble,
             kCharP,
             kStdString,
-            kVoidP
+            kVoidP,
+            kCheckOp
         };
 
         void FatalLog(const char* file,
@@ -80,5 +81,13 @@ namespace granary {
     }
 }
 
+void FatalMessage(const char* file, int line, const char* msg);
+
+#define D_CHECK(condition)                                             \
+  do {                                                                   \
+    if (!(condition)) {                                                  \
+      FatalMessage(__FILE__, __LINE__, "CHECK failed: " #condition); \
+    }                                                                    \
+  } while (0)
 
 #endif //GRANARY_CHECKS_HPP
